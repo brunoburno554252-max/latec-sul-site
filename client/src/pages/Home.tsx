@@ -4,6 +4,7 @@ import CourseList from "@/components/CourseList";
 import About from "@/components/About";
 import ExclusiveSupport from "@/components/ExclusiveSupport";
 import Certifications from "@/components/Certifications";
+import Ecosystem from "@/components/Ecosystem";
 import FeaturedBlog from "@/components/FeaturedBlog";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Footer from "@/components/Footer";
@@ -19,6 +20,7 @@ export default function Home() {
         <Certifications />
         <About />
         <ExclusiveSupport />
+        <Ecosystem />
         <CourseList />
         <TestimonialsSection />
         <FeaturedBlog />
