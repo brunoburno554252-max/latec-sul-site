@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { writeFileSync, readFileSync } from "fs";
 import { join } from "path";
 
@@ -24,7 +24,7 @@ type CardCoordinate = z.infer<typeof cardCoordinateSchema>;
 
 export const ecosystemRouter = router({
   // Salvar coordenadas dos cards direto no arquivo JSON
-  saveCoordinates: protectedProcedure
+  saveCoordinates: publicProcedure
     .input(z.record(z.string(), cardCoordinateSchema))
     .mutation(({ input }) => {
       try {
@@ -48,7 +48,7 @@ export const ecosystemRouter = router({
     }),
 
   // Carregar coordenadas do arquivo JSON
-  getCoordinates: protectedProcedure.query(() => {
+  getCoordinates: publicProcedure.query(() => {
     try {
       console.log("[Ecosystem] Carregando coordenadas do arquivo JSON...");
       const fileContent = readFileSync(CARDS_FILE, "utf-8");
@@ -62,7 +62,7 @@ export const ecosystemRouter = router({
   }),
 
   // Inverter estado de um card (branco/rosa)
-  toggleInverted: protectedProcedure
+  toggleInverted: publicProcedure
     .input(z.object({
       cardId: z.string(),
       inverted: z.boolean(),
