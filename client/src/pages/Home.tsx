@@ -6,6 +6,7 @@ import StudentExperience from "@/components/StudentExperience";
 import Certifications from "@/components/Certifications";
 
 import Ecosystem from "@/components/Ecosystem";
+import PressNews from "@/components/PressNews";
 import FeaturedBlog from "@/components/FeaturedBlog";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import Footer from "@/components/Footer";
@@ -19,6 +20,7 @@ export default function Home() {
       <main className="flex-grow">
         <Hero />
         <Certifications />
+        <PressNews />
         <About />
         <StudentExperience />
         <Ecosystem />
