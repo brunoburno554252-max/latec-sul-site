@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import ToggleSwitch from "./ToggleSwitch";
 import { trpc } from "@/lib/trpc";
 import cardsData from "@/data/organograma-cards-final.json";
-import { X, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { X } from "lucide-react";
 
 interface CardPosition {
   [key: string]: {
@@ -28,16 +28,12 @@ interface CardInfo {
 
 export default function FullscreenEcosystemEditor() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [positions, setPositions] = useState<CardPosition>({});
   const [draggingCard, setDraggingCard] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [showCode, setShowCode] = useState(false);
-  const [zoom, setZoom] = useState(0.5); // Começar com zoom 50% para caber na tela
-  const [panX, setPanX] = useState(0);
-  const [panY, setPanY] = useState(0);
-  const [isPanning, setIsPanning] = useState(false);
-  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const [scale, setScale] = useState(1);
 
   // Dimensões reais da imagem
   const imageWidth = 8199;
@@ -57,33 +53,17 @@ export default function FullscreenEcosystemEditor() {
       };
     });
     setPositions(initialPositions);
+
+    // Calcular escala inicial
+    if (imgRef.current && containerRef.current) {
+      const containerWidth = containerRef.current.clientWidth;
+      const calculatedScale = containerWidth / imageWidth;
+      setScale(calculatedScale);
+    }
   }, []);
 
-  const getDisplayCoordinates = (cardId: string) => {
-    if (!positions[cardId]) return null;
-
-    const scaledX = (positions[cardId].x * zoom) + panX;
-    const scaledY = (positions[cardId].y * zoom) + panY;
-
-    return {
-      displayX: scaledX,
-      displayY: scaledY,
-    };
-  };
-
   const handleMouseDown = (e: React.MouseEvent, cardId: string) => {
-    // Se for clique com botão direito ou Ctrl, ativar pan
-    if (e.button === 2 || e.ctrlKey) {
-      e.preventDefault();
-      setIsPanning(true);
-      setPanStart({ x: e.clientX - panX, y: e.clientY - panY });
-      return;
-    }
-
     e.preventDefault();
-    const coords = getDisplayCoordinates(cardId);
-    if (!coords) return;
-
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 
     setDraggingCard(cardId);
@@ -94,23 +74,18 @@ export default function FullscreenEcosystemEditor() {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    // Pan mode
-    if (isPanning) {
-      setPanX(e.clientX - panStart.x);
-      setPanY(e.clientY - panStart.y);
-      return;
-    }
+    if (!draggingCard || !imgRef.current || !containerRef.current) return;
 
-    if (!draggingCard || !canvasRef.current) return;
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const imgRect = imgRef.current.getBoundingClientRect();
 
-    const canvasRect = canvasRef.current.getBoundingClientRect();
-
-    const displayX = e.clientX - canvasRect.left - dragOffset.x;
-    const displayY = e.clientY - canvasRect.top - dragOffset.y;
+    // Posição relativa ao container
+    const displayX = e.clientX - containerRect.left - dragOffset.x;
+    const displayY = e.clientY - containerRect.top - dragOffset.y;
 
     // Converter de coordenadas de display para coordenadas reais
-    const imageX = (displayX - panX) / zoom;
-    const imageY = (displayY - panY) / zoom;
+    const imageX = displayX / scale;
+    const imageY = displayY / scale;
 
     // Limitar dentro da imagem
     const constrainedX = Math.max(0, Math.min(imageX, imageWidth - 50));
@@ -128,14 +103,6 @@ export default function FullscreenEcosystemEditor() {
 
   const handleMouseUp = () => {
     setDraggingCard(null);
-    setIsPanning(false);
-  };
-
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    const newZoom = Math.max(0.1, Math.min(2, zoom + delta));
-    setZoom(newZoom);
   };
 
   const handleSave = async () => {
@@ -198,9 +165,6 @@ export default function FullscreenEcosystemEditor() {
       };
     });
     setPositions(initialPositions);
-    setZoom(0.5);
-    setPanX(0);
-    setPanY(0);
   };
 
   const handleClose = () => {
@@ -234,13 +198,15 @@ export default function FullscreenEcosystemEditor() {
     <div
       ref={containerRef}
       className="fixed inset-0 bg-black z-50 flex flex-col"
-      onContextMenu={(e) => e.preventDefault()}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
     >
       {/* Header */}
-      <div className="bg-gray-900 text-white p-4 flex justify-between items-center border-b border-gray-700">
+      <div className="bg-gray-900 text-white p-4 flex justify-between items-center border-b border-gray-700 z-10">
         <div>
-          <h1 className="text-2xl font-bold">Editor de Ecossistema - Tela Cheia</h1>
-          <p className="text-sm text-gray-400">Arraste os botões para posicionar. Scroll para zoom. Ctrl+Drag para pan.</p>
+          <h1 className="text-2xl font-bold">Editor de Ecossistema</h1>
+          <p className="text-sm text-gray-400">Arraste os botões para posicionar. Clique em Salvar quando terminar.</p>
         </div>
         <button
           onClick={handleClose}
@@ -250,82 +216,77 @@ export default function FullscreenEcosystemEditor() {
         </button>
       </div>
 
-      {/* Canvas Area */}
-      <div className="flex-1 overflow-hidden relative bg-black">
+      {/* Canvas Area - Imagem em tamanho real */}
+      <div className="flex-1 overflow-auto bg-black relative">
         <div
-          ref={canvasRef}
-          className="w-full h-full relative overflow-hidden"
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onWheel={handleWheel}
-          style={{ cursor: isPanning ? "grabbing" : draggingCard ? "grabbing" : "grab" }}
+          style={{
+            display: "inline-block",
+            position: "relative",
+            width: `${imageWidth * scale}px`,
+            height: `${imageHeight * scale}px`,
+          }}
         >
-          {/* Imagem com zoom e pan */}
-          <div
+          <img
+            ref={imgRef}
+            src="/ecossistema-organograma.png"
+            alt="Ecossistema LA Educação"
+            className="block"
             style={{
-              transform: `translate(${panX}px, ${panY}px) scale(${zoom})`,
-              transformOrigin: "0 0",
-              transition: draggingCard || isPanning ? "none" : "transform 0.1s ease-out",
+              width: `${imageWidth * scale}px`,
+              height: `${imageHeight * scale}px`,
+              display: "block",
             }}
-          >
-            <img
-              src="/ecossistema-organograma.png"
-              alt="Ecossistema LA Educação"
-              className="block"
-              style={{
-                width: `${imageWidth}px`,
-                height: `${imageHeight}px`,
-              }}
-              draggable={false}
-            />
+            draggable={false}
+          />
 
-            {/* Toggles Draggable */}
-            {Object.entries(cardsData).map(([cardId, card]) => {
-              const coords = getDisplayCoordinates(cardId);
-              if (!coords) return null;
+          {/* Toggles Draggable */}
+          {Object.entries(cardsData).map(([cardId, card]) => {
+            const pos = positions[cardId];
+            if (!pos) return null;
 
-              return (
-                <div
-                  key={cardId}
-                  className="absolute cursor-grab active:cursor-grabbing group"
-                  style={{
-                    left: `${coords.displayX}px`,
-                    top: `${coords.displayY}px`,
-                    transform: "translate(-50%, -50%)",
+            const displayX = pos.x * scale;
+            const displayY = pos.y * scale;
+
+            return (
+              <div
+                key={cardId}
+                className="absolute cursor-grab active:cursor-grabbing group"
+                style={{
+                  left: `${displayX}px`,
+                  top: `${displayY}px`,
+                  transform: "translate(-50%, -50%)",
+                }}
+                onMouseDown={(e) => handleMouseDown(e, cardId)}
+              >
+                <ToggleSwitch
+                  isActive={true}
+                  label={(card as CardInfo).nome}
+                  onClick={() => {}}
+                  inverted={pos.inverted || false}
+                />
+                {/* Botão para inverter */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleInverted(cardId);
                   }}
-                  onMouseDown={(e) => handleMouseDown(e, cardId)}
+                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  title="Inverter cores do botão"
                 >
-                  <ToggleSwitch
-                    isActive={true}
-                    label={(card as CardInfo).nome}
-                    onClick={() => {}}
-                    inverted={positions[cardId]?.inverted || false}
-                  />
-                  {/* Botão para inverter */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleInverted(cardId);
-                    }}
-                    className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
-                    title="Inverter cores do botão"
-                  >
-                    ⚡
-                  </button>
-                  {/* Label */}
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
-                    {(card as CardInfo).nome}
-                  </div>
+                  ⚡
+                </button>
+                {/* Label */}
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
+                  {(card as CardInfo).nome}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Footer Controls */}
-      <div className="bg-gray-900 text-white p-4 border-t border-gray-700 flex gap-3 flex-wrap">
+      <div className="bg-gray-900 text-white p-4 border-t border-gray-700 flex gap-3 flex-wrap z-10">
         <button
           onClick={handleSave}
           disabled={saveCoordinatesMutation.isPending}
@@ -337,25 +298,7 @@ export default function FullscreenEcosystemEditor() {
           onClick={handleReset}
           className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition"
         >
-          🔄 Resetar Zoom/Pan
-        </button>
-        <button
-          onClick={() => setZoom(Math.max(0.1, zoom - 0.1))}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center gap-2"
-        >
-          <ZoomOut className="w-4 h-4" /> Zoom Out
-        </button>
-        <button
-          onClick={() => setZoom(Math.min(2, zoom + 0.1))}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center gap-2"
-        >
-          <ZoomIn className="w-4 h-4" /> Zoom In
-        </button>
-        <button
-          onClick={() => setZoom(0.5)}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center gap-2"
-        >
-          <RotateCcw className="w-4 h-4" /> Reset Zoom
+          🔄 Resetar
         </button>
         <button
           onClick={() => setShowCode(!showCode)}
@@ -367,7 +310,7 @@ export default function FullscreenEcosystemEditor() {
 
       {/* JSON Display */}
       {showCode && (
-        <div className="bg-gray-800 text-green-400 p-4 max-h-48 overflow-y-auto border-t border-gray-700">
+        <div className="bg-gray-800 text-green-400 p-4 max-h-48 overflow-y-auto border-t border-gray-700 z-10">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-lg font-bold">JSON/JavaScript</h3>
             <button
@@ -385,22 +328,6 @@ export default function FullscreenEcosystemEditor() {
           </pre>
         </div>
       )}
-
-      {/* Info Panel */}
-      <div className="absolute bottom-4 right-4 bg-gray-900 text-white p-4 rounded-lg border border-gray-700 max-w-xs text-xs">
-        <h4 className="font-bold mb-2">Coordenadas Selecionadas:</h4>
-        {draggingCard && positions[draggingCard] && (
-          <div>
-            <p><strong>{(cardsData[draggingCard as keyof typeof cardsData] as CardInfo).nome}</strong></p>
-            <p>X: <span className="font-mono">{positions[draggingCard].x}</span></p>
-            <p>Y: <span className="font-mono">{positions[draggingCard].y}</span></p>
-            <p>Zoom: <span className="font-mono">{(zoom * 100).toFixed(0)}%</span></p>
-          </div>
-        )}
-        {!draggingCard && (
-          <p className="text-gray-400">Arraste um botão para ver suas coordenadas</p>
-        )}
-      </div>
     </div>
   );
 }
