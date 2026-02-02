@@ -5,6 +5,8 @@ interface ToggleSwitchProps {
   onClick: () => void;
   backgroundColor?: string;
   title?: string;
+  label?: string;
+  inverted?: boolean;
 }
 
 export default function ToggleSwitch({
@@ -12,6 +14,8 @@ export default function ToggleSwitch({
   onClick,
   backgroundColor = "#ffffff",
   title = "Clique para abrir",
+  label,
+  inverted = false,
 }: ToggleSwitchProps) {
   const [useWhiteSwitch, setUseWhiteSwitch] = useState(false);
 
@@ -26,8 +30,14 @@ export default function ToggleSwitch({
     setUseWhiteSwitch(isRosaBackground);
   }, [backgroundColor]);
 
-  const switchColor = useWhiteSwitch ? "#ffffff" : "#da1069";
+  // Se inverted, inverter as cores
+  let switchColor = useWhiteSwitch ? "#ffffff" : "#da1069";
+  let circleBgColor = useWhiteSwitch ? "#da1069" : "#ffffff";
   const dotColor = "#000000"; // Pontinhos pretos sempre
+  
+  if (inverted) {
+    [switchColor, circleBgColor] = [circleBgColor, switchColor];
+  }
 
   return (
     <button
@@ -64,7 +74,7 @@ export default function ToggleSwitch({
       <div
         className="absolute top-1 w-6 h-6 rounded-full transition-all duration-300 flex items-center justify-center"
         style={{
-          backgroundColor: useWhiteSwitch ? "#da1069" : "#ffffff",
+          backgroundColor: circleBgColor,
           left: isActive ? "calc(100% - 28px)" : "2px",
           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
         }}

@@ -1,4 +1,4 @@
-import { Download, Save, RotateCcw } from "lucide-react";
+import { Download, Save, RotateCcw, Zap } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import ToggleSwitch from "./ToggleSwitch";
@@ -9,6 +9,7 @@ interface CardPosition {
   [key: string]: {
     x: number;
     y: number;
+    inverted?: boolean;
   };
 }
 
@@ -22,6 +23,7 @@ interface CardInfo {
   width: number;
   height: number;
   descricao: string;
+  inverted?: boolean;
 }
 
 export default function CanvasEditor() {
@@ -35,6 +37,7 @@ export default function CanvasEditor() {
   const imageHeight = 4576;
 
   const saveCoordinatesMutation = trpc.ecosystem.saveCoordinates.useMutation();
+  const toggleInvertedMutation = trpc.ecosystem.toggleInverted.useMutation();
 
   // Inicializar posições
   useEffect(() => {
@@ -43,6 +46,7 @@ export default function CanvasEditor() {
       initialPositions[cardId] = {
         x: (card as CardInfo).x,
         y: (card as CardInfo).y,
+        inverted: (card as CardInfo).inverted || false,
       };
     });
     setPositions(initialPositions);
@@ -109,6 +113,7 @@ export default function CanvasEditor() {
     setPositions((prev) => ({
       ...prev,
       [draggingCard]: {
+        ...prev[draggingCard],
         x: Math.round(imageX),
         y: Math.round(imageY),
       },
@@ -128,14 +133,15 @@ export default function CanvasEditor() {
         ...cardData,
         x: positions[cardId]?.x || cardData.x,
         y: positions[cardId]?.y || cardData.y,
+        inverted: positions[cardId]?.inverted || false,
       };
     });
 
     try {
       // Salvar direto no arquivo JSON via API
       await saveCoordinatesMutation.mutateAsync(updatedCards);
-      toast.success("Coordenadas salvas com sucesso! A página será recarregada...");
-      setSavedMessage("Coordenadas salvas com sucesso!");
+      toast.success("✓ Coordenadas salvas com sucesso! A página será recarregada...");
+      setSavedMessage("✓ Coordenadas salvas com sucesso!");
       
       // Recarregar a página após 2 segundos para aplicar as mudanças
       setTimeout(() => {
@@ -147,12 +153,38 @@ export default function CanvasEditor() {
     }
   };
 
+  const handleToggleInverted = async (cardId: string) => {
+    const currentInverted = positions[cardId]?.inverted || false;
+    const newInverted = !currentInverted;
+
+    try {
+      await toggleInvertedMutation.mutateAsync({
+        cardId,
+        inverted: newInverted,
+      });
+
+      setPositions((prev) => ({
+        ...prev,
+        [cardId]: {
+          ...prev[cardId],
+          inverted: newInverted,
+        },
+      }));
+
+      toast.success(`Card ${cardId} ${newInverted ? "invertido" : "restaurado"}!`);
+    } catch (error) {
+      toast.error("Erro ao inverter card");
+      console.error(error);
+    }
+  };
+
   const handleReset = () => {
     const initialPositions: CardPosition = {};
     Object.entries(cardsData).forEach(([cardId, card]) => {
       initialPositions[cardId] = {
         x: (card as CardInfo).x,
         y: (card as CardInfo).y,
+        inverted: (card as CardInfo).inverted || false,
       };
     });
     setPositions(initialPositions);
@@ -195,7 +227,7 @@ export default function CanvasEditor() {
             return (
               <div
                 key={cardId}
-                className="absolute cursor-grab active:cursor-grabbing"
+                className="absolute cursor-grab active:cursor-grabbing group"
                 style={{
                   left: `${coords.displayX}px`,
                   top: `${coords.displayY}px`,
@@ -207,7 +239,19 @@ export default function CanvasEditor() {
                   isActive={true}
                   label={(card as CardInfo).nome}
                   onClick={() => {}}
+                  inverted={positions[cardId]?.inverted || false}
                 />
+                {/* Botão para inverter */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleInverted(cardId);
+                  }}
+                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  title="Inverter cores"
+                >
+                  <Zap size={16} />
+                </button>
               </div>
             );
           })}
@@ -221,6 +265,7 @@ export default function CanvasEditor() {
           {Object.entries(positions).map(([cardId, pos]) => (
             <div key={cardId} className="text-gray-700">
               <strong>{cardId}:</strong> X: {pos.x}, Y: {pos.y}
+              {pos.inverted && <span className="ml-2 text-purple-600">🔄 Invertido</span>}
             </div>
           ))}
         </div>
