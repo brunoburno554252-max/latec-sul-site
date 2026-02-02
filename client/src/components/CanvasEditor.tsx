@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect } from "react";
 import { Download, Save, RotateCcw } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { toast } from "sonner";
 import ToggleSwitch from "./ToggleSwitch";
+import { trpc } from "@/lib/trpc";
 import cardsData from "@/data/organograma-cards-final.json";
 
 interface CardPosition {
@@ -31,6 +33,8 @@ export default function CanvasEditor() {
 
   const imageWidth = 8199;
   const imageHeight = 4576;
+
+  const saveCoordinatesMutation = trpc.ecosystem.saveCoordinates.useMutation();
 
   // Inicializar posições
   useEffect(() => {
@@ -115,7 +119,7 @@ export default function CanvasEditor() {
     setDraggingCard(null);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Criar JSON com as posições
     const updatedCards: Record<string, any> = {};
     Object.entries(cardsData).forEach(([cardId, card]) => {
@@ -127,25 +131,20 @@ export default function CanvasEditor() {
       };
     });
 
-    const jsonData = JSON.stringify(updatedCards, null, 2);
-
-    // Copiar para clipboard
-    navigator.clipboard.writeText(jsonData).then(() => {
-      setSavedMessage("✓ Coordenadas copiadas para clipboard!");
-      setTimeout(() => setSavedMessage(""), 3000);
-    });
-
-    // Também fazer download
-    const element = document.createElement("a");
-    element.setAttribute(
-      "href",
-      "data:text/plain;charset=utf-8," + encodeURIComponent(jsonData)
-    );
-    element.setAttribute("download", "organograma-cards-final.json");
-    element.style.display = "none";
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    try {
+      // Salvar direto no arquivo JSON via API
+      await saveCoordinatesMutation.mutateAsync(updatedCards);
+      toast.success("Coordenadas salvas com sucesso! A página será recarregada...");
+      setSavedMessage("Coordenadas salvas com sucesso!");
+      
+      // Recarregar a página após 2 segundos para aplicar as mudanças
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      toast.error("Erro ao salvar coordenadas");
+      console.error(error);
+    }
   };
 
   const handleReset = () => {
@@ -167,7 +166,7 @@ export default function CanvasEditor() {
         </h2>
         <p className="text-gray-600">
           Arraste os botões sobre a imagem para posicionar exatamente onde você
-          quer. Depois clique em "Salvar" para exportar as coordenadas.
+          quer. Depois clique em "Salvar" para salvar as coordenadas direto no arquivo.
         </p>
       </div>
 
@@ -201,96 +200,56 @@ export default function CanvasEditor() {
                   left: `${coords.displayX}px`,
                   top: `${coords.displayY}px`,
                   transform: "translate(-50%, -50%)",
-                  zIndex: draggingCard === cardId ? 50 : 10,
                 }}
                 onMouseDown={(e) => handleMouseDown(e, cardId)}
               >
-                <div className="relative group">
-                  <ToggleSwitch
-                    isActive={false}
-                    onClick={() => {}}
-                    title={`${(card as CardInfo).nome} - Arraste para mover`}
-                  />
-
-                  {/* Label */}
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    {(card as CardInfo).nome}
-                  </div>
-                </div>
+                <ToggleSwitch
+                  isActive={true}
+                  label={(card as CardInfo).nome}
+                  onClick={() => {}}
+                />
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Informações de Posição */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
-        {Object.entries(cardsData).map(([cardId, card]) => (
-          <div
-            key={cardId}
-            className={`p-3 rounded-lg text-sm ${
-              draggingCard === cardId
-                ? "bg-pink-100 border-2 border-pink-600"
-                : "bg-gray-100 border border-gray-300"
-            }`}
-          >
-            <p className="font-semibold text-gray-900">
-              {(card as CardInfo).nome}
-            </p>
-            <p className="text-xs text-gray-600">
-              X: {positions[cardId]?.x || 0}
-            </p>
-            <p className="text-xs text-gray-600">
-              Y: {positions[cardId]?.y || 0}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Botões de Ação */}
-      <div className="flex gap-3 justify-end">
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold"
-        >
-          <RotateCcw size={18} />
-          Resetar
-        </button>
-
-        <button
-          onClick={handleSave}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold"
-        >
-          <Download size={18} />
-          Exportar JSON
-        </button>
-
-        <button
-          onClick={handleSave}
-          className="flex items-center gap-2 px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors font-semibold"
-        >
-          <Save size={18} />
-          Salvar
-        </button>
+      {/* Coordenadas */}
+      <div className="bg-gray-50 p-4 rounded-lg mb-6 max-h-64 overflow-y-auto">
+        <h3 className="font-bold text-gray-900 mb-3">Coordenadas Atuais:</h3>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          {Object.entries(positions).map(([cardId, pos]) => (
+            <div key={cardId} className="text-gray-700">
+              <strong>{cardId}:</strong> X: {pos.x}, Y: {pos.y}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Mensagem de Sucesso */}
       {savedMessage && (
-        <div className="mt-4 p-3 bg-green-100 border border-green-400 text-green-800 rounded-lg text-sm font-semibold">
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
           {savedMessage}
         </div>
       )}
 
-      {/* Instruções */}
-      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-900">
-        <p className="font-semibold mb-2">Como usar:</p>
-        <ul className="list-disc list-inside space-y-1">
-          <li>Clique e arraste cada botão para o local desejado</li>
-          <li>As coordenadas são atualizadas em tempo real</li>
-          <li>Clique em "Salvar" para copiar o JSON para clipboard</li>
-          <li>Também será feito download do arquivo JSON</li>
-          <li>Cole o JSON no arquivo de configuração do projeto</li>
-        </ul>
+      {/* Botões */}
+      <div className="flex gap-4">
+        <button
+          onClick={handleSave}
+          disabled={saveCoordinatesMutation.isPending}
+          className="flex items-center gap-2 bg-pink-600 hover:bg-pink-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-semibold transition"
+        >
+          <Save size={20} />
+          {saveCoordinatesMutation.isPending ? "Salvando..." : "Salvar"}
+        </button>
+        <button
+          onClick={handleReset}
+          className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition"
+        >
+          <RotateCcw size={20} />
+          Resetar
+        </button>
       </div>
     </div>
   );
