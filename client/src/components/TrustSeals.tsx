@@ -2,67 +2,66 @@ export default function TrustSeals() {
   const seals = [
     {
       id: 1,
-      name: "Education Awards 2025",
-      image: "/images/seal-awards.png",
-      description: "Prêmio Nacional de Excelência"
+      name: "Selo de Excelência",
+      image: "https://via.placeholder.com/120x120/D4AF37/FFFFFF?text=Excelência",
+      description: "Certificação Nacional"
     },
     {
       id: 2,
-      name: "Google 5 Estrelas",
-      image: "/images/seal-google.png",
-      description: "Certificação Google"
+      name: "Education Awards",
+      image: "https://via.placeholder.com/120x120/1a1a1a/FFD700?text=AWARDS",
+      description: "Prêmio 2025"
     },
     {
       id: 3,
-      name: "RA1000",
-      image: "/images/seal-ra1000.png",
-      description: "Certificação RA1000"
+      name: "Google 5 Estrelas",
+      image: "https://via.placeholder.com/120x120/4285F4/FFFFFF?text=Google",
+      description: "Certificação Google"
     },
     {
       id: 4,
-      name: "Education Awards 2025",
-      image: "/images/seal-awards.png",
-      description: "Prêmio Internacional"
+      name: "RA1000",
+      image: "https://via.placeholder.com/120x120/22C55E/FFFFFF?text=RA1000",
+      description: "Certificação Premium"
     },
     {
       id: 5,
-      name: "Google 5 Estrelas",
-      image: "/images/seal-google.png",
-      description: "Excelência em Serviço"
+      name: "Selo de Excelência",
+      image: "https://via.placeholder.com/120x120/D4AF37/FFFFFF?text=Excelência",
+      description: "Certificação Internacional"
     },
     {
       id: 6,
-      name: "RA1000",
-      image: "/images/seal-ra1000.png",
-      description: "Certificação Premium"
+      name: "Education Awards",
+      image: "https://via.placeholder.com/120x120/1a1a1a/FFD700?text=AWARDS",
+      description: "Prêmio Internacional"
     }
   ];
 
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
+        {/* Título */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-heading font-bold text-gray-900 mb-4">
-            Selos de Confiança <span className="text-primary">Nacional e Internacional</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+            Selo de Confiança <span className="text-[#E91E8C]">Nacional e Internacional</span>
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Reconhecimentos e certificações que comprovam nossa excelência e compromisso com a qualidade educacional.
-          </p>
         </div>
 
         {/* Selos Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-center">
+        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
           {seals.map((seal) => (
-            <div key={seal.id} className="flex flex-col items-center justify-center group">
-              <div className="w-32 h-32 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 mb-4">
+            <div 
+              key={seal.id} 
+              className="flex flex-col items-center justify-center group transform transition-transform duration-300 hover:scale-110"
+            >
+              <div className="w-32 h-32 flex items-center justify-center mb-3 rounded-full bg-gray-50 group-hover:bg-gray-100 transition-colors">
                 <img 
                   src={seal.image} 
                   alt={seal.name}
-                  className="max-w-full max-h-full object-contain drop-shadow-lg"
+                  className="max-w-full max-h-full object-contain"
                 />
               </div>
-              <h3 className="text-sm font-bold text-gray-900 text-center">{seal.name}</h3>
-              <p className="text-xs text-gray-500 text-center mt-1">{seal.description}</p>
             </div>
           ))}
         </div>

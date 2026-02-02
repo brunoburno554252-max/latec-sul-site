@@ -1,100 +1,134 @@
-import { ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
 export default function PressNews() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const news = [
     {
       id: 1,
-      title: "LA Educação lidera transformação digital no Brasil",
-      outlet: "Jornal Nacional",
-      date: "2024",
-      description: "Conheça como a LA Educação está revolucionando a educação à distância no país.",
+      title: "LA Educação é reconhecida como melhor plataforma de educação online",
+      source: "Jornal Nacional",
+      date: "15 de janeiro de 2026",
+      image: "https://via.placeholder.com/400x250/FF6B9D/FFFFFF?text=Notícia+1",
       link: "#"
     },
     {
       id: 2,
-      title: "Maior ecossistema educacional do Brasil",
-      outlet: "Revista Educação",
-      date: "2024",
-      description: "Reportagem especial sobre o crescimento e impacto da LA Educação.",
+      title: "Educação a distância cresce 300% com inovação da LA Educação",
+      source: "Folha de S.Paulo",
+      date: "10 de janeiro de 2026",
+      image: "https://via.placeholder.com/400x250/FF6B9D/FFFFFF?text=Notícia+2",
       link: "#"
     },
     {
       id: 3,
-      title: "Inovação em educação profissional",
-      outlet: "Portal de Notícias",
-      date: "2024",
-      description: "LA Educação reconhecida por inovação em cursos técnicos e profissionalizantes.",
+      title: "LA Educação expande presença em 14 estados brasileiros",
+      source: "Valor Econômico",
+      date: "5 de janeiro de 2026",
+      image: "https://via.placeholder.com/400x250/FF6B9D/FFFFFF?text=Notícia+3",
       link: "#"
     },
     {
       id: 4,
-      title: "Parceria com instituições internacionais",
-      outlet: "Mídia Educacional",
-      date: "2024",
-      description: "LA Educação expande presença internacional com novas parcerias.",
+      title: "Parceria com universidades internacionais marca novo passo da LA",
+      source: "O Globo",
+      date: "28 de dezembro de 2025",
+      image: "https://via.placeholder.com/400x250/FF6B9D/FFFFFF?text=Notícia+4",
       link: "#"
     }
   ];
 
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % news.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + news.length) % news.length);
+  };
+
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+    <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
+        {/* Título */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-heading font-bold text-gray-900 mb-4">
-            Notícias na <span className="text-primary">Imprensa Nacional</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+            Notícias na <span className="text-[#E91E8C]">IMPRENSA NACIONAL</span>
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Acompanhe a cobertura da mídia sobre os avanços e conquistas da LA Educação.
-          </p>
         </div>
 
-        {/* News Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {news.map((item) => (
-            <div 
-              key={item.id} 
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group hover:-translate-y-1"
-            >
-              {/* Card Header */}
-              <div className="h-2 bg-gradient-to-r from-primary to-accent"></div>
-              
-              {/* Card Content */}
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                    {item.outlet}
-                  </span>
-                  <span className="text-xs text-gray-500">{item.date}</span>
+        {/* Carousel */}
+        <div className="relative">
+          {/* Notícias Grid - Desktop */}
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {news.map((item) => (
+              <div 
+                key={item.id}
+                className="group cursor-pointer transform transition-transform duration-300 hover:scale-105"
+              >
+                <div className="bg-gray-100 rounded-lg overflow-hidden mb-4 h-48">
+                  <img 
+                    src={item.image} 
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:brightness-110 transition-all"
+                  />
                 </div>
-                
-                <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#E91E8C] transition-colors">
                   {item.title}
                 </h3>
-                
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {item.description}
-                </p>
-                
-                <a 
-                  href={item.link}
-                  className="inline-flex items-center gap-2 text-primary font-bold text-sm hover:gap-3 transition-all"
-                >
-                  Leia mais
-                  <ExternalLink size={16} />
-                </a>
+                <p className="text-sm text-gray-600 mb-1">{item.source}</p>
+                <p className="text-xs text-gray-500">{item.date}</p>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* CTA */}
-        <div className="text-center mt-12">
-          <a 
-            href="/blog"
-            className="inline-block bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-primary/20 transition-all hover:-translate-y-1"
-          >
-            Ver Todas as Notícias
-          </a>
+          {/* Carousel - Mobile */}
+          <div className="md:hidden">
+            <div className="relative bg-gray-100 rounded-lg overflow-hidden mb-6 h-64">
+              <img 
+                src={news[currentSlide].image} 
+                alt={news[currentSlide].title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            
+            <div className="mb-6">
+              <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                {news[currentSlide].title}
+              </h3>
+              <p className="text-sm text-gray-600 mb-1">{news[currentSlide].source}</p>
+              <p className="text-xs text-gray-500">{news[currentSlide].date}</p>
+            </div>
+
+            {/* Controles */}
+            <div className="flex items-center justify-between gap-4">
+              <button
+                onClick={prevSlide}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-[#E91E8C] text-white hover:bg-[#D41A7A] transition-colors"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              
+              <div className="flex gap-2">
+                {news.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      index === currentSlide ? 'bg-[#E91E8C] w-8' : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={nextSlide}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-[#E91E8C] text-white hover:bg-[#D41A7A] transition-colors"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
