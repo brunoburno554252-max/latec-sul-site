@@ -1,0 +1,122 @@
+{
+  "faculdade_la": {
+    "nome": "Faculdade LA",
+    "tipo": "Faculdade",
+    "categoria": "Instituições de Ensino",
+    "descricao": "Instituição de ensino superior reconhecida pelo MEC",
+    "missao": "Formar profissionais qualificados e comprometidos com a excelência acadêmica e responsabilidade social",
+    "visao": "Ser referência em educação superior inovadora e inclusiva",
+    "valores": ["Excelência", "Inovação", "Inclusão", "Sustentabilidade"],
+    "cursos": ["Administração", "Engenharia", "Pedagogia", "Tecnologia da Informação"],
+    "fotos": ["/faculdade-la-1.jpg", "/faculdade-la-2.jpg"],
+    "website": "https://faculdade-la.edu.br"
+  },
+  "la_tec": {
+    "nome": "LA Tec",
+    "tipo": "ETEC",
+    "categoria": "Instituições de Ensino",
+    "descricao": "Escola técnica de educação profissional com cursos de nível médio e técnico",
+    "missao": "Preparar profissionais técnicos para o mercado de trabalho com qualidade e responsabilidade",
+    "visao": "Ser a melhor escola técnica da região",
+    "valores": ["Qualidade", "Profissionalismo", "Inovação", "Compromisso"],
+    "cursos": ["Informática", "Eletrônica", "Mecânica", "Administração"],
+    "fotos": ["/la-tec-1.jpg", "/la-tec-2.jpg"],
+    "website": "https://la-tec.edu.br"
+  },
+  "la_tec_sul": {
+    "nome": "LA Tec Sul",
+    "tipo": "ETEC",
+    "categoria": "Instituições de Ensino",
+    "descricao": "Unidade sul da LA Tec, expandindo o acesso à educação técnica de qualidade",
+    "missao": "Levar educação técnica de excelência para a região sul",
+    "visao": "Expandir oportunidades de formação profissional",
+    "valores": ["Acessibilidade", "Qualidade", "Inovação", "Comunidade"],
+    "cursos": ["Logística", "Gestão", "Turismo", "Gastronomia"],
+    "fotos": ["/la-tec-sul-1.jpg", "/la-tec-sul-2.jpg"],
+    "website": "https://la-tec-sul.edu.br"
+  },
+  "astor_tec": {
+    "nome": "AstorTec",
+    "tipo": "ETEC",
+    "categoria": "Instituições de Ensino",
+    "descricao": "Centro de educação técnica especializado em tecnologia e inovação",
+    "missao": "Formar técnicos especializados em tecnologia de ponta",
+    "visao": "Ser centro de excelência em educação tecnológica",
+    "valores": ["Tecnologia", "Inovação", "Excelência", "Futuro"],
+    "cursos": ["Desenvolvimento Web", "Banco de Dados", "Redes", "Segurança da Informação"],
+    "fotos": ["/astor-tec-1.jpg", "/astor-tec-2.jpg"],
+    "website": "https://astor-tec.edu.br"
+  },
+  "la_bank": {
+    "nome": "LA BANK",
+    "tipo": "Serviço Financeiro",
+    "categoria": "Tecnologia e Serviços",
+    "descricao": "Plataforma de serviços bancários e financeiros inovadora",
+    "missao": "Democratizar o acesso a serviços financeiros de qualidade",
+    "visao": "Ser a fintech mais confiável do Brasil",
+    "valores": ["Segurança", "Transparência", "Inovação", "Confiança"],
+    "servicos": ["Conta Corrente", "Investimentos", "Empréstimos", "Seguros"],
+    "fotos": ["/la-bank-1.jpg", "/la-bank-2.jpg"],
+    "website": "https://labank.com.br"
+  },
+  "mde": {
+    "nome": "MDE",
+    "tipo": "Plataforma Digital",
+    "categoria": "Tecnologia e Serviços",
+    "descricao": "Plataforma de gestão educacional integrada para escolas e instituições",
+    "missao": "Transformar a gestão educacional através de tecnologia",
+    "visao": "Ser a plataforma educacional mais utilizada no Brasil",
+    "valores": ["Tecnologia", "Educação", "Eficiência", "Inovação"],
+    "funcionalidades": ["Gestão Acadêmica", "Comunicação", "Avaliação", "Relatórios"],
+    "fotos": ["/mde-1.jpg", "/mde-2.jpg"],
+    "website": "https://mde.edu.br"
+  },
+  "la_tecnologia": {
+    "nome": "LA Tecnologia",
+    "tipo": "Consultoria Tecnológica",
+    "categoria": "Tecnologia e Serviços",
+    "descricao": "Soluções tecnológicas personalizadas para educação e negócios",
+    "missao": "Impulsionar a transformação digital das organizações",
+    "visao": "Ser parceira estratégica em inovação tecnológica",
+    "valores": ["Inovação", "Qualidade", "Parceria", "Resultado"],
+    "servicos": ["Consultoria", "Desenvolvimento", "Infraestrutura", "Suporte"],
+    "fotos": ["/la-tecnologia-1.jpg", "/la-tecnologia-2.jpg"],
+    "website": "https://la-tecnologia.com.br"
+  },
+  "izul": {
+    "nome": "iZuL Institute Social",
+    "tipo": "ONG Social",
+    "categoria": "Impacto Social",
+    "descricao": "Instituto de impacto social dedicado ao desenvolvimento comunitário",
+    "missao": "Transformar vidas através de educação e oportunidades",
+    "visao": "Um mundo com igualdade de oportunidades",
+    "valores": ["Solidariedade", "Inclusão", "Transformação", "Esperança"],
+    "programas": ["Educação", "Empreendedorismo", "Saúde", "Cultura"],
+    "fotos": ["/izul-1.jpg", "/izul-2.jpg"],
+    "website": "https://izul.org.br"
+  },
+  "capacita_cidade": {
+    "nome": "Capacita Cidade",
+    "tipo": "Programa Social",
+    "categoria": "Impacto Social",
+    "descricao": "Programa de capacitação comunitária para desenvolvimento local",
+    "missao": "Capacitar cidadãos para transformar suas comunidades",
+    "visao": "Cidades mais desenvolvidas e inclusivas",
+    "valores": ["Comunidade", "Capacitação", "Inclusão", "Desenvolvimento"],
+    "cursos": ["Profissionalizante", "Empreendedorismo", "Liderança", "Tecnologia"],
+    "fotos": ["/capacita-cidade-1.jpg", "/capacita-cidade-2.jpg"],
+    "website": "https://capacita-cidade.org.br"
+  },
+  "la_educacao": {
+    "nome": "LA Educação",
+    "tipo": "Holding",
+    "categoria": "Centro",
+    "descricao": "Grupo LA Educação - Ecossistema completo de educação e inovação",
+    "missao": "Transformar vidas através de educação de qualidade e inovação",
+    "visao": "Ser o maior ecossistema educacional do Brasil",
+    "valores": ["Educação", "Inovação", "Inclusão", "Excelência"],
+    "empresas": ["Faculdade LA", "LA Tec", "LA Tec Sul", "AstorTec", "LA BANK", "MDE", "LA Tecnologia", "iZuL", "Capacita Cidade"],
+    "fotos": ["/la-educacao-1.jpg", "/la-educacao-2.jpg"],
+    "website": "https://la-educacao.com.br"
+  }
+}
