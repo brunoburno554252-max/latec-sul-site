@@ -121,3 +121,33 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
+
+  // Endpoint para salvar instituições do ecossistema
+  app.post("/api/ecosystem/save-institution", express.json(), (req, res) => {
+    try {
+      const { writeFileSync } = require("fs");
+      const { join } = require("path");
+      const fs = require("fs");
+      
+      const { institutionId, data } = req.body;
+      const filePath = join(process.cwd(), "client/src/data/instituicoes-info.json");
+      
+      // Ler arquivo atual
+      let allInstitutions = {};
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, "utf-8");
+        allInstitutions = JSON.parse(content);
+      }
+      
+      // Atualizar instituição
+      allInstitutions[institutionId] = data;
+      
+      console.log("[API] Salvando instituição:", institutionId);
+      writeFileSync(filePath, JSON.stringify(allInstitutions, null, 2), "utf-8");
+      
+      res.json({ success: true, message: "Instituição salva com sucesso!" });
+    } catch (error) {
+      console.error("[API] Erro ao salvar instituição:", error);
+      res.status(500).json({ success: false, error: String(error) });
+    }
+  });

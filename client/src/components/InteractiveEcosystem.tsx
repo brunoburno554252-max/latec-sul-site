@@ -134,7 +134,7 @@ export default function InteractiveEcosystem() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Coluna Esquerda - Imagem Vertical */}
-            <div className="w-80 bg-gray-900 flex-shrink-0 overflow-hidden flex items-center justify-center">
+            <div className="w-96 bg-gray-900 flex-shrink-0 overflow-hidden flex items-center justify-center">
               {selectedInstituicaoInfo.fotos && selectedInstituicaoInfo.fotos.length > 0 ? (
                 <img
                   src={selectedInstituicaoInfo.fotos[0]}

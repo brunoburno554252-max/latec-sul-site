@@ -93,27 +93,19 @@ export default function AdminEcosystemInstitutionPage() {
     const files = e.target.files;
     if (!files || !formData) return;
 
-    const newFotos = [...(formData.fotos || [])];
+    const file = files[0];
+    const reader = new FileReader();
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64 = event.target?.result as string;
+      setFormData({
+        ...formData,
+        fotos: [base64],
+      });
+      toast.success("Imagem adicionada!");
+    };
 
-      reader.onload = (event) => {
-        const base64 = event.target?.result as string;
-        newFotos.push(base64);
-        
-        if (i === files.length - 1) {
-          setFormData({
-            ...formData,
-            fotos: newFotos,
-          });
-          toast.success(`${files.length} imagem(ns) adicionada(s)`);
-        }
-      };
-
-      reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
   };
 
   const handleRemoveImage = (index: number) => {
@@ -130,12 +122,21 @@ export default function AdminEcosystemInstitutionPage() {
 
     setIsSaving(true);
     try {
-      // Salvar no localStorage por enquanto (depois integrar com API)
-      const allInstitutions = { ...instituicoesInfo };
-      allInstitutions[institutionId as keyof typeof instituicoesInfo] = formData;
+      // Chamar endpoint para salvar no servidor
+      const response = await fetch("/api/ecosystem/save-institution", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          institutionId,
+          data: formData,
+        }),
+      });
 
-      // Aqui você faria uma chamada para salvar no servidor
-      // await fetch("/api/ecosystem/save-institution", { ... })
+      if (!response.ok) {
+        throw new Error("Erro ao salvar no servidor");
+      }
 
       toast.success("✓ Instituição salva com sucesso!");
       
@@ -382,19 +383,7 @@ export default function AdminEcosystemInstitutionPage() {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files?.[0]) {
-                      const file = e.target.files[0];
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        setFormData({
-                          ...formData,
-                          fotos: [event.target?.result as string],
-                        });
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
+                  onChange={handleImageUpload}
                   className="hidden"
                 />
               </label>
