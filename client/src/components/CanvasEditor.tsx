@@ -1,4 +1,3 @@
-import { Download, Save, RotateCcw, Zap } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import ToggleSwitch from "./ToggleSwitch";
@@ -31,8 +30,9 @@ export default function CanvasEditor() {
   const [positions, setPositions] = useState<CardPosition>({});
   const [draggingCard, setDraggingCard] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [savedMessage, setSavedMessage] = useState("");
+  const [showCode, setShowCode] = useState(false);
 
+  // Dimensões reais da imagem
   const imageWidth = 8199;
   const imageHeight = 4576;
 
@@ -125,7 +125,6 @@ export default function CanvasEditor() {
   };
 
   const handleSave = async () => {
-    // Criar JSON com as posições
     const updatedCards: Record<string, any> = {};
     Object.entries(cardsData).forEach(([cardId, card]) => {
       const cardData = card as CardInfo;
@@ -138,12 +137,9 @@ export default function CanvasEditor() {
     });
 
     try {
-      // Salvar direto no arquivo JSON via API
       await saveCoordinatesMutation.mutateAsync(updatedCards);
       toast.success("✓ Coordenadas salvas com sucesso! A página será recarregada...");
-      setSavedMessage("✓ Coordenadas salvas com sucesso!");
       
-      // Recarregar a página após 2 segundos para aplicar as mudanças
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -190,112 +186,170 @@ export default function CanvasEditor() {
     setPositions(initialPositions);
   };
 
+  // Gerar JSON para copiar
+  const generateJSON = () => {
+    const output: Record<string, any> = {};
+    Object.entries(cardsData).forEach(([cardId, card]) => {
+      const cardData = card as CardInfo;
+      output[cardId] = {
+        nome: cardData.nome,
+        tipo: cardData.tipo,
+        categoria: cardData.categoria,
+        posicao: cardData.posicao,
+        x: positions[cardId]?.x || cardData.x,
+        y: positions[cardId]?.y || cardData.y,
+        width: cardData.width,
+        height: cardData.height,
+        descricao: cardData.descricao,
+        inverted: positions[cardId]?.inverted || false,
+      };
+    });
+    return JSON.stringify(output, null, 2);
+  };
+
+  const jsonCode = generateJSON();
+
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="w-full p-6 bg-white rounded-lg shadow-lg">
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">
           Editor Visual de Toggles
         </h2>
-        <p className="text-gray-600">
-          Arraste os botões sobre a imagem para posicionar exatamente onde você
-          quer. Depois clique em "Salvar" para salvar as coordenadas direto no arquivo.
+        <p className="text-gray-600 mb-4">
+          Arraste os botões sobre a imagem para posicionar exatamente onde você quer.
         </p>
       </div>
 
-      {/* Canvas */}
-      <div
-        ref={canvasRef}
-        className="relative w-full bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-300 mb-6"
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        style={{ cursor: draggingCard ? "grabbing" : "grab" }}
-      >
-        <img
-          src="/ecossistema-organograma.png"
-          alt="Ecossistema LA Educação"
-          className="w-full h-auto block"
-          draggable={false}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Canvas - 2/3 da tela */}
+        <div className="lg:col-span-2">
+          <div
+            ref={canvasRef}
+            className="relative w-full bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-300"
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            style={{ cursor: draggingCard ? "grabbing" : "grab" }}
+          >
+            <img
+              src="/ecossistema-organograma.png"
+              alt="Ecossistema LA Educação"
+              className="w-full h-auto block"
+              draggable={false}
+            />
 
-        {/* Toggles Draggable */}
-        <div className="absolute inset-0">
-          {Object.entries(cardsData).map(([cardId, card]) => {
-            const coords = getPixelCoordinates(cardId);
-            if (!coords) return null;
+            {/* Toggles Draggable */}
+            <div className="absolute inset-0">
+              {Object.entries(cardsData).map(([cardId, card]) => {
+                const coords = getPixelCoordinates(cardId);
+                if (!coords) return null;
 
-            return (
-              <div
-                key={cardId}
-                className="absolute cursor-grab active:cursor-grabbing group"
-                style={{
-                  left: `${coords.displayX}px`,
-                  top: `${coords.displayY}px`,
-                  transform: "translate(-50%, -50%)",
-                }}
-                onMouseDown={(e) => handleMouseDown(e, cardId)}
-              >
-                <ToggleSwitch
-                  isActive={true}
-                  label={(card as CardInfo).nome}
-                  onClick={() => {}}
-                  inverted={positions[cardId]?.inverted || false}
-                />
-                {/* Botão para inverter */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleToggleInverted(cardId);
-                  }}
-                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
-                  title="Inverter cores"
-                >
-                  <Zap size={16} />
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Coordenadas */}
-      <div className="bg-gray-50 p-4 rounded-lg mb-6 max-h-64 overflow-y-auto">
-        <h3 className="font-bold text-gray-900 mb-3">Coordenadas Atuais:</h3>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          {Object.entries(positions).map(([cardId, pos]) => (
-            <div key={cardId} className="text-gray-700">
-              <strong>{cardId}:</strong> X: {pos.x}, Y: {pos.y}
-              {pos.inverted && <span className="ml-2 text-purple-600">🔄 Invertido</span>}
+                return (
+                  <div
+                    key={cardId}
+                    className="absolute cursor-grab active:cursor-grabbing group"
+                    style={{
+                      left: `${coords.displayX}px`,
+                      top: `${coords.displayY}px`,
+                      transform: "translate(-50%, -50%)",
+                    }}
+                    onMouseDown={(e) => handleMouseDown(e, cardId)}
+                  >
+                    <ToggleSwitch
+                      isActive={true}
+                      label={(card as CardInfo).nome}
+                      onClick={() => {}}
+                      inverted={positions[cardId]?.inverted || false}
+                    />
+                    {/* Botão para inverter */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleInverted(cardId);
+                      }}
+                      className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                      title="Inverter cores do botão"
+                    >
+                      ⚡
+                    </button>
+                    {/* Label */}
+                    <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
+                      {(card as CardInfo).nome}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
+
+          {/* Botões de ação */}
+          <div className="flex gap-3 mt-6">
+            <button
+              onClick={handleSave}
+              className="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded-lg transition"
+            >
+              💾 Salvar Coordenadas
+            </button>
+            <button
+              onClick={handleReset}
+              className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition"
+            >
+              🔄 Resetar
+            </button>
+            <button
+              onClick={() => setShowCode(!showCode)}
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition"
+            >
+              {showCode ? "🙈 Ocultar" : "👁️ Ver"} JSON
+            </button>
+          </div>
+        </div>
+
+        {/* Painel de Coordenadas - 1/3 da tela */}
+        <div className="lg:col-span-1">
+          <div className="bg-gray-50 rounded-lg p-4 border-2 border-gray-200 h-full overflow-y-auto max-h-96">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Coordenadas Atuais</h3>
+            
+            {Object.entries(positions).map(([cardId, pos]) => (
+              <div key={cardId} className="mb-4 pb-4 border-b border-gray-200">
+                <p className="font-semibold text-gray-800 text-sm">
+                  {(cardsData[cardId as keyof typeof cardsData] as CardInfo).nome}
+                </p>
+                <p className="text-xs text-gray-600">
+                  X: <span className="font-mono font-bold">{pos.x}</span>
+                </p>
+                <p className="text-xs text-gray-600">
+                  Y: <span className="font-mono font-bold">{pos.y}</span>
+                </p>
+                <p className="text-xs text-gray-600">
+                  Invertido: <span className="font-mono font-bold">{pos.inverted ? "Sim" : "Não"}</span>
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Mensagem de Sucesso */}
-      {savedMessage && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
-          {savedMessage}
+      {/* Exibição de JSON/JavaScript */}
+      {showCode && (
+        <div className="mt-6 bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-lg font-bold">JSON/JavaScript</h3>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(jsonCode);
+                toast.success("✓ JSON copiado para clipboard!");
+              }}
+              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
+            >
+              📋 Copiar
+            </button>
+          </div>
+          <pre className="text-xs font-mono whitespace-pre-wrap break-words max-h-96 overflow-y-auto">
+            {jsonCode}
+          </pre>
         </div>
       )}
-
-      {/* Botões */}
-      <div className="flex gap-4">
-        <button
-          onClick={handleSave}
-          disabled={saveCoordinatesMutation.isPending}
-          className="flex items-center gap-2 bg-pink-600 hover:bg-pink-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg font-semibold transition"
-        >
-          <Save size={20} />
-          {saveCoordinatesMutation.isPending ? "Salvando..." : "Salvar"}
-        </button>
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition"
-        >
-          <RotateCcw size={20} />
-          Resetar
-        </button>
-      </div>
     </div>
   );
 }
