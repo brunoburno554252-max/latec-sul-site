@@ -123,134 +123,154 @@ export default function InteractiveEcosystem() {
         </div>
       </div>
 
-      {/* Modal Horizontal com Fundo Transparente e Desfocado */}
+      {/* Modal FULLSCREEN com Fundo Transparente */}
       {isModalOpen && selectedCardData && selectedInstituicaoInfo && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50 p-4 backdrop-blur-md"
+          className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
           onClick={closeModal}
         >
           <div 
-            className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[85vh] overflow-y-auto animate-in fade-in zoom-in duration-300"
+            className="bg-white rounded-2xl shadow-2xl w-full h-[90vh] max-w-7xl overflow-hidden animate-in fade-in zoom-in duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Layout Horizontal */}
-            <div className="flex flex-col lg:flex-row relative">
-              {/* Lado Esquerdo - Informações Principais */}
-              <div className="flex-1 bg-gradient-to-br from-pink-50 to-white p-8 border-b lg:border-b-0 lg:border-r border-pink-100">
-                <div className="space-y-4">
+            {/* Layout Horizontal - 2 Colunas */}
+            <div className="flex h-full relative">
+              {/* Coluna Esquerda - Imagens */}
+              <div className="flex-1 bg-gray-900 overflow-y-auto">
+                {selectedInstituicaoInfo.fotos && selectedInstituicaoInfo.fotos.length > 0 ? (
+                  <div className="w-full h-full flex flex-col gap-4 p-6">
+                    {selectedInstituicaoInfo.fotos.map((foto, idx) => (
+                      <img
+                        key={idx}
+                        src={foto}
+                        alt={`${selectedInstituicaoInfo.nome} - ${idx + 1}`}
+                        className="w-full h-auto rounded-lg object-cover"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="text-center text-gray-400">
+                      <div className="text-6xl mb-4">🏢</div>
+                      <p>Sem imagens disponíveis</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Coluna Direita - Informações */}
+              <div className="flex-1 bg-white overflow-y-auto p-8">
+                <div className="space-y-6">
                   {/* Header */}
                   <div>
-                    <div className="inline-block bg-pink-600 text-white px-3 py-1 rounded-full text-xs font-bold mb-3">
+                    <div className="inline-block bg-pink-600 text-white px-4 py-2 rounded-full text-sm font-bold mb-4">
                       {selectedInstituicaoInfo.categoria}
                     </div>
-                    <h2 className="text-4xl font-bold text-gray-900 mb-1">
+                    <h2 className="text-5xl font-bold text-gray-900 mb-2">
                       {selectedInstituicaoInfo.nome}
                     </h2>
-                    <p className="text-lg text-pink-600 font-semibold">
+                    <p className="text-2xl text-pink-600 font-semibold">
                       {selectedInstituicaoInfo.tipo}
                     </p>
                   </div>
 
                   {/* Descrição */}
-                  <p className="text-gray-700 leading-relaxed text-base">
+                  <p className="text-gray-700 leading-relaxed text-lg">
                     {selectedInstituicaoInfo.descricao}
                   </p>
 
-                  {/* Missão e Visão em Cards */}
-                  <div className="space-y-3 pt-2">
-                    <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                      <p className="text-xs text-blue-600 font-bold uppercase tracking-wide">Missão</p>
-                      <p className="text-sm text-blue-900 mt-1">
+                  {/* Missão e Visão */}
+                  <div className="space-y-4 pt-4 border-t border-gray-200">
+                    <div className="bg-blue-50 p-5 rounded-lg border-l-4 border-blue-500">
+                      <p className="text-sm text-blue-600 font-bold uppercase tracking-wide">Missão</p>
+                      <p className="text-base text-blue-900 mt-2">
                         {selectedInstituicaoInfo.missao}
                       </p>
                     </div>
-                    <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
-                      <p className="text-xs text-purple-600 font-bold uppercase tracking-wide">Visão</p>
-                      <p className="text-sm text-purple-900 mt-1">
+                    <div className="bg-purple-50 p-5 rounded-lg border-l-4 border-purple-500">
+                      <p className="text-sm text-purple-600 font-bold uppercase tracking-wide">Visão</p>
+                      <p className="text-base text-purple-900 mt-2">
                         {selectedInstituicaoInfo.visao}
                       </p>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Lado Direito - Detalhes e Valores */}
-              <div className="flex-1 p-8 space-y-6">
-                {/* Valores */}
-                {selectedInstituicaoInfo.valores && (
-                  <div>
-                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
-                      Valores Fundamentais
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedInstituicaoInfo.valores.map((valor, idx) => (
-                        <span
-                          key={idx}
-                          className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold"
-                        >
-                          {valor}
-                        </span>
-                      ))}
+                  {/* Valores */}
+                  {selectedInstituicaoInfo.valores && selectedInstituicaoInfo.valores.length > 0 && (
+                    <div className="pt-4 border-t border-gray-200">
+                      <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
+                        Valores Fundamentais
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedInstituicaoInfo.valores.map((valor, idx) => (
+                          <span
+                            key={idx}
+                            className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold"
+                          >
+                            {valor}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-
-                {/* Cursos/Serviços/Programas */}
-                {(selectedInstituicaoInfo.cursos ||
-                  selectedInstituicaoInfo.servicos ||
-                  selectedInstituicaoInfo.programas ||
-                  selectedInstituicaoInfo.empresas) && (
-                  <div>
-                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
-                      {selectedInstituicaoInfo.cursos
-                        ? "Cursos Oferecidos"
-                        : selectedInstituicaoInfo.servicos
-                          ? "Serviços"
-                          : selectedInstituicaoInfo.programas
-                            ? "Programas"
-                            : "Empresas do Grupo"}
-                    </h3>
-                    <div className="grid grid-cols-2 gap-2">
-                      {(
-                        selectedInstituicaoInfo.cursos ||
-                        selectedInstituicaoInfo.servicos ||
-                        selectedInstituicaoInfo.programas ||
-                        selectedInstituicaoInfo.empresas ||
-                        []
-                      ).map((item, idx) => (
-                        <div key={idx} className="flex items-start text-sm text-gray-700">
-                          <span className="inline-block w-2 h-2 bg-pink-600 rounded-full mr-2 mt-1 flex-shrink-0"></span>
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Botões CTA */}
-                <div className="flex gap-3 pt-4 border-t border-gray-200">
-                  <button className="flex-1 bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-pink-700 transition-colors text-sm">
-                    Conhecer Mais
-                  </button>
-                  {selectedInstituicaoInfo.website && (
-                    <a
-                      href={selectedInstituicaoInfo.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 border-2 border-pink-600 text-pink-600 py-2 px-4 rounded-lg font-semibold hover:bg-pink-50 transition-colors text-sm text-center"
-                    >
-                      Visitar Site
-                    </a>
                   )}
+
+                  {/* Cursos/Serviços/Programas */}
+                  {(selectedInstituicaoInfo.cursos?.length ||
+                    selectedInstituicaoInfo.servicos?.length ||
+                    selectedInstituicaoInfo.programas?.length ||
+                    selectedInstituicaoInfo.empresas?.length) && (
+                    <div className="pt-4 border-t border-gray-200">
+                      <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
+                        {selectedInstituicaoInfo.cursos?.length
+                          ? "Cursos Oferecidos"
+                          : selectedInstituicaoInfo.servicos?.length
+                            ? "Serviços"
+                            : selectedInstituicaoInfo.programas?.length
+                              ? "Programas"
+                              : "Empresas do Grupo"}
+                      </h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        {(
+                          selectedInstituicaoInfo.cursos ||
+                          selectedInstituicaoInfo.servicos ||
+                          selectedInstituicaoInfo.programas ||
+                          selectedInstituicaoInfo.empresas ||
+                          []
+                        ).map((item, idx) => (
+                          <div key={idx} className="flex items-start text-base text-gray-700">
+                            <span className="inline-block w-3 h-3 bg-pink-600 rounded-full mr-3 mt-1 flex-shrink-0"></span>
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Botões CTA */}
+                  <div className="flex gap-4 pt-6 border-t border-gray-200">
+                    <button className="flex-1 bg-pink-600 text-white py-3 px-6 rounded-lg font-bold hover:bg-pink-700 transition-colors text-base">
+                      Conhecer Mais
+                    </button>
+                    {selectedInstituicaoInfo.website && (
+                      <a
+                        href={selectedInstituicaoInfo.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 border-2 border-pink-600 text-pink-600 py-3 px-6 rounded-lg font-bold hover:bg-pink-50 transition-colors text-base text-center"
+                      >
+                        Visitar Site
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
 
               {/* Botão Fechar */}
               <button
                 onClick={closeModal}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 hover:bg-gray-100 p-2 rounded-full transition-colors z-10"
+                className="absolute top-4 right-4 text-white hover:text-gray-200 bg-black/50 hover:bg-black/70 p-3 rounded-full transition-colors z-10"
               >
-                <X size={24} />
+                <X size={28} />
               </button>
             </div>
           </div>
