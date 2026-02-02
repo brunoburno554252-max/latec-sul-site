@@ -117,6 +117,8 @@ export default function FullscreenEcosystemEditor() {
       };
     });
 
+    console.log("[DEBUG] Enviando dados:", updatedCards);
+
     try {
       await saveCoordinatesMutation.mutateAsync(updatedCards);
       toast.success("✓ Coordenadas salvas com sucesso! A página será recarregada...");
