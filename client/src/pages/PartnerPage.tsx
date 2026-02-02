@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle, TrendingUp, Users, DollarSign } from "lucide-react";
+import ExclusiveSupport from "@/components/ExclusiveSupport";
 
 export default function PartnerPage() {
   return (
@@ -76,6 +77,9 @@ export default function PartnerPage() {
             </div>
           </div>
         </section>
+
+        {/* Exclusive Support Section */}
+        <ExclusiveSupport />
 
         {/* Form Section */}
         <section className="py-20 bg-gray-50">
