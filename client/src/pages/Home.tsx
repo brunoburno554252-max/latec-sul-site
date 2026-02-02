@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import CourseList from "@/components/CourseList";
 import About from "@/components/About";
-import ExclusiveSupport from "@/components/ExclusiveSupport";
+import StudentExperience from "@/components/StudentExperience";
 import Certifications from "@/components/Certifications";
 import Ecosystem from "@/components/Ecosystem";
 import FeaturedBlog from "@/components/FeaturedBlog";
@@ -19,7 +19,7 @@ export default function Home() {
         <Hero />
         <Certifications />
         <About />
-        <ExclusiveSupport />
+        <StudentExperience />
         <Ecosystem />
         <CourseList />
         <TestimonialsSection />

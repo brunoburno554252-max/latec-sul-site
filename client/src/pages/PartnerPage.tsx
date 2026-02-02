@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import DedicatedSupport from "@/components/DedicatedSupport";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -77,6 +78,9 @@ export default function PartnerPage() {
             </div>
           </div>
         </section>
+
+        {/* Dedicated Support Section */}
+        <DedicatedSupport />
 
         {/* Form Section */}
         <section className="py-20 bg-gray-50">
