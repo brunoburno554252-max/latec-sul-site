@@ -20,13 +20,20 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const result = await loginMutation.mutateAsync({ username, password });
-      localStorage.setItem("admin_token", result.token);
-      localStorage.setItem("admin_user", JSON.stringify(result.admin));
+      // Login simplificado - sem validação de banco de dados
+      // TODO: Implementar autenticação segura após apresentação
+      const token = btoa(`${username}:${password}:${Date.now()}`);
+      localStorage.setItem("admin_token", token);
+      localStorage.setItem("admin_user", JSON.stringify({
+        id: 1,
+        username: username || "admin",
+        name: username || "Administrador",
+        email: "admin@laeducacao.com.br",
+      }));
       toast.success("Login realizado com sucesso!");
       setLocation("/admin-la-educacao/dashboard");
     } catch (error) {
-      toast.error("Credenciais inválidas");
+      toast.error("Erro ao fazer login");
     } finally {
       setIsLoading(false);
     }
