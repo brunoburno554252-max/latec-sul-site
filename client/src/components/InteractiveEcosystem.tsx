@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import ToggleSwitch from "./ToggleSwitch";
-import cardsData from "@/data/organograma-cards-final.json";
+import { trpc } from "@/lib/trpc";
 import instituicoesInfo from "@/data/instituicoes-info.json";
 
 interface CardInfo {
@@ -14,6 +14,7 @@ interface CardInfo {
   width: number;
   height: number;
   descricao: string;
+  inverted?: boolean;
 }
 
 interface InstituicaoInfo {
@@ -36,9 +37,22 @@ export default function InteractiveEcosystem() {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeToggles, setActiveToggles] = useState<Record<string, boolean>>({});
+  const [cardsData, setCardsData] = useState<Record<string, CardInfo>>({});
 
   const imageWidth = 8199;
   const imageHeight = 4576;
+
+  // Buscar coordenadas do servidor
+  const { data: coordinates, isLoading } = trpc.ecosystem.getCoordinates.useQuery(undefined, {
+    refetchInterval: 5000, // Atualizar a cada 5 segundos
+  });
+
+  // Atualizar cardsData quando as coordenadas chegarem do servidor
+  useEffect(() => {
+    if (coordinates) {
+      setCardsData(coordinates);
+    }
+  }, [coordinates]);
 
   // Calcular percentuais para responsividade
   const getPercentages = (card: CardInfo) => {
@@ -71,12 +85,25 @@ export default function InteractiveEcosystem() {
   };
 
   const selectedCardData = selectedCard
-    ? (cardsData[selectedCard as keyof typeof cardsData] as CardInfo)
+    ? (cardsData[selectedCard] as CardInfo)
     : null;
 
   const selectedInstituicaoInfo = selectedCard
     ? (instituicoesInfo[selectedCard as keyof typeof instituicoesInfo] as InstituicaoInfo)
     : null;
+
+  if (isLoading) {
+    return (
+      <div className="relative w-full bg-white">
+        <img
+          src="/ecossistema-organograma.png"
+          alt="Ecossistema LA Educação"
+          className="w-full h-auto"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full">
@@ -113,6 +140,7 @@ export default function InteractiveEcosystem() {
                   isActive={isActive}
                   onClick={() => handleToggleClick(cardId)}
                   title={`Clique para abrir ${(card as CardInfo).nome}`}
+                  inverted={(card as CardInfo).inverted || false}
                 />
               </div>
             );
