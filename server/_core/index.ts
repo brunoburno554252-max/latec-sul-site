@@ -72,6 +72,27 @@ async function startServer() {
   app.use(adminSubdomainMiddleware);
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  
+  // Endpoint simples para salvar coordenadas do ecossistema
+  app.post("/api/ecosystem/save-coordinates", express.json(), (req, res) => {
+    try {
+      const { fs, path } = require("fs");
+      const { writeFileSync } = require("fs");
+      const { join } = require("path");
+      
+      const data = req.body;
+      const filePath = join(process.cwd(), "client/src/data/organograma-cards-final.json");
+      
+      console.log("[API] Salvando coordenadas em:", filePath);
+      writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+      
+      res.json({ success: true, message: "Coordenadas salvas com sucesso!" });
+    } catch (error) {
+      console.error("[API] Erro ao salvar:", error);
+      res.status(500).json({ success: false, error: String(error) });
+    }
+  });
+  
   // tRPC API
   app.use(
     "/api/trpc",

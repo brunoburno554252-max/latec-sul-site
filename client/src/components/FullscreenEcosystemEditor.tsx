@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import ToggleSwitch from "./ToggleSwitch";
-import { trpc } from "@/lib/trpc";
 import cardsData from "@/data/organograma-cards-final.json";
 import { X } from "lucide-react";
 
@@ -34,13 +33,11 @@ export default function FullscreenEcosystemEditor() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [showCode, setShowCode] = useState(false);
   const [scale, setScale] = useState(1);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Dimensões reais da imagem
   const imageWidth = 8199;
   const imageHeight = 4576;
-
-  const saveCoordinatesMutation = trpc.ecosystem.saveCoordinates.useMutation();
-  const toggleInvertedMutation = trpc.ecosystem.toggleInverted.useMutation();
 
   // Inicializar posições
   useEffect(() => {
@@ -77,7 +74,6 @@ export default function FullscreenEcosystemEditor() {
     if (!draggingCard || !imgRef.current || !containerRef.current) return;
 
     const containerRect = containerRef.current.getBoundingClientRect();
-    const imgRect = imgRef.current.getBoundingClientRect();
 
     // Posição relativa ao container
     const displayX = e.clientX - containerRect.left - dragOffset.x;
@@ -106,6 +102,7 @@ export default function FullscreenEcosystemEditor() {
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     const updatedCards: Record<string, any> = {};
     Object.entries(cardsData).forEach(([cardId, card]) => {
       const cardData = card as CardInfo;
@@ -117,10 +114,19 @@ export default function FullscreenEcosystemEditor() {
       };
     });
 
-    console.log("[DEBUG] Enviando dados:", updatedCards);
-
     try {
-      await saveCoordinatesMutation.mutateAsync(updatedCards);
+      const response = await fetch("/api/ecosystem/save-coordinates", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedCards),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao salvar coordenadas");
+      }
+
       toast.success("✓ Coordenadas salvas com sucesso! A página será recarregada...");
       
       setTimeout(() => {
@@ -129,6 +135,8 @@ export default function FullscreenEcosystemEditor() {
     } catch (error) {
       toast.error("Erro ao salvar coordenadas");
       console.error(error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -136,25 +144,15 @@ export default function FullscreenEcosystemEditor() {
     const currentInverted = positions[cardId]?.inverted || false;
     const newInverted = !currentInverted;
 
-    try {
-      await toggleInvertedMutation.mutateAsync({
-        cardId,
+    setPositions((prev) => ({
+      ...prev,
+      [cardId]: {
+        ...prev[cardId],
         inverted: newInverted,
-      });
+      },
+    }));
 
-      setPositions((prev) => ({
-        ...prev,
-        [cardId]: {
-          ...prev[cardId],
-          inverted: newInverted,
-        },
-      }));
-
-      toast.success(`Card ${cardId} ${newInverted ? "invertido" : "restaurado"}!`);
-    } catch (error) {
-      toast.error("Erro ao inverter card");
-      console.error(error);
-    }
+    toast.success(`Card ${cardId} ${newInverted ? "invertido" : "restaurado"}!`);
   };
 
   const handleReset = () => {
@@ -291,10 +289,10 @@ export default function FullscreenEcosystemEditor() {
       <div className="bg-gray-900 text-white p-4 border-t border-gray-700 flex gap-3 flex-wrap z-10">
         <button
           onClick={handleSave}
-          disabled={saveCoordinatesMutation.isPending}
+          disabled={isSaving}
           className="bg-pink-600 hover:bg-pink-700 disabled:bg-pink-400 text-white font-bold py-2 px-4 rounded-lg transition"
         >
-          💾 Salvar Coordenadas
+          {isSaving ? "⏳ Salvando..." : "💾 Salvar Coordenadas"}
         </button>
         <button
           onClick={handleReset}
