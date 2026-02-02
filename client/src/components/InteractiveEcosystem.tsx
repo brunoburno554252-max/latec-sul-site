@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import ToggleSwitch from "./ToggleSwitch";
-import cardsData from "@/data/organograma-cards-v3.json";
+import cardsData from "@/data/organograma-cards-final.json";
 import instituicoesInfo from "@/data/instituicoes-info.json";
 
 interface CardInfo {
@@ -109,18 +109,11 @@ export default function InteractiveEcosystem() {
                   justifyContent: "center",
                 }}
               >
-                <div className="relative group">
-                  <ToggleSwitch
-                    isActive={isActive}
-                    onClick={() => handleToggleClick(cardId)}
-                    title={`Clique para abrir ${(card as CardInfo).nome}`}
-                  />
-                  
-                  {/* Label ao passar o mouse */}
-                  <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-3 py-1 rounded text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 shadow-lg">
-                    {(card as CardInfo).nome}
-                  </div>
-                </div>
+                <ToggleSwitch
+                  isActive={isActive}
+                  onClick={() => handleToggleClick(cardId)}
+                  title={`Clique para abrir ${(card as CardInfo).nome}`}
+                />
               </div>
             );
           })}
