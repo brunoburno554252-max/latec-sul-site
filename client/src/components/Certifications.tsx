@@ -10,7 +10,8 @@ export default function Certifications() {
     <section className="pt-12 pb-6 bg-white overflow-hidden border-b border-gray-100">
       <div className="container mx-auto px-4 mb-10 text-center">
         <span className="text-[#E91E8C] font-bold tracking-widest text-sm uppercase block mb-3">Qualidade Comprovada</span>
-        <h2 className="text-3xl md:text-4xl font-bold text-[#9d197d]">
+        {/* Alterado de text-[#9d197d] (roxo) para text-gray-900 (preto suave/neutro) */}
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
           Selo de Confiança Nacional e Internacional
         </h2>
       </div>
