@@ -12,7 +12,7 @@ export default function PressNews() {
     <section className="py-16 bg-white border-b border-gray-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#9d197d] uppercase tracking-widest">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#E91E8C] uppercase tracking-widest">
             Notícias na IMPRENSA NACIONAL
           </h2>
         </div>
