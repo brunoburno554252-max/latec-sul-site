@@ -25,8 +25,8 @@ export default function Header() {
 
   return (
     <header className="w-full bg-white sticky top-0 z-50 shadow-md border-b border-gray-100">
-      {/* Top Bar - Aumentada de py-1 para py-2.5 e text-xs para text-sm */}
-      <div className="bg-primary text-white py-2.5 text-sm font-semibold hidden md:block">
+      {/* Top Bar - Reduzido padding de py-2.5 para py-1.5 */}
+      <div className="bg-primary text-white py-1.5 text-sm font-semibold hidden md:block">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex gap-6 items-center">
             <span className="flex items-center gap-2">
@@ -44,10 +44,10 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Main Navigation - Aumentada de py-2 para py-4 */}
-      <div className="container mx-auto px-4 py-4">
+      {/* Main Navigation - Reduzido padding de py-4 para py-1.5 para aproximar as seções */}
+      <div className="container mx-auto px-4 py-1.5">
         <div className="flex justify-between items-center">
-          {/* Logo - Aumentado de h-14 para h-20 */}
+          {/* Logo - Mantido h-20 mas com menos espaço ao redor */}
           <Link href="/">
             <div className="cursor-pointer hover:opacity-90 transition-opacity">
               <img 
@@ -58,7 +58,7 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop Navigation - Aumentada gap-5 para gap-7 e text-sm para text-base */}
+          {/* Desktop Navigation */}
           <nav className="hidden xl:flex items-center gap-7">
             {navItems.map((item) => (
               item.hasDropdown ? (
@@ -95,7 +95,7 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* CTA Button - Aumentado de h-9 para h-12 e text-sm para text-base */}
+          {/* CTA Button */}
           <div className="hidden xl:block">
             <Button className="bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white text-base font-extrabold shadow-xl shadow-primary/20 rounded-full px-8 py-3 h-12 transition-all hover:scale-105 uppercase tracking-wider">
               SEJA UM PARCEIRO
