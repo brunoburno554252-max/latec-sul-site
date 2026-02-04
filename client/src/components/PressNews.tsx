@@ -9,9 +9,9 @@ const pressLogos = [
 
 export default function PressNews() {
   return (
-    <section className="py-16 bg-white border-b border-gray-50">
+    <section className="py-8 bg-white border-b border-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10">
           <h2 className="text-2xl md:text-3xl font-bold text-[#E91E8C] uppercase tracking-widest">
             Notícias na IMPRENSA NACIONAL
           </h2>

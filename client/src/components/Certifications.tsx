@@ -7,10 +7,9 @@ const seals = [
 
 export default function Certifications() {
   return (
-    <section className="pt-12 pb-6 bg-white overflow-hidden border-b border-gray-100">
-      <div className="container mx-auto px-4 mb-10 text-center">
-        <span className="text-[#E91E8C] font-bold tracking-widest text-sm uppercase block mb-3">Qualidade Comprovada</span>
-        {/* Alterado de text-[#9d197d] (roxo) para text-gray-900 (preto suave/neutro) */}
+    <section className="pt-12 pb-2 bg-white overflow-hidden">
+      <div className="container mx-auto px-4 mb-6 text-center">
+        {/* Removido: Qualidade Comprovada */}
         <h2 className="text-3xl md:text-4xl font-bold text-[#E91E8C]">
           Selo de Confiança Nacional e Internacional
         </h2>
@@ -20,7 +19,7 @@ export default function Certifications() {
         className="relative w-full overflow-hidden"
         style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}
       >
-        <div className="flex items-center gap-16 animate-scroll-infinite py-6">
+        <div className="flex items-center gap-16 animate-scroll-infinite py-4">
           {[...seals, ...seals, ...seals, ...seals].map((seal, index) => (
             <div 
               key={`${seal.id}-${index}`} 
