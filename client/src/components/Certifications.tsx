@@ -1,64 +1,54 @@
-import { useEffect, useRef } from "react";
-
-const badges = [
-  { id: 1, name: "Reconhecido pelo MEC", image: "/images/badges/selo-mec.png" },
-  { id: 2, name: "Selo RA1000 Reclame Aqui", image: "/images/badges/selo-ra1000.png" },
-  { id: 3, name: "Google 5 Estrelas", image: "/images/badges/selo-google.png" },
-  { id: 4, name: "ISTOÉ Somos Notícia", image: "/images/badges/selo-istoe.png" },
-  { id: 9, name: "Caras TV", image: "/images/badges/selo-caras.png" },
-  // Placeholder images for badges not found in high quality, using text fallback or generic icons if needed
-  // For now, we repeat the high quality ones to create a full carousel effect
-  { id: 5, name: "Reconhecido pelo MEC", image: "/images/badges/selo-mec.png" },
-  { id: 6, name: "Selo RA1000 Reclame Aqui", image: "/images/badges/selo-ra1000.png" },
-  { id: 7, name: "Google 5 Estrelas", image: "/images/badges/selo-google.png" },
-  { id: 8, name: "ISTOÉ Somos Notícia", image: "/images/badges/selo-istoe.png" },
-  { id: 10, name: "Caras TV", image: "/images/badges/selo-caras.png" },
+const seals = [
+  { id: 1, name: "Reconhecido pelo MEC", image: "/assets/seals/mec-selo.png" },
+  { id: 2, name: "Education Awards 2025", image: "/assets/seals/education-awards-2025.png" },
+  { id: 3, name: "Google 5 Estrelas", image: "/assets/seals/google-5-estrelas.png" },
+  { id: 4, name: "Certificado RA1000", image: "/assets/seals/ra1000-selo.png" },
 ];
 
 export default function Certifications() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer) return;
-
-    const scroll = () => {
-      if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
-        scrollContainer.scrollLeft = 0;
-      } else {
-        scrollContainer.scrollLeft += 1;
-      }
-    };
-
-    const intervalId = setInterval(scroll, 20);
-    return () => clearInterval(intervalId);
-  }, []);
-
   return (
-    <section className="py-12 bg-white border-b border-gray-100 overflow-hidden">
-      <div className="container mx-auto px-4 mb-8 text-center">
-        <span className="text-accent font-bold tracking-widest text-sm uppercase block">Qualidade Comprovada</span>
+    <section className="pt-12 pb-6 bg-white overflow-hidden border-b border-gray-100">
+      <div className="container mx-auto px-4 mb-10 text-center">
+        <span className="text-[#E91E8C] font-bold tracking-widest text-sm uppercase block mb-3">Qualidade Comprovada</span>
+        <h2 className="text-3xl md:text-4xl font-bold text-[#9d197d]">
+          Selo de Confiança Nacional e Internacional
+        </h2>
       </div>
 
       <div 
-        ref={scrollRef}
-        className="flex items-center gap-16 overflow-x-hidden whitespace-nowrap py-4"
+        className="relative w-full overflow-hidden"
         style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}
       >
-        {/* Double the badges to create seamless infinite scroll */}
-        {[...badges, ...badges].map((badge, index) => (
-          <div 
-            key={`${badge.id}-${index}`} 
-            className="flex-shrink-0 transition-all duration-500 cursor-pointer transform hover:scale-110"
-          >
-            <img 
-              src={badge.image} 
-              alt={badge.name} 
-              className="h-24 w-auto object-contain filter-none"
-            />
-          </div>
-        ))}
+        <div className="flex items-center gap-16 animate-scroll-infinite py-6">
+          {[...seals, ...seals, ...seals, ...seals].map((seal, index) => (
+            <div 
+              key={`${seal.id}-${index}`} 
+              className="flex-shrink-0 hover:scale-110 transition-transform duration-300 bg-white rounded-lg p-2"
+            >
+              <img 
+                src={seal.image} 
+                alt={seal.name} 
+                className={seal.id === 2 ? "h-32 md:h-40 w-auto object-contain" : "h-20 md:h-24 w-auto object-contain"}
+              />
+            </div>
+          ))}
+        </div>
       </div>
+      
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes scroll-infinite {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-scroll-infinite {
+          display: flex;
+          width: max-content;
+          animation: scroll-infinite 40s linear infinite;
+        }
+        .animate-scroll-infinite:hover {
+          animation-play-state: paused;
+        }
+      `}} />
     </section>
   );
 }
