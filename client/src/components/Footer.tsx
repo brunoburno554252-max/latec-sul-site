@@ -31,7 +31,8 @@ export default function Footer() {
 
   const phone = settings.phone || "(44) 9944-9323";
   const email = settings.email || "contato@laeducacao.com.br";
-  const address = settings.address || "R. Moóca, 221 - Vila Progresso\nMaringá - PR, 87020-110";
+  // Alterado para Sede Administrativa - Maringá/PR conforme solicitado
+  const address = "Sede Administrativa - Maringá/PR";
   const facebook = settings.facebook || "https://www.facebook.com/laeducacao.oficial/";
   const instagram = settings.instagram || "https://www.instagram.com/laeducacao.oficial/";
   const youtube = settings.youtube || "https://www.youtube.com/channel/UCwNlniwYjILixId5t7bii7g";
@@ -89,6 +90,8 @@ export default function Footer() {
                 <li><a href="/parceiro" className="text-gray-400 hover:text-accent transition-colors flex items-center gap-2 text-sm"><span className="w-1 h-1 rounded-full bg-gray-600"></span>Seja um Parceiro</a></li>
                 <li><a href="/blog" className="text-gray-400 hover:text-accent transition-colors flex items-center gap-2 text-sm"><span className="w-1 h-1 rounded-full bg-gray-600"></span>Blog e Notícias</a></li>
                 <li><a href="/faq" className="text-gray-400 hover:text-accent transition-colors flex items-center gap-2 text-sm"><span className="w-1 h-1 rounded-full bg-gray-600"></span>Perguntas Frequentes</a></li>
+                {/* Adicionado Trabalhe Conosco conforme solicitado */}
+                <li><a href="#" className="text-gray-400 hover:text-accent transition-colors flex items-center gap-2 text-sm"><span className="w-1 h-1 rounded-full bg-gray-600"></span>Trabalhe Conosco</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-accent transition-colors flex items-center gap-2 text-sm"><span className="w-1 h-1 rounded-full bg-gray-600"></span>Política de Privacidade</a></li>
               </ul>
             </div>
