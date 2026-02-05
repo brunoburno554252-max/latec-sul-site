@@ -20,18 +20,21 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      // Login simplificado - sem validação de banco de dados
-      // TODO: Implementar autenticação segura após apresentação
-      const token = btoa(`${username}:${password}:${Date.now()}`);
-      localStorage.setItem("admin_token", token);
-      localStorage.setItem("admin_user", JSON.stringify({
-        id: 1,
-        username: username || "admin",
-        name: username || "Administrador",
-        email: "admin@laeducacao.com.br",
-      }));
-      toast.success("Login realizado com sucesso!");
-      setLocation("/admin-la-educacao/dashboard");
+      // Login simplificado para ambiente de desenvolvimento/sandbox
+      if (username === "admin" && password === "admin") {
+        const token = btoa(`${username}:${password}:${Date.now()}`);
+        localStorage.setItem("admin_token", token);
+        localStorage.setItem("admin_user", JSON.stringify({
+          id: 1,
+          username: "admin",
+          name: "Administrador Manus",
+          email: "admin@laeducacao.com.br",
+        }));
+        toast.success("Login realizado com sucesso!");
+        setLocation("/admin-la-educacao/dashboard");
+      } else {
+        toast.error("Usuário ou senha incorretos (Use admin/admin)");
+      }
     } catch (error) {
       toast.error("Erro ao fazer login");
     } finally {
