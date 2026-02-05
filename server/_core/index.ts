@@ -65,17 +65,16 @@ async function startServer() {
   registerOAuthRoutes(app);
   
   // Endpoint simples para salvar coordenadas do ecossistema
-  app.post("/api/ecosystem/save-coordinates", express.json(), (req, res) => {
+  app.post("/api/ecosystem/save-coordinates", express.json(), async (req, res) => {
     try {
-      const { fs, path } = require("fs");
-      const { writeFileSync } = require("fs");
-      const { join } = require("path");
+      const fs = await import("fs");
+      const path = await import("path");
       
       const data = req.body;
-      const filePath = join(process.cwd(), "client/src/data/organograma-cards-final.json");
+      const filePath = path.join(process.cwd(), "client/src/data/organograma-cards-final.json");
       
       console.log("[API] Salvando coordenadas em:", filePath);
-      writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
       
       res.json({ success: true, message: "Coordenadas salvas com sucesso!" });
     } catch (error) {
@@ -85,14 +84,13 @@ async function startServer() {
   });
   
   // Endpoint para salvar instituições do ecossistema
-  app.post("/api/ecosystem/save-institution", express.json(), (req, res) => {
+  app.post("/api/ecosystem/save-institution", express.json(), async (req, res) => {
     try {
-      const { writeFileSync } = require("fs");
-      const { join } = require("path");
-      const fs = require("fs");
+      const fs = await import("fs");
+      const path = await import("path");
       
       const { institutionId, data } = req.body;
-      const filePath = join(process.cwd(), "client/src/data/instituicoes-info.json");
+      const filePath = path.join(process.cwd(), "client/src/data/instituicoes-info.json");
       
       // Ler arquivo atual
       let allInstitutions = {};
@@ -105,7 +103,7 @@ async function startServer() {
       allInstitutions[institutionId] = data;
       
       console.log("[API] Salvando instituição:", institutionId);
-      writeFileSync(filePath, JSON.stringify(allInstitutions, null, 2), "utf-8");
+      fs.writeFileSync(filePath, JSON.stringify(allInstitutions, null, 2), "utf-8");
       
       res.json({ success: true, message: "Instituição salva com sucesso!" });
     } catch (error) {
