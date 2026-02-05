@@ -101,24 +101,16 @@ export default function EcosystemMenu() {
         </div>
       </div>
 
-      {/* Mensagem Explicativa com Seta Animada */}
-      <div className="py-6 px-4 bg-white">
-        <div className="max-w-2xl mx-auto text-center">
-          <p className="text-gray-700 text-lg font-medium mb-3">
-            Os logos abaixo são interativos. Clique e conheça cada instituição do nosso ecossistema.
-          </p>
-          {/* Seta Animada */}
-          <div className="flex justify-center">
-            <svg 
-              className="w-6 h-6 text-primary animate-bounce" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </div>
-        </div>
+      {/* Seta Animada */}
+      <div className="flex justify-center py-4 bg-white">
+        <svg 
+          className="w-6 h-6 text-primary animate-bounce" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
       </div>
 
       {/* Menu Rosa Claro */}
