@@ -251,4 +251,51 @@ export const homeRouters = router({
       await pool.query("DELETE FROM home_featured_courses WHERE id = ?", [input.id]);
       return { success: true };
     }),
+
+  // ========== ECOSYSTEM INSTITUTIONS ==========
+  getEcosystemInstitutions: publicProcedure
+    .query(async () => {
+      const pool = await getDbPool();
+      const [rows] = await pool.query(
+        "SELECT * FROM ecosystem_institutions ORDER BY display_order"
+      );
+      return rows;
+    }),
+
+  // ========== UPDATE HOME SECTION (BATCH) ==========
+  updateHomeSection: publicProcedure
+    .input(z.object({
+      section: z.string(),
+      fields: z.array(z.object({
+        key: z.string(),
+        value: z.string()
+      }))
+    }))
+    .mutation(async ({ input }) => {
+      const pool = await getDbPool();
+      
+      for (const field of input.fields) {
+        const [existing] = await pool.query(
+          "SELECT id FROM home_settings WHERE section = ? AND field_key = ?",
+          [input.section, field.key]
+        );
+
+        if ((existing as any[]).length > 0) {
+          await pool.query(
+            `UPDATE home_settings 
+             SET field_value = ?, updated_at = CURRENT_TIMESTAMP
+             WHERE section = ? AND field_key = ?`,
+            [field.value, input.section, field.key]
+          );
+        } else {
+          await pool.query(
+            `INSERT INTO home_settings (section, field_key, field_value) 
+             VALUES (?, ?, ?)`,
+            [input.section, field.key, field.value]
+          );
+        }
+      }
+
+      return { success: true };
+    }),
 });
