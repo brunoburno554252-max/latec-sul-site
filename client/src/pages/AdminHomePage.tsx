@@ -432,7 +432,7 @@ function DiferenciaisSection() {
             </div>
             <div><Label>Imagem da Seção</Label><ImageUpload value={aboutImage} onChange={setAboutImage} onRemove={() => setAboutImage("")} aspectRatio={4/3} /></div>
           </div>
-          <Button onClick={handleSaveTexts} disabled={updateSettingsMutation.isPending}><Save className="w-4 h-4 mr-2" /> Salvar Textos</Button>
+          <Button type="button" onClick={() => { alert("Botão clicado!"); handleSaveTexts(); }} disabled={updateSettingsMutation.isPending}><Save className="w-4 h-4 mr-2" /> Salvar Textos</Button>
         </CardContent>
       </Card>
 
@@ -589,7 +589,7 @@ function PlataformaSection() {
             </div>
             <div><Label>Imagem da Plataforma</Label><ImageUpload value={platformImage} onChange={setPlatformImage} onRemove={() => setPlatformImage("")} aspectRatio={16/9} /></div>
           </div>
-          <Button onClick={handleSaveTexts} disabled={updateSettingsMutation.isPending}><Save className="w-4 h-4 mr-2" /> Salvar Textos</Button>
+          <Button type="button" onClick={() => { alert("Botão clicado!"); handleSaveTexts(); }} disabled={updateSettingsMutation.isPending}><Save className="w-4 h-4 mr-2" /> Salvar Textos</Button>
         </CardContent>
       </Card>
 
@@ -772,7 +772,7 @@ function EcossistemaSection() {
           <div><Label>Título</Label><Input value={ecoTitle} onChange={(e) => setEcoTitle(e.target.value)} placeholder="Por que somos o maior..." /></div>
           <div><Label>Subtítulo (em destaque)</Label><Input value={ecoSubtitle} onChange={(e) => setEcoSubtitle(e.target.value)} placeholder="Ecossistema Educacional" /></div>
           <div><Label>Descrição</Label><Textarea value={ecoDescription} onChange={(e) => setEcoDescription(e.target.value)} rows={3} placeholder="À disposição de nossos parceiros..." /></div>
-          <Button onClick={handleSaveTexts} disabled={updateSettingsMutation.isPending}><Save className="w-4 h-4 mr-2" /> Salvar Textos</Button>
+          <Button type="button" onClick={() => { alert("Botão clicado!"); handleSaveTexts(); }} disabled={updateSettingsMutation.isPending}><Save className="w-4 h-4 mr-2" /> Salvar Textos</Button>
         </CardContent>
       </Card>
 
