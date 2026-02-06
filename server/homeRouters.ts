@@ -257,7 +257,7 @@ export const homeRouters = router({
     .query(async () => {
       const pool = await getDbPool();
       const [rows] = await pool.query(
-        "SELECT * FROM ecosystem_institutions ORDER BY display_order"
+        "SELECT id, name, description, logo_url as logo, banner_url as banner, tipo, categoria, website, missao, visao, valores, pos_x, pos_y, pos_width, pos_height, created_at, updated_at FROM ecosystem_institutions ORDER BY name"
       );
       return rows;
     }),
@@ -420,48 +420,55 @@ export const homeRouters = router({
   // ========== ECOSYSTEM INSTITUTIONS CRUD ==========
   addEcosystemInstitution: publicProcedure
     .input(z.object({
+      id: z.string(),
       name: z.string(),
       logo: z.string(),
       description: z.string().optional(),
-      link: z.string().optional(),
-      displayOrder: z.number().optional()
+      website: z.string().optional(),
+      tipo: z.string().optional(),
+      categoria: z.string().optional(),
+      banner: z.string().optional()
     }))
     .mutation(async ({ input }) => {
       const pool = await getDbPool();
       await pool.query(
-        "INSERT INTO ecosystem_institutions (name, logo, description, link, display_order) VALUES (?, ?, ?, ?, ?)",
-        [input.name, input.logo, input.description || '', input.link || '', input.displayOrder || 0]
+        "INSERT INTO ecosystem_institutions (id, name, logo_url, description, website, tipo, categoria, banner_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [input.id, input.name, input.logo, input.description || '', input.website || '', input.tipo || '', input.categoria || '', input.banner || '']
       );
       return { success: true };
     }),
 
   updateEcosystemInstitution: publicProcedure
     .input(z.object({
-      id: z.number(),
+      id: z.string(),
       name: z.string().optional(),
       logo: z.string().optional(),
       description: z.string().optional(),
-      link: z.string().optional(),
-      displayOrder: z.number().optional()
+      website: z.string().optional(),
+      tipo: z.string().optional(),
+      categoria: z.string().optional(),
+      banner: z.string().optional()
     }))
     .mutation(async ({ input }) => {
       const pool = await getDbPool();
       await pool.query(
         `UPDATE ecosystem_institutions 
          SET name = COALESCE(?, name),
-             logo = COALESCE(?, logo),
+             logo_url = COALESCE(?, logo_url),
              description = COALESCE(?, description),
-             link = COALESCE(?, link),
-             display_order = COALESCE(?, display_order),
+             website = COALESCE(?, website),
+             tipo = COALESCE(?, tipo),
+             categoria = COALESCE(?, categoria),
+             banner_url = COALESCE(?, banner_url),
              updated_at = CURRENT_TIMESTAMP
          WHERE id = ?`,
-        [input.name, input.logo, input.description, input.link, input.displayOrder, input.id]
+        [input.name, input.logo, input.description, input.website, input.tipo, input.categoria, input.banner, input.id]
       );
       return { success: true };
     }),
 
   deleteEcosystemInstitution: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       const pool = await getDbPool();
       await pool.query("DELETE FROM ecosystem_institutions WHERE id = ?", [input.id]);
