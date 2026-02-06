@@ -2,9 +2,21 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, TrendingUp, DollarSign, Users, Package, Clock } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
+// Mapa de ícones disponíveis
+const iconMap: Record<string, any> = {
+  DollarSign,
+  Package,
+  Clock,
+  TrendingUp,
+  Users,
+  CheckCircle2,
+};
+
 export default function About() {
   // Buscar configurações da seção About do banco
   const { data: aboutSettings = [] } = trpc.home.getHomeSection.useQuery({ section: "about" });
+  // Buscar diferenciais do banco
+  const { data: diferenciais = [] } = trpc.home.getDiferenciais.useQuery();
 
   // Função auxiliar para pegar valor de um campo
   const getFieldValue = (field: string, defaultValue: string = "") => {
@@ -18,33 +30,43 @@ export default function About() {
   const description = getFieldValue("description", "Enquanto o mercado paga 30%, aqui você constrói autoridade, domina seu negócio e pode lucrar até 1000% sobre cada matrícula.");
   const sectionTitle = getFieldValue("section_title", "Conheça agora os diferenciais de Ser LA:");
 
-  const benefits = [
-    {
-      icon: <DollarSign className="text-white" size={20} />,
-      title: "REPASSE",
-      desc: "Possibilitamos LUCROS de até 1000%."
-    },
-    {
-      icon: <Package className="text-white" size={20} />,
-      title: "CATÁLOGO",
-      desc: "Temos hoje o MAIOR catálogo para revenda de cursos do Brasil, com quase 4.000 opções de todas as modalidades."
-    },
-    {
-      icon: <Clock className="text-white" size={20} />,
-      title: "FLUXO DE CAIXA",
-      desc: "Parceiro recebe e repassa, aqui o parceiro não precisa aguardar mais de 30 dias para receber."
-    },
-    {
-      icon: <TrendingUp className="text-white" size={20} />,
-      title: "PRECIFICAÇÃO",
-      desc: "Parceiro tem total autonomia, para precificar, pois aqui ele é dono do seu próprio negócio."
-    },
-    {
-      icon: <Users className="text-white" size={20} />,
-      title: "CONSULTORIA COMERCIAL/MARKETING",
-      desc: "Trabalhamos com gestores regionais, altamente capacitados para prestar consultoria gratuita aos parceiros."
-    }
-  ];
+  // Usar diferenciais do banco ou fallback
+  const benefits = (diferenciais as any[]).length > 0
+    ? (diferenciais as any[]).map((d: any) => {
+        const IconComponent = iconMap[d.icon] || CheckCircle2;
+        return {
+          icon: <IconComponent className="text-white" size={20} />,
+          title: d.title,
+          desc: d.description,
+        };
+      })
+    : [
+        {
+          icon: <DollarSign className="text-white" size={20} />,
+          title: "REPASSE",
+          desc: "Possibilitamos LUCROS de até 1000%."
+        },
+        {
+          icon: <Package className="text-white" size={20} />,
+          title: "CATÁLOGO",
+          desc: "Temos hoje o MAIOR catálogo para revenda de cursos do Brasil, com quase 4.000 opções de todas as modalidades."
+        },
+        {
+          icon: <Clock className="text-white" size={20} />,
+          title: "FLUXO DE CAIXA",
+          desc: "Parceiro recebe e repassa, aqui o parceiro não precisa aguardar mais de 30 dias para receber."
+        },
+        {
+          icon: <TrendingUp className="text-white" size={20} />,
+          title: "PRECIFICAÇÃO",
+          desc: "Parceiro tem total autonomia, para precificar, pois aqui ele é dono do seu próprio negócio."
+        },
+        {
+          icon: <Users className="text-white" size={20} />,
+          title: "CONSULTORIA COMERCIAL/MARKETING",
+          desc: "Trabalhamos com gestores regionais, altamente capacitados para prestar consultoria gratuita aos parceiros."
+        }
+      ];
 
   return (
     <section className="py-24 bg-white overflow-hidden">

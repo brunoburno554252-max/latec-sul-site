@@ -564,7 +564,7 @@ function PlataformaSection() {
 
   const handleSaveTexts = () => {
     updateSettingsMutation.mutate({
-      section: "platform",
+      section: "student_experience",
       fields: [
         { key: "platform_title", value: platformTitle },
         { key: "platform_subtitle", value: platformSubtitle },

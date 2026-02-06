@@ -1,10 +1,24 @@
 import { Button } from "@/components/ui/button";
-import { Monitor, Smartphone, Video, BookOpen, Award, Users } from "lucide-react";
+import { Monitor, Smartphone, Video, BookOpen, Award, Users, Clock, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+
+// Mapa de ícones disponíveis
+const iconMap: Record<string, any> = {
+  Monitor,
+  Smartphone,
+  Video,
+  BookOpen,
+  Award,
+  Users,
+  Clock,
+  CheckCircle2,
+};
 
 export default function StudentExperience() {
   // Buscar configurações da seção Student Experience do banco
   const { data: studentSettings = [] } = trpc.home.getHomeSection.useQuery({ section: "student_experience" });
+  // Buscar features da plataforma do banco
+  const { data: platformFeaturesData = [] } = trpc.home.getPlatformFeatures.useQuery();
 
   // Função auxiliar para pegar valor de um campo
   const getFieldValue = (field: string, defaultValue: string = "") => {
@@ -17,38 +31,48 @@ export default function StudentExperience() {
   const title = getFieldValue("title", "Plataforma intuitiva e repleta de recursos");
   const description = getFieldValue("description", "Seus alunos terão acesso a uma plataforma moderna, extremamente fácil de usar e com inúmeras vantagens que transformam o aprendizado em uma experiência envolvente e eficiente.");
 
-  const platformFeatures = [
-    {
-      icon: <Monitor className="text-white" size={20} />,
-      title: "Interface Intuitiva",
-      desc: "Navegação simples e clara."
-    },
-    {
-      icon: <Smartphone className="text-white" size={20} />,
-      title: "Multiplataforma",
-      desc: "Acesso em qualquer dispositivo."
-    },
-    {
-      icon: <Video className="text-white" size={20} />,
-      title: "Aulas ao Vivo",
-      desc: "Interação em tempo real."
-    },
-    {
-      icon: <BookOpen className="text-white" size={20} />,
-      title: "Material Completo",
-      desc: "PDFs, slides e exercícios."
-    },
-    {
-      icon: <Award className="text-white" size={20} />,
-      title: "Progresso Visual",
-      desc: "Acompanhe seu desempenho."
-    },
-    {
-      icon: <Users className="text-white" size={20} />,
-      title: "Fóruns Ativos",
-      desc: "Comunidade engajada."
-    }
-  ];
+  // Usar features do banco ou fallback
+  const platformFeatures = (platformFeaturesData as any[]).length > 0
+    ? (platformFeaturesData as any[]).map((f: any) => {
+        const IconComponent = iconMap[f.icon] || CheckCircle2;
+        return {
+          icon: <IconComponent className="text-white" size={20} />,
+          title: f.title,
+          desc: f.description,
+        };
+      })
+    : [
+        {
+          icon: <Monitor className="text-white" size={20} />,
+          title: "Interface Intuitiva",
+          desc: "Navegação simples e clara."
+        },
+        {
+          icon: <Smartphone className="text-white" size={20} />,
+          title: "Multiplataforma",
+          desc: "Acesso em qualquer dispositivo."
+        },
+        {
+          icon: <Video className="text-white" size={20} />,
+          title: "Aulas ao Vivo",
+          desc: "Interação em tempo real."
+        },
+        {
+          icon: <BookOpen className="text-white" size={20} />,
+          title: "Material Completo",
+          desc: "PDFs, slides e exercícios."
+        },
+        {
+          icon: <Award className="text-white" size={20} />,
+          title: "Progresso Visual",
+          desc: "Acompanhe seu desempenho."
+        },
+        {
+          icon: <Users className="text-white" size={20} />,
+          title: "Fóruns Ativos",
+          desc: "Comunidade engajada."
+        }
+      ];
 
   return (
     <section className="py-24 bg-gradient-to-br from-gray-50 to-primary/5 overflow-hidden relative">
