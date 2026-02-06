@@ -416,4 +416,55 @@ export const homeRouters = router({
       await pool.query("DELETE FROM home_platform_features WHERE id = ?", [input.id]);
       return { success: true };
     }),
+
+  // ========== ECOSYSTEM INSTITUTIONS CRUD ==========
+  addEcosystemInstitution: publicProcedure
+    .input(z.object({
+      name: z.string(),
+      logo: z.string(),
+      description: z.string().optional(),
+      link: z.string().optional(),
+      displayOrder: z.number().optional()
+    }))
+    .mutation(async ({ input }) => {
+      const pool = await getDbPool();
+      await pool.query(
+        "INSERT INTO ecosystem_institutions (name, logo, description, link, display_order) VALUES (?, ?, ?, ?, ?)",
+        [input.name, input.logo, input.description || '', input.link || '', input.displayOrder || 0]
+      );
+      return { success: true };
+    }),
+
+  updateEcosystemInstitution: publicProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string().optional(),
+      logo: z.string().optional(),
+      description: z.string().optional(),
+      link: z.string().optional(),
+      displayOrder: z.number().optional()
+    }))
+    .mutation(async ({ input }) => {
+      const pool = await getDbPool();
+      await pool.query(
+        `UPDATE ecosystem_institutions 
+         SET name = COALESCE(?, name),
+             logo = COALESCE(?, logo),
+             description = COALESCE(?, description),
+             link = COALESCE(?, link),
+             display_order = COALESCE(?, display_order),
+             updated_at = CURRENT_TIMESTAMP
+         WHERE id = ?`,
+        [input.name, input.logo, input.description, input.link, input.displayOrder, input.id]
+      );
+      return { success: true };
+    }),
+
+  deleteEcosystemInstitution: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const pool = await getDbPool();
+      await pool.query("DELETE FROM ecosystem_institutions WHERE id = ?", [input.id]);
+      return { success: true };
+    }),
 });

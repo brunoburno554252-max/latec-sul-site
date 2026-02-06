@@ -659,7 +659,7 @@ function PlataformaSection() {
   );
 }
 
-// ============ ECOSSISTEMA SECTION ============
+// ============ ECOSSISTEMA SECTION (CRUD COMPLETO) ============
 function EcossistemaSection() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -674,6 +674,21 @@ function EcossistemaSection() {
   
   const updateSettingsMutation = trpc.home.updateHomeSection.useMutation({
     onSuccess: () => { toast.success("Textos salvos!"); refetchSettings(); },
+    onError: (e: any) => toast.error(`Erro: ${e.message}`),
+  });
+
+  const addMutation = trpc.home.addEcosystemInstitution.useMutation({
+    onSuccess: () => { toast.success("Instituição adicionada!"); refetch(); resetForm(); },
+    onError: (e: any) => toast.error(`Erro: ${e.message}`),
+  });
+
+  const updateMutation = trpc.home.updateEcosystemInstitution.useMutation({
+    onSuccess: () => { toast.success("Instituição atualizada!"); refetch(); resetForm(); },
+    onError: (e: any) => toast.error(`Erro: ${e.message}`),
+  });
+
+  const deleteMutation = trpc.home.deleteEcosystemInstitution.useMutation({
+    onSuccess: () => { toast.success("Instituição excluída!"); refetch(); setDeleteId(null); },
     onError: (e: any) => toast.error(`Erro: ${e.message}`),
   });
 
@@ -699,6 +714,35 @@ function EcossistemaSection() {
     });
   };
 
+  const resetForm = () => {
+    setEditingId(null);
+    setShowForm(false);
+    setName("");
+    setLogo("");
+    setLink("");
+    setDescription("");
+  };
+
+  const handleEdit = (inst: any) => {
+    setEditingId(inst.id);
+    setName(inst.name || "");
+    setLogo(inst.logo || "");
+    setLink(inst.link || "");
+    setDescription(inst.description || "");
+    setShowForm(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !logo) { toast.error("Nome e logo são obrigatórios!"); return; }
+    
+    if (editingId) {
+      updateMutation.mutate({ id: editingId, name, logo, link, description });
+    } else {
+      addMutation.mutate({ name, logo, link, description });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold">Seção Ecossistema</h2>
@@ -714,21 +758,47 @@ function EcossistemaSection() {
       </Card>
 
       <Card>
-        <CardHeader><CardTitle>Instituições do Ecossistema</CardTitle></CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Instituições do Ecossistema ({institutions.length})</CardTitle>
+          <Button onClick={() => { resetForm(); setShowForm(true); }} size="sm" className="gap-2"><Plus className="w-4 h-4" /> Nova Instituição</Button>
+        </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-500 mb-4">
-            As instituições são gerenciadas via API. Atualmente existem {institutions.length} instituições cadastradas.
-          </p>
-          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+          {showForm && (
+            <Card className="border-primary mb-4">
+              <CardContent className="pt-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><Label>Nome da Instituição *</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Faculdade LA" /></div>
+                    <div><Label>Link (opcional)</Label><Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..." /></div>
+                  </div>
+                  <div><Label>Descrição (opcional)</Label><Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} placeholder="Breve descrição da instituição..." /></div>
+                  <div><Label>Logo da Instituição *</Label><ImageUpload value={logo} onChange={setLogo} onRemove={() => setLogo("")} aspectRatio={1} /></div>
+                  <div className="flex gap-2">
+                    <Button type="submit" disabled={addMutation.isPending || updateMutation.isPending}><Save className="w-4 h-4 mr-2" /> {editingId ? "Atualizar" : "Adicionar"}</Button>
+                    <Button type="button" variant="outline" onClick={resetForm}>Cancelar</Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {institutions.map((inst: any) => (
-              <div key={inst.id} className="border rounded p-2 text-center hover:shadow-md transition-shadow">
-                <img src={inst.logo} alt={inst.name} className="h-10 mx-auto object-contain" />
-                <p className="text-xs mt-1 truncate">{inst.name}</p>
+              <div key={inst.id} className="border rounded-lg p-4 text-center hover:shadow-md transition-shadow relative group">
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                  <Button variant="ghost" size="sm" onClick={() => handleEdit(inst)} className="h-7 w-7 p-0"><Pencil className="w-3 h-3" /></Button>
+                  <Button variant="ghost" size="sm" className="text-red-600 h-7 w-7 p-0" onClick={() => setDeleteId(inst.id)}><Trash2 className="w-3 h-3" /></Button>
+                </div>
+                <img src={inst.logo} alt={inst.name} className="h-16 mx-auto object-contain mb-2" />
+                <p className="text-sm font-medium truncate">{inst.name}</p>
+                {inst.link && <a href={inst.link} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline">Ver site</a>}
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
+
+      {deleteId && <DeleteConfirmDialog open={true} onOpenChange={(open) => !open && setDeleteId(null)} onConfirm={() => deleteMutation.mutate({ id: deleteId })} title="Excluir Instituição" description="Tem certeza que deseja excluir esta instituição do ecossistema?" />}
     </div>
   );
 }
