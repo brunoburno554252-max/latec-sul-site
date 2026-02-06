@@ -276,20 +276,20 @@ export const homeRouters = router({
       
       for (const field of input.fields) {
         const [existing] = await pool.query(
-          "SELECT id FROM home_settings WHERE section = ? AND field_key = ?",
+          "SELECT id FROM home_settings WHERE section = ? AND field = ?",
           [input.section, field.key]
         );
 
         if ((existing as any[]).length > 0) {
           await pool.query(
             `UPDATE home_settings 
-             SET field_value = ?, updated_at = CURRENT_TIMESTAMP
-             WHERE section = ? AND field_key = ?`,
+             SET value = ?, updated_at = CURRENT_TIMESTAMP
+             WHERE section = ? AND field = ?`,
             [field.value, input.section, field.key]
           );
         } else {
           await pool.query(
-            `INSERT INTO home_settings (section, field_key, field_value) 
+            `INSERT INTO home_settings (section, field, value) 
              VALUES (?, ?, ?)`,
             [input.section, field.key, field.value]
           );

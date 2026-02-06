@@ -378,7 +378,7 @@ function DiferenciaisSection() {
     onError: (e: any) => toast.error(`Erro: ${e.message}`),
   });
 
-  const getValue = (key: string) => settings.find((s: any) => s.field_key === key)?.field_value || "";
+  const getValue = (key: string) => settings.find((s: any) => s.field === key)?.value || "";
   const [aboutTitle, setAboutTitle] = useState("");
   const [aboutSubtitle, setAboutSubtitle] = useState("");
   const [aboutDescription, setAboutDescription] = useState("");
@@ -536,7 +536,7 @@ function PlataformaSection() {
     onError: (e: any) => toast.error(`Erro: ${e.message}`),
   });
 
-  const getValue = (key: string) => settings.find((s: any) => s.field_key === key)?.field_value || "";
+  const getValue = (key: string) => settings.find((s: any) => s.field === key)?.value || "";
   const [platformTitle, setPlatformTitle] = useState("");
   const [platformSubtitle, setPlatformSubtitle] = useState("");
   const [platformDescription, setPlatformDescription] = useState("");
@@ -702,7 +702,7 @@ function EcossistemaSection() {
     onError: (e: any) => toast.error(`Erro: ${e.message}`),
   });
 
-  const getValue = (key: string) => settings.find((s: any) => s.field_key === key)?.field_value || "";
+  const getValue = (key: string) => settings.find((s: any) => s.field === key)?.value || "";
   const [ecoTitle, setEcoTitle] = useState("");
   const [ecoSubtitle, setEcoSubtitle] = useState("");
   const [ecoDescription, setEcoDescription] = useState("");
