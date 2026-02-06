@@ -566,10 +566,10 @@ function PlataformaSection() {
     updateSettingsMutation.mutate({
       section: "student_experience",
       fields: [
-        { key: "platform_title", value: platformTitle },
-        { key: "platform_subtitle", value: platformSubtitle },
-        { key: "platform_description", value: platformDescription },
-        { key: "platform_image", value: platformImage },
+        { key: "title", value: platformTitle },
+        { key: "label", value: platformSubtitle },
+        { key: "description", value: platformDescription },
+        { key: "image_url", value: platformImage },
       ],
     });
   };
