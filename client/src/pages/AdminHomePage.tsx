@@ -292,39 +292,116 @@ function ImprensaSection() {
 }
 
 function DiferenciaisSection() {
+  // Settings da seção about
+  const { data: aboutSettings = [], refetch: refetchSettings } = trpc.adminSectionSettings.getBySection.useQuery({ section: 'about' });
+  const bulkUpdateMutation = trpc.adminSectionSettings.bulkUpdate.useMutation({ onSuccess: () => { toast.success('Configurações salvas!'); refetchSettings(); } });
+
+  // Cards de diferenciais
   const { data: diferenciais = [], refetch } = trpc.adminDiferenciais.getAll.useQuery();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<any>(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [icon, setIcon] = useState('');
-  const [isActive, setIsActive] = useState(true);
+  const [cardTitle, setCardTitle] = useState('');
+  const [cardDesc, setCardDesc] = useState('');
+  const [cardIcon, setCardIcon] = useState('');
+  const [cardActive, setCardActive] = useState(true);
 
-  const createMutation = trpc.adminDiferenciais.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetForm(); } });
-  const updateMutation = trpc.adminDiferenciais.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetForm(); } });
+  const createMutation = trpc.adminDiferenciais.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetCardForm(); } });
+  const updateMutation = trpc.adminDiferenciais.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetCardForm(); } });
   const deleteMutation = trpc.adminDiferenciais.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); } });
 
-  const resetForm = () => { setShowForm(false); setEditing(null); setTitle(''); setDescription(''); setIcon(''); setIsActive(true); };
-  const handleEdit = (item: any) => { setEditing(item); setShowForm(true); setTitle(item.title); setDescription(item.description); setIcon(item.icon || ''); setIsActive(item.isActive); };
-  const handleSubmit = (e: React.FormEvent) => {
+  const resetCardForm = () => { setShowForm(false); setEditing(null); setCardTitle(''); setCardDesc(''); setCardIcon(''); setCardActive(true); };
+  const handleEditCard = (item: any) => { setEditing(item); setShowForm(true); setCardTitle(item.title); setCardDesc(item.description); setCardIcon(item.icon || ''); setCardActive(item.isActive); };
+  const handleSubmitCard = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editing) updateMutation.mutate({ id: editing.id, title, description, icon, isActive });
-    else createMutation.mutate({ title, description, icon, isActive, order: diferenciais.length + 1 });
+    if (editing) updateMutation.mutate({ id: editing.id, title: cardTitle, description: cardDesc, icon: cardIcon, isActive: cardActive });
+    else createMutation.mutate({ title: cardTitle, description: cardDesc, icon: cardIcon, isActive: cardActive, order: diferenciais.length + 1 });
+  };
+
+  // Helper para pegar valor do settings
+  const getVal = (field: string, def: string = '') => {
+    const item = (aboutSettings as any[]).find((s: any) => s.field === field);
+    return item?.value || def;
+  };
+
+  // Form states para settings
+  const [sTitle, setSTitle] = useState('');
+  const [sSubtitle, setSSubtitle] = useState('');
+  const [sDescription, setSDescription] = useState('');
+  const [sSectionTitle, setSSectionTitle] = useState('');
+  const [sImage, setSImage] = useState('');
+  const [sCounterNum, setSCounterNum] = useState('');
+  const [sCounterText, setSCounterText] = useState('');
+  const [sBtnText, setSBtnText] = useState('');
+  const [sBtnLink, setSBtnLink] = useState('');
+
+  React.useEffect(() => {
+    if ((aboutSettings as any[]).length > 0) {
+      setSTitle(getVal('title', 'Empresários Educacionais: transformem propósito em rentabilidade real'));
+      setSSubtitle(getVal('subtitle', 'Ser parceiro da LA Educação é sair do jogo pequeno.'));
+      setSDescription(getVal('description', ''));
+      setSSectionTitle(getVal('section_title', 'Conheça agora os diferenciais de Ser LA:'));
+      setSImage(getVal('image', '/images/about-building-new.jpg'));
+      setSCounterNum(getVal('counter_number', '+1.500'));
+      setSCounterText(getVal('counter_text', 'Parceiros ativos em todo o Brasil'));
+      setSBtnText(getVal('button_text', 'QUERO SER UM PARCEIRO'));
+      setSBtnLink(getVal('button_link', '/seja-um-parceiro'));
+    }
+  }, [aboutSettings]);
+
+  const handleSaveSettings = () => {
+    bulkUpdateMutation.mutate({
+      section: 'about',
+      fields: [
+        { field: 'title', value: sTitle },
+        { field: 'subtitle', value: sSubtitle },
+        { field: 'description', value: sDescription },
+        { field: 'section_title', value: sSectionTitle },
+        { field: 'image', value: sImage },
+        { field: 'counter_number', value: sCounterNum },
+        { field: 'counter_text', value: sCounterText },
+        { field: 'button_text', value: sBtnText },
+        { field: 'button_link', value: sBtnLink },
+      ],
+    });
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Configurações da Seção */}
+      <Card>
+        <CardHeader><CardTitle className="flex items-center gap-2"><Save className="w-5 h-5" /> Configurações da Seção Diferenciais</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div><Label className="font-semibold">Título Principal</Label><Input value={sTitle} onChange={(e) => setSTitle(e.target.value)} placeholder="Ex: Empresários Educacionais: transformem propósito em rentabilidade real" /></div>
+          <div><Label className="font-semibold">Subtítulo (negrito)</Label><Input value={sSubtitle} onChange={(e) => setSSubtitle(e.target.value)} placeholder="Ex: Ser parceiro da LA Educação é sair do jogo pequeno." /></div>
+          <div><Label className="font-semibold">Descrição</Label><Textarea value={sDescription} onChange={(e) => setSDescription(e.target.value)} rows={3} placeholder="Ex: Enquanto o mercado paga 30%..." /></div>
+          <div><Label className="font-semibold">Título dos Cards</Label><Input value={sSectionTitle} onChange={(e) => setSSectionTitle(e.target.value)} placeholder="Ex: Conheça agora os diferenciais de Ser LA:" /></div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="font-semibold">Imagem da Seção</Label><ImageUpload value={sImage} onChange={setSImage} onRemove={() => setSImage('')} /></div>
+            <div className="space-y-4">
+              <div><Label className="font-semibold">Contador (número)</Label><Input value={sCounterNum} onChange={(e) => setSCounterNum(e.target.value)} placeholder="Ex: +1.500" /></div>
+              <div><Label className="font-semibold">Contador (texto)</Label><Input value={sCounterText} onChange={(e) => setSCounterText(e.target.value)} placeholder="Ex: Parceiros ativos em todo o Brasil" /></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="font-semibold">Texto do Botão</Label><Input value={sBtnText} onChange={(e) => setSBtnText(e.target.value)} placeholder="Ex: QUERO SER UM PARCEIRO" /></div>
+            <div><Label className="font-semibold">Link do Botão</Label><Input value={sBtnLink} onChange={(e) => setSBtnLink(e.target.value)} placeholder="Ex: /seja-um-parceiro" /></div>
+          </div>
+          <Button onClick={handleSaveSettings} className="gap-2"><Save className="w-4 h-4" /> Salvar Configurações</Button>
+        </CardContent>
+      </Card>
+
+      {/* Cards de Diferenciais */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Diferenciais</h2>
+        <h2 className="text-xl font-semibold">Cards de Diferenciais</h2>
         <Button onClick={() => setShowForm(true)} className="gap-2"><Plus className="w-4 h-4" /> Novo Diferencial</Button>
       </div>
       {showForm && (
-        <Card><CardContent className="pt-6"><form onSubmit={handleSubmit} className="space-y-4">
-          <div><Label>Título</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-          <div><Label>Descrição</Label><Textarea value={description} onChange={(e) => setDescription(e.target.value)} /></div>
-          <div><Label>Ícone (Lucide name)</Label><Input value={icon} onChange={(e) => setIcon(e.target.value)} placeholder="Ex: GraduationCap" /></div>
-          <div className="flex items-center gap-2"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Ativo</Label></div>
-          <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={resetForm}>Cancelar</Button><Button type="submit">Salvar</Button></div>
+        <Card><CardContent className="pt-6"><form onSubmit={handleSubmitCard} className="space-y-4">
+          <div><Label>Título</Label><Input value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} /></div>
+          <div><Label>Descrição</Label><Textarea value={cardDesc} onChange={(e) => setCardDesc(e.target.value)} /></div>
+          <div><Label>Ícone (Lucide name)</Label><Input value={cardIcon} onChange={(e) => setCardIcon(e.target.value)} placeholder="Ex: DollarSign, BookOpen, Wallet, TrendingUp, Users" /></div>
+          <div className="flex items-center gap-2"><Switch checked={cardActive} onCheckedChange={setCardActive} /><Label>Ativo</Label></div>
+          <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={resetCardForm}>Cancelar</Button><Button type="submit">Salvar</Button></div>
         </form></CardContent></Card>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -333,7 +410,7 @@ function DiferenciaisSection() {
             <CardContent className="p-4 flex justify-between items-start">
               <div><h3 className="font-bold">{item.title}</h3><p className="text-sm text-gray-500">{item.description}</p></div>
               <div className="flex gap-1">
-                <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => handleEditCard(item)}><Pencil className="w-4 h-4" /></Button>
                 <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: item.id })}><Trash2 className="w-4 h-4" /></Button>
               </div>
             </CardContent>
@@ -345,21 +422,132 @@ function DiferenciaisSection() {
 }
 
 function PlataformaSection() {
-  const { data: settings, refetch } = trpc.adminHome.getSettings.useQuery();
-  const updateMutation = trpc.adminHome.updateSettings.useMutation({ onSuccess: () => { toast.success('Salvo!'); refetch(); } });
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
-  const [img, setImg] = useState('');
+  // Settings da seção student_experience
+  const { data: platSettings = [], refetch: refetchSettings } = trpc.adminSectionSettings.getBySection.useQuery({ section: 'student_experience' });
+  const bulkUpdateMutation = trpc.adminSectionSettings.bulkUpdate.useMutation({ onSuccess: () => { toast.success('Configurações salvas!'); refetchSettings(); } });
 
-  React.useEffect(() => { if (settings) { setTitle(settings.platformTitle || ''); setDesc(settings.platformDescription || ''); setImg(settings.platformImage || ''); } }, [settings]);
+  // Features da plataforma
+  const { data: features = [], refetch } = trpc.adminPlatformFeatures.getAll.useQuery();
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+  const [fTitle, setFTitle] = useState('');
+  const [fDesc, setFDesc] = useState('');
+  const [fIcon, setFIcon] = useState('');
+  const [fActive, setFActive] = useState(true);
+
+  const createMutation = trpc.adminPlatformFeatures.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetFeatureForm(); } });
+  const updateMutation = trpc.adminPlatformFeatures.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetFeatureForm(); } });
+  const deleteMutation = trpc.adminPlatformFeatures.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); } });
+
+  const resetFeatureForm = () => { setShowForm(false); setEditing(null); setFTitle(''); setFDesc(''); setFIcon(''); setFActive(true); };
+  const handleEditFeature = (item: any) => { setEditing(item); setShowForm(true); setFTitle(item.title); setFDesc(item.description || ''); setFIcon(item.icon || ''); setFActive(item.isActive); };
+  const handleSubmitFeature = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editing) updateMutation.mutate({ id: editing.id, title: fTitle, description: fDesc, icon: fIcon, isActive: fActive });
+    else createMutation.mutate({ title: fTitle, description: fDesc, icon: fIcon, isActive: fActive, order: features.length + 1 });
+  };
+
+  // Helper para pegar valor do settings
+  const getVal = (field: string, def: string = '') => {
+    const item = (platSettings as any[]).find((s: any) => s.field === field);
+    return item?.value || def;
+  };
+
+  // Form states para settings
+  const [sLabel, setSLabel] = useState('');
+  const [sTitle, setSTitle] = useState('');
+  const [sDescription, setSDescription] = useState('');
+  const [sImage, setSImage] = useState('');
+  const [sCounterNum, setSCounterNum] = useState('');
+  const [sCounterText, setSCounterText] = useState('');
+  const [sCounterSub, setSCounterSub] = useState('');
+  const [sBtnText, setSBtnText] = useState('');
+  const [sBtnLink, setSBtnLink] = useState('');
+
+  React.useEffect(() => {
+    if ((platSettings as any[]).length > 0) {
+      setSLabel(getVal('label', 'EXPERIÊNCIA DO ALUNO'));
+      setSTitle(getVal('title', 'Plataforma Super Intuitiva'));
+      setSDescription(getVal('description', ''));
+      setSImage(getVal('image', '/images/plataforma-alunos.jpg'));
+      setSCounterNum(getVal('counter_number', '+15000'));
+      setSCounterText(getVal('counter_text', 'ALUNOS'));
+      setSCounterSub(getVal('counter_subtext', 'Transformando vidas'));
+      setSBtnText(getVal('button_text', 'CONHECER CURSOS'));
+      setSBtnLink(getVal('button_link', '/cursos'));
+    }
+  }, [platSettings]);
+
+  const handleSaveSettings = () => {
+    bulkUpdateMutation.mutate({
+      section: 'student_experience',
+      fields: [
+        { field: 'label', value: sLabel },
+        { field: 'title', value: sTitle },
+        { field: 'description', value: sDescription },
+        { field: 'image', value: sImage },
+        { field: 'counter_number', value: sCounterNum },
+        { field: 'counter_text', value: sCounterText },
+        { field: 'counter_subtext', value: sCounterSub },
+        { field: 'button_text', value: sBtnText },
+        { field: 'button_link', value: sBtnLink },
+      ],
+    });
+  };
 
   return (
-    <Card><CardContent className="pt-6 space-y-4">
-      <div><Label>Título da Seção Plataforma</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-      <div><Label>Descrição</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={4} /></div>
-      <div><Label>Imagem da Plataforma</Label><ImageUpload value={img} onChange={setImg} onRemove={() => setImg('')} /></div>
-      <Button onClick={() => updateMutation.mutate({ platformTitle: title, platformDescription: desc, platformImage: img })}>Salvar Alterações</Button>
-    </CardContent></Card>
+    <div className="space-y-8">
+      {/* Configurações da Seção */}
+      <Card>
+        <CardHeader><CardTitle className="flex items-center gap-2"><Save className="w-5 h-5" /> Configurações da Seção Plataforma</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div><Label className="font-semibold">Tag / Label</Label><Input value={sLabel} onChange={(e) => setSLabel(e.target.value)} placeholder="Ex: EXPERIÊNCIA DO ALUNO" /></div>
+          <div><Label className="font-semibold">Título Principal</Label><Input value={sTitle} onChange={(e) => setSTitle(e.target.value)} placeholder="Ex: Plataforma Super Intuitiva" /></div>
+          <div><Label className="font-semibold">Descrição</Label><Textarea value={sDescription} onChange={(e) => setSDescription(e.target.value)} rows={3} placeholder="Ex: Seus alunos terão acesso a uma plataforma moderna..." /></div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="font-semibold">Imagem da Plataforma</Label><ImageUpload value={sImage} onChange={setSImage} onRemove={() => setSImage('')} /></div>
+            <div className="space-y-4">
+              <div><Label className="font-semibold">Contador (número)</Label><Input value={sCounterNum} onChange={(e) => setSCounterNum(e.target.value)} placeholder="Ex: +15000" /></div>
+              <div><Label className="font-semibold">Contador (texto principal)</Label><Input value={sCounterText} onChange={(e) => setSCounterText(e.target.value)} placeholder="Ex: ALUNOS" /></div>
+              <div><Label className="font-semibold">Contador (subtexto)</Label><Input value={sCounterSub} onChange={(e) => setSCounterSub(e.target.value)} placeholder="Ex: Transformando vidas" /></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="font-semibold">Texto do Botão</Label><Input value={sBtnText} onChange={(e) => setSBtnText(e.target.value)} placeholder="Ex: CONHECER CURSOS" /></div>
+            <div><Label className="font-semibold">Link do Botão</Label><Input value={sBtnLink} onChange={(e) => setSBtnLink(e.target.value)} placeholder="Ex: /cursos" /></div>
+          </div>
+          <Button onClick={handleSaveSettings} className="gap-2"><Save className="w-4 h-4" /> Salvar Configurações</Button>
+        </CardContent>
+      </Card>
+
+      {/* Features da Plataforma */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Features da Plataforma</h2>
+        <Button onClick={() => setShowForm(true)} className="gap-2"><Plus className="w-4 h-4" /> Nova Feature</Button>
+      </div>
+      {showForm && (
+        <Card><CardContent className="pt-6"><form onSubmit={handleSubmitFeature} className="space-y-4">
+          <div><Label>Título</Label><Input value={fTitle} onChange={(e) => setFTitle(e.target.value)} placeholder="Ex: Acesso 24h" /></div>
+          <div><Label>Descrição</Label><Textarea value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ex: Estude quando e onde quiser" /></div>
+          <div><Label>Ícone (Lucide name)</Label><Input value={fIcon} onChange={(e) => setFIcon(e.target.value)} placeholder="Ex: Clock, Award, Users, BookOpen, Monitor, CheckCircle2" /></div>
+          <div className="flex items-center gap-2"><Switch checked={fActive} onCheckedChange={setFActive} /><Label>Ativo</Label></div>
+          <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={resetFeatureForm}>Cancelar</Button><Button type="submit">Salvar</Button></div>
+        </form></CardContent></Card>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {features.map((item: any) => (
+          <Card key={item.id} className={item.isActive ? '' : 'opacity-50'}>
+            <CardContent className="p-4 flex justify-between items-start">
+              <div><h3 className="font-bold">{item.title}</h3><p className="text-sm text-gray-500">{item.description}</p><p className="text-xs text-blue-500 mt-1">Ícone: {item.icon}</p></div>
+              <div className="flex gap-1">
+                <Button variant="ghost" size="icon" onClick={() => handleEditFeature(item)}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: item.id })}><Trash2 className="w-4 h-4" /></Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
   );
 }
 

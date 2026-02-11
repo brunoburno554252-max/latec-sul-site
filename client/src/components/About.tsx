@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, TrendingUp, DollarSign, Users, Package, Clock } from "lucide-react";
+import { CheckCircle2, TrendingUp, DollarSign, Users, Package, Clock, Headphones, BookOpen, Award } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
 // Mapa de ícones disponíveis
@@ -10,6 +10,9 @@ const iconMap: Record<string, any> = {
   TrendingUp,
   Users,
   CheckCircle2,
+  Headphones,
+  BookOpen,
+  Award,
 };
 
 export default function About() {
@@ -24,11 +27,22 @@ export default function About() {
     return item?.value || defaultValue;
   };
 
-  // Valores padrão (fallback)
+  // Valores do banco (com fallback)
   const title = getFieldValue("title", "Empresários Educacionais: transformem propósito em rentabilidade real");
   const subtitle = getFieldValue("subtitle", "Ser parceiro da LA Educação é sair do jogo pequeno.");
   const description = getFieldValue("description", "Enquanto o mercado paga 30%, aqui você constrói autoridade, domina seu negócio e pode lucrar até 1000% sobre cada matrícula.");
   const sectionTitle = getFieldValue("section_title", "Conheça agora os diferenciais de Ser LA:");
+  
+  // IMAGEM - puxar do banco
+  const sectionImage = getFieldValue("image", "/images/about-building-new.jpg");
+  
+  // CONTADOR - puxar do banco
+  const counterNumber = getFieldValue("counter_number", "+1.500");
+  const counterText = getFieldValue("counter_text", "Parceiros ativos em todo o Brasil");
+  
+  // BOTÃO - puxar do banco
+  const buttonText = getFieldValue("button_text", "QUERO SER UM PARCEIRO");
+  const buttonLink = getFieldValue("button_link", "/seja-um-parceiro");
 
   // Usar diferenciais do banco ou fallback
   const benefits = (diferenciais as any[]).length > 0
@@ -76,7 +90,7 @@ export default function About() {
           <div className="w-full lg:w-1/2 relative order-2 lg:order-1">
             <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white">
               <img 
-                src="/images/about-building-new.jpg" 
+                src={sectionImage} 
                 alt="Sede da LA Educação" 
                 className="w-full aspect-[4/3] object-cover"
               />
@@ -91,10 +105,10 @@ export default function About() {
             <div className="absolute -bottom-10 -right-10 bg-white p-8 rounded-3xl shadow-2xl border border-gray-100 z-20 hidden md:block animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 max-w-xs">
               <div className="flex flex-col gap-2">
                 <span className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#da1069] to-[#3559AC]">
-                  +1.500
+                  {counterNumber}
                 </span>
                 <span className="text-gray-600 font-bold text-lg leading-tight">
-                  Parceiros ativos em todo o Brasil
+                  {counterText}
                 </span>
               </div>
             </div>
@@ -138,8 +152,11 @@ export default function About() {
               ))}
             </div>
 
-            <Button className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg">
-              QUERO SER UM PARCEIRO
+            <Button 
+              className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
+              onClick={() => window.location.href = buttonLink}
+            >
+              {buttonText}
             </Button>
           </div>
         </div>

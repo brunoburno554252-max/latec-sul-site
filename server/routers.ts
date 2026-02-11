@@ -34,7 +34,7 @@ import { analyticsRouter } from "./analyticsRouter";
 import { ecosystemRouter } from "./ecosystemRouter";
 import { bitrixCertificadosRouter } from "./bitrixCertificadosRouter";
 import { homeRouters } from "./homeRouters";
-import { adminSelosRouter, adminImprensaRouter, adminDiferenciaisRouter } from "./adminHomeExtras";
+import { adminSelosRouter, adminImprensaRouter, adminDiferenciaisRouter, adminSectionSettingsRouter, adminPlatformFeaturesRouter } from "./adminHomeExtras";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -85,6 +85,8 @@ export const appRouter = router({
   adminSelos: adminSelosRouter,
   adminImprensa: adminImprensaRouter,
   adminDiferenciais: adminDiferenciaisRouter,
+  adminSectionSettings: adminSectionSettingsRouter,
+  adminPlatformFeatures: adminPlatformFeaturesRouter,
 });
 
 export type AppRouter = typeof appRouter;

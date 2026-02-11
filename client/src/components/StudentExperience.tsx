@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Monitor, Smartphone, Video, BookOpen, Award, Users, Clock, CheckCircle2 } from "lucide-react";
+import { Monitor, Smartphone, Video, BookOpen, Award, Users, Clock, CheckCircle2, Headphones } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 
 // Mapa de ícones disponíveis
@@ -12,6 +12,7 @@ const iconMap: Record<string, any> = {
   Users,
   Clock,
   CheckCircle2,
+  Headphones,
 };
 
 export default function StudentExperience() {
@@ -26,10 +27,22 @@ export default function StudentExperience() {
     return item?.value || defaultValue;
   };
 
-  // Valores padrão (fallback)
+  // Valores do banco (com fallback)
   const label = getFieldValue("label", "EXPERIÊNCIA DO ALUNO");
   const title = getFieldValue("title", "Plataforma intuitiva e repleta de recursos");
   const description = getFieldValue("description", "Seus alunos terão acesso a uma plataforma moderna, extremamente fácil de usar e com inúmeras vantagens que transformam o aprendizado em uma experiência envolvente e eficiente.");
+  
+  // IMAGEM - puxar do banco
+  const sectionImage = getFieldValue("image", "/images/plataforma-alunos.jpg");
+  
+  // CONTADOR - puxar do banco
+  const counterNumber = getFieldValue("counter_number", "+15000");
+  const counterText = getFieldValue("counter_text", "ALUNOS");
+  const counterSubtext = getFieldValue("counter_subtext", "Transformando vidas");
+  
+  // BOTÃO - puxar do banco
+  const buttonText = getFieldValue("button_text", "CONHECER CURSOS");
+  const buttonLink = getFieldValue("button_link", "/cursos");
 
   // Usar features do banco ou fallback
   const platformFeatures = (platformFeaturesData as any[]).length > 0
@@ -116,9 +129,9 @@ export default function StudentExperience() {
 
             <Button 
               className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
-              onClick={() => window.location.href = '/cursos'}
+              onClick={() => window.location.href = buttonLink}
             >
-              CONHECER CURSOS
+              {buttonText}
             </Button>
           </div>
 
@@ -126,7 +139,7 @@ export default function StudentExperience() {
           <div className="w-full lg:w-1/2 relative order-2">
             <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white">
               <img 
-                src="/images/plataforma-alunos.jpg" 
+                src={sectionImage} 
                 alt="Plataforma de Estudos LA Educação" 
                 className="w-full aspect-[4/3] object-cover"
               />
@@ -156,9 +169,9 @@ export default function StudentExperience() {
                   </div>
                 </div>
                 {/* Count */}
-                <p className="text-2xl font-extrabold bg-gradient-to-r from-[#da1069] to-[#3559AC] bg-clip-text text-transparent mb-1">+15000</p>
-                <p className="text-xs font-bold text-gray-900 uppercase tracking-wider">ALUNOS</p>
-                <p className="text-xs text-gray-500 mt-1">Transformando vidas</p>
+                <p className="text-2xl font-extrabold bg-gradient-to-r from-[#da1069] to-[#3559AC] bg-clip-text text-transparent mb-1">{counterNumber}</p>
+                <p className="text-xs font-bold text-gray-900 uppercase tracking-wider">{counterText}</p>
+                <p className="text-xs text-gray-500 mt-1">{counterSubtext}</p>
               </div>
             </div>
           </div>
