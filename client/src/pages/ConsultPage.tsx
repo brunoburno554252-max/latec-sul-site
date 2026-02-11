@@ -48,7 +48,7 @@ export default function ConsultPage() {
               Consulte Nossos Parceiros
             </h1>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              Verifique se o seu polo de ensino é oficialmente credenciado pela LA. Educação
+              Verifique se o seu polo de ensino é oficialmente credenciado pela LA Educação
             </p>
           </div>
         </section>
@@ -105,7 +105,7 @@ export default function ConsultPage() {
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-gray-700">Por Nome</p>
-                      <p className="text-xs text-gray-400">Ex: ECID</p>
+                      <p className="text-xs text-gray-400">Ex: João Silva</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100">
@@ -123,7 +123,7 @@ export default function ConsultPage() {
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-gray-700">Por ID</p>
-                      <p className="text-xs text-gray-400">Ex: 537</p>
+                      <p className="text-xs text-gray-400">Ex: 12345</p>
                     </div>
                   </div>
                 </div>
