@@ -9,9 +9,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import AvaModal from "@/components/AvaModal";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAvaModalOpen, setIsAvaModalOpen] = useState(false);
   
   const { data: settingsData } = trpc.settings.getAll.useQuery();
   const settings = settingsData ? Object.fromEntries(
@@ -55,7 +57,12 @@ export default function Header() {
             <span>{location}</span>
           </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:opacity-80 transition-opacity">AVA do Aluno</a>
+            <button 
+              onClick={() => setIsAvaModalOpen(true)}
+              className="hover:opacity-80 transition-opacity cursor-pointer"
+            >
+              AVA do Aluno
+            </button>
             <a href="#" className="hover:opacity-80 transition-opacity">Área do Parceiro</a>
           </div>
         </div>
@@ -140,8 +147,15 @@ export default function Header() {
               </Link>
             ))}
             <div className="mt-4 flex flex-col gap-4">
-              <Button variant="outline" className="w-full border-primary text-primary hover:from-[#c4105e] hover:to-[#2a468a]/5 h-12 rounded-xl font-bold">
-                Área do Aluno
+              <Button 
+                variant="outline" 
+                className="w-full border-primary text-primary hover:from-[#c4105e] hover:to-[#2a468a]/5 h-12 rounded-xl font-bold"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsAvaModalOpen(true);
+                }}
+              >
+                AVA do Aluno
               </Button>
               <Button className="w-full bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white h-12 rounded-xl font-bold shadow-lg shadow-[#3559AC]/30">
                 SEJA UM PARCEIRO
@@ -150,6 +164,9 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      {/* AVA Modal */}
+      <AvaModal isOpen={isAvaModalOpen} onClose={() => setIsAvaModalOpen(false)} />
     </header>
   );
 }

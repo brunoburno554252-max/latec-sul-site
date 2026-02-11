@@ -115,24 +115,33 @@ export default function InteractiveEcosystem() {
             return (
               <div
                 key={cardId}
-                className="absolute pointer-events-auto"
+                className="absolute pointer-events-auto flex flex-col items-center gap-2"
                 style={{
                   left: `${percentages.left}%`,
                   top: `${percentages.top}%`,
                   width: `${percentages.width}%`,
                   height: `${percentages.height}%`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transform: "scale(1.2)",
                 }}
               >
-                <ToggleSwitch
-                  isActive={isActive}
-                  onClick={() => handleToggleClick(cardId)}
-                  title={`Clique para abrir ${(card as CardInfo).nome}`}
-                  inverted={(card as CardInfo).inverted || false}
-                />
+                <div className="flex-1 flex items-center justify-center" style={{ transform: "scale(1.2)" }}>
+                  <ToggleSwitch
+                    isActive={isActive}
+                    onClick={() => handleToggleClick(cardId)}
+                    title={`Clique para abrir ${(card as CardInfo).nome}`}
+                    inverted={(card as CardInfo).inverted || false}
+                  />
+                </div>
+                {instituicoesInfo[cardId]?.website && (
+                  <a
+                    href={instituicoesInfo[cardId].website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gradient-to-r from-[#da1069] to-[#9b1b8e] text-white text-xs font-bold py-1.5 px-4 rounded-full hover:opacity-90 transition-opacity shadow-lg whitespace-nowrap"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Conhecer mais →
+                  </a>
+                )}
               </div>
             );
           })}
