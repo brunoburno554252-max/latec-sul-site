@@ -11,6 +11,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { adminSubdomainMiddleware } from "../adminSubdomainMiddleware";
 import mysql from "mysql2/promise";
+import { registerCertificateKeysRoutes } from "../certificateKeysRouter";
 
 // Configuração do banco de dados MySQL - lida em RUNTIME
 function getDbConfig() {
@@ -243,6 +244,11 @@ async function startServer() {
     }
   });
   
+  // ============================================================
+  // CERTIFICATE KEYS - Sistema seguro de chaves de download
+  // ============================================================
+  registerCertificateKeysRoutes(app, getDbPool);
+
   // tRPC API
   app.use(
     "/api/trpc",
