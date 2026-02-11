@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, CheckCircle2, XCircle, MapPin, Phone, Mail, AlertCircle, Loader2 } from "lucide-react";
+import { Search, CheckCircle2, XCircle, AlertCircle, Loader2, Building2, Sparkles, ChevronRight, User, FileText, Hash } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -38,45 +38,54 @@ export default function ConsultPage() {
       <Header />
       
       <main className="flex-1">
-        {/* Barra Rosa de Título */}
-        <div className="bg-gradient-to-r from-[#da1069] to-[#3559AC] py-6 shadow-md">
-          <div className="container mx-auto px-4">
-            <h1 className="text-2xl md:text-3xl font-bold text-white text-center">
-              Consulte Polo Parceiro
+        {/* Hero Section */}
+        <section className="bg-gradient-to-r from-[#da1069] to-[#3559AC] py-16 text-white">
+          <div className="container mx-auto px-4 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-6">
+              <Building2 className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">
+              Consulte Nossos Parceiros
             </h1>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+              Verifique se o seu polo de ensino é oficialmente credenciado pela LA. Educação
+            </p>
           </div>
-        </div>
+        </section>
 
-        {/* Seção de Busca Simplificada */}
-        <section className="py-12 md:py-20 bg-gray-50">
+        {/* Seção de Busca */}
+        <section className="py-12 md:py-20 bg-gray-50 -mt-10">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
               {/* Card de Busca */}
-              <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
-                <div className="text-center mb-10">
-                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
-                    Verifique suas credenciais LA Educação
-                  </h2>
-                  <p className="text-gray-500">
-                    Busque por nome, CNPJ, ID ou código do polo
-                  </p>
+              <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100">
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#da1069]/10 to-[#da1069]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Search className="w-6 h-6 text-[#da1069]" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">Buscar Parceiro</h2>
+                    <p className="text-sm text-gray-500">Digite pelo menos 3 caracteres para iniciar</p>
+                  </div>
                 </div>
                 
                 {/* Campo de Busca */}
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    {isLoading || isTyping ? (
-                      <Loader2 className="w-6 h-6 text-primary animate-spin" />
-                    ) : (
-                      <Search className="w-6 h-6 text-gray-400" />
-                    )}
+                <div className="relative mt-6">
+                  <div className="absolute inset-y-0 left-0 flex items-center">
+                    <div className="w-12 h-12 ml-1 bg-gradient-to-br from-[#da1069] to-[#9b1b8e] rounded-full flex items-center justify-center">
+                      {isLoading || isTyping ? (
+                        <Loader2 className="w-5 h-5 text-white animate-spin" />
+                      ) : (
+                        <Search className="w-5 h-5 text-white" />
+                      )}
+                    </div>
                   </div>
                   <input
                     type="text"
-                    placeholder="Digite aqui para buscar..."
+                    placeholder="Nome, CNPJ/CPF ou ID do Parceiro..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl text-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-0 transition-all"
+                    className="block w-full pl-16 pr-12 py-4 border-2 border-gray-200 rounded-full text-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#da1069] focus:ring-0 transition-all"
                   />
                   {searchTerm && (
                     <button 
@@ -86,6 +95,37 @@ export default function ConsultPage() {
                       <XCircle className="w-6 h-6 text-gray-300 hover:text-gray-500 transition-colors" />
                     </button>
                   )}
+                </div>
+
+                {/* Dicas de busca */}
+                <div className="flex flex-wrap gap-3 mt-5 justify-center">
+                  <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100">
+                    <div className="w-8 h-8 bg-[#da1069]/10 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-[#da1069]" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-700">Por Nome</p>
+                      <p className="text-xs text-gray-400">Ex: ECID</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100">
+                    <div className="w-8 h-8 bg-[#da1069]/10 rounded-full flex items-center justify-center">
+                      <FileText className="w-4 h-4 text-[#da1069]" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-700">Por CNPJ/CPF</p>
+                      <p className="text-xs text-gray-400">Ex: 12.345.678/0001-00</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100">
+                    <div className="w-8 h-8 bg-[#da1069]/10 rounded-full flex items-center justify-center">
+                      <Hash className="w-4 h-4 text-[#da1069]" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-700">Por ID</p>
+                      <p className="text-xs text-gray-400">Ex: 537</p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Mensagem de Ajuda */}
@@ -99,47 +139,72 @@ export default function ConsultPage() {
 
               {/* Resultados da Busca */}
               {showResults && (
-                <div className="mt-10 space-y-6">
+                <div className="mt-8 space-y-6">
                   {isLoading ? (
                     <div className="text-center py-10">
-                      <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto mb-4" />
+                      <Loader2 className="w-10 h-10 text-[#da1069] animate-spin mx-auto mb-4" />
                       <p className="text-gray-500">Consultando base de dados...</p>
                     </div>
                   ) : error ? (
                     <div className="bg-red-50 border border-red-100 rounded-xl p-6 text-center">
-                      <p className="text-red-600 font-medium">Ocorreu um erro ao realizar a consulta.</p>
+                      <p className="text-red-600 font-medium">Ocorreu um erro ao realizar a consulta. Tente novamente em instantes.</p>
                     </div>
                   ) : filteredResults.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4">
-                      {filteredResults.map((licenciado: any) => (
-                        <div key={licenciado.id} className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                          <div className="flex items-start gap-4">
-                            <div className="bg-green-100 p-2 rounded-full">
-                              <CheckCircle2 className="w-6 h-6 text-green-600" />
+                    <>
+                      {/* Contador de resultados */}
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#da1069]/10 to-purple-100 rounded-full flex items-center justify-center">
+                          <Sparkles className="w-5 h-5 text-[#da1069]" />
+                        </div>
+                        <div>
+                          <p className="text-lg font-bold text-gray-900">
+                            {filteredResults.length} resultado{filteredResults.length !== 1 ? 's' : ''}
+                          </p>
+                          <p className="text-sm text-gray-500">para "{debouncedTerm}"</p>
+                        </div>
+                      </div>
+
+                      {/* Cards de resultado */}
+                      <div className="grid grid-cols-1 gap-5">
+                        {filteredResults.map((licenciado: any) => (
+                          <div key={licenciado.id} className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow">
+                            {/* Header verde */}
+                            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-3 flex items-center gap-2">
+                              <CheckCircle2 className="w-5 h-5 text-white" />
+                              <span className="text-white font-semibold text-sm">Parceiro Credenciado e Autorizado</span>
                             </div>
-                            <div>
-                              <h3 className="text-lg font-bold text-gray-900">{licenciado.nome}</h3>
-                              <p className="text-sm text-gray-500 font-mono">{licenciado.cnpj_cpf}</p>
-                              <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
-                                <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {licenciado.polo}</span>
-                                {licenciado.telefone && <span className="flex items-center gap-1"><Phone className="w-4 h-4" /> {licenciado.telefone}</span>}
+                            
+                            {/* Conteúdo */}
+                            <div className="p-6">
+                              <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-xl font-bold text-gray-900">{licenciado.nome}</h3>
+                                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                                </div>
+                              </div>
+                              
+                              {/* Dados em colunas */}
+                              <div className="grid grid-cols-2 gap-4 bg-gray-50 rounded-xl p-4">
+                                <div>
+                                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">ID do Parceiro</p>
+                                  <p className="text-lg font-bold text-emerald-600">{licenciado.id}</p>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">CNPJ/CPF</p>
+                                  <p className="text-base font-mono font-medium text-gray-800">{licenciado.cnpj_cpf}</p>
+                                </div>
                               </div>
                             </div>
                           </div>
-                          <div className="flex-shrink-0">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 uppercase">
-                              Credenciado Ativo
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    </>
                   ) : (
                     <div className="bg-white rounded-xl shadow-md p-12 text-center border border-gray-100">
                       <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Search className="w-8 h-8 text-gray-400" />
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-2">Nenhum polo encontrado</h3>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">Nenhum parceiro encontrado</h3>
                       <p className="text-gray-500">Verifique os dados digitados e tente novamente.</p>
                     </div>
                   )}

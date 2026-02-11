@@ -94,65 +94,80 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
-// Função para mascarar CPF/CNPJ
-function maskCpfCnpj(cpfCnpj: string): string {
-  if (!cpfCnpj) return "";
+// Função para mascarar CPF/CNPJ - mostra 4 primeiros dígitos usando cnpj_cpf_busca
+function maskCpfCnpj(cnpjCpfBusca: string, cnpjCpfOriginal: string): string {
+  // Usar cnpj_cpf_busca (números completos) para criar máscara controlada
+  const numbers = (cnpjCpfBusca || "").replace(/[^\d]/g, "");
   
-  // Remover formatação
-  const numbers = cpfCnpj.replace(/[^\d]/g, "");
-  
-  if (numbers.length === 11) {
-    // CPF: mostrar apenas 3 primeiros dígitos
-    return `${numbers.substring(0, 3)}.***.***-**`;
-  } else if (numbers.length === 14) {
-    // CNPJ: mostrar apenas 2 primeiros dígitos
-    return `${numbers.substring(0, 2)}.***.***/****-**`;
+  if (!numbers || numbers.length < 4) {
+    // Fallback: se não tem busca, retornar o original da API (já mascarado)
+    return cnpjCpfOriginal || "\u2014";
   }
   
-  // Formato desconhecido, mascarar tudo
-  return "***";
+  if (numbers.length === 11) {
+    // CPF: mostrar 4 primeiros dígitos -> 123.4**.**-**
+    return numbers.substring(0, 3) + "." + numbers.substring(3, 4) + "**.**-**";
+  } else if (numbers.length === 14) {
+    // CNPJ: mostrar 4 primeiros dígitos -> 12.34*.***/****-**
+    return numbers.substring(0, 2) + "." + numbers.substring(2, 4) + "*.***/****-**";
+  }
+  
+  // Outro formato: mostrar 4 primeiros dígitos
+  return numbers.substring(0, 4) + "*".repeat(Math.max(0, numbers.length - 4));
 }
 
 // Função para filtrar licenciados - BUSCA PRECISA
 function searchLicenciados(licenciados: any[], searchTerm: string): any[] {
   const term = searchTerm.toLowerCase().trim();
-  const termNumerico = term.replace(/[^0-9]/g, '');
+  const termNumerico = term.replace(/[^0-9]/g, "");
   
-  // Se o termo é apenas números, buscar por ID EXATO ou CNPJ/CPF EXATO
+  // Detectar se parece CNPJ/CPF (contém pontos, barras, hifens ou é numérico com 3+ dígitos)
+  const looksLikeCnpjCpf = /^[\d.\-\/]+$/.test(term) && termNumerico.length >= 3;
+  
+  // Se o termo é apenas números ou parece CNPJ/CPF
   const isNumericOnly = /^\d+$/.test(term);
   
-  if (isNumericOnly) {
+  if (looksLikeCnpjCpf || isNumericOnly) {
     // Busca numérica - priorizar ID exato
-    const exactIdMatch = licenciados.filter((lic) => lic.id.toString() === term);
-    if (exactIdMatch.length > 0) {
-      return exactIdMatch; // Retornar apenas o ID exato
+    if (isNumericOnly) {
+      const exactIdMatch = licenciados.filter((lic) => lic.id.toString() === term);
+      if (exactIdMatch.length > 0) {
+        return exactIdMatch;
+      }
     }
     
-    // Se não encontrou ID exato, buscar por CNPJ/CPF que contenha o número
-    return licenciados.filter((lic) => {
-      const cnpjCpfBusca = (lic.cnpj_cpf_busca || "").replace(/[^0-9]/g, '');
-      return cnpjCpfBusca === termNumerico || cnpjCpfBusca.startsWith(termNumerico);
+    // Buscar por CNPJ/CPF que contenha os números
+    const cnpjResults = licenciados.filter((lic) => {
+      const cnpjCpfBusca = (lic.cnpj_cpf_busca || lic.cnpj_cpf || "").replace(/[^0-9]/g, "");
+      return cnpjCpfBusca.startsWith(termNumerico) || cnpjCpfBusca.includes(termNumerico);
     });
+    
+    if (cnpjResults.length > 0) {
+      return cnpjResults;
+    }
+    
+    // Se não encontrou por CNPJ, tentar por ID parcial
+    if (isNumericOnly) {
+      return licenciados.filter((lic) => lic.id.toString().startsWith(term));
+    }
+    
+    return [];
   }
   
-  // Busca por texto - nome, código do polo
+  // Busca por texto - nome
   return licenciados.filter((lic) => {
     const nome = (lic.nome || "").toLowerCase();
-    const polo = (lic.polo || "").toLowerCase();
     
-    // Busca por nome - deve começar com o termo OU conter como palavra completa
+    // Busca por nome
     const nomeWords = nome.split(/\s+/);
     const termWords = term.split(/\s+/);
     
     // Verificar se TODAS as palavras do termo estão presentes no nome
-    const allTermsInName = termWords.every(tw => 
+    const allTermsInName = termWords.every((tw: string) => 
       nomeWords.some((nw: string) => nw.startsWith(tw) || nw === tw)
     );
     
     if (allTermsInName) return true;
-    
-    // Busca por código do polo - correspondência exata ou começa com
-    if (polo === term || polo.startsWith(term)) return true;
     
     return false;
   });
@@ -163,22 +178,22 @@ export const licenciadosProxyRouter = router({
     .input(
       z.object({
         term: z.string()
-          .min(3, "O termo de busca deve ter no mínimo 3 caracteres")
-          .max(100, "O termo de busca deve ter no máximo 100 caracteres")
+          .min(3, "O termo de busca deve ter no m\u00ednimo 3 caracteres")
+          .max(100, "O termo de busca deve ter no m\u00e1ximo 100 caracteres")
       })
     )
     .query(async ({ input, ctx }) => {
-      // Obter IP do cliente (via headers do request)
-      const ip = ctx.req?.headers['x-forwarded-for'] || 
-                 ctx.req?.headers['x-real-ip'] || 
+      // Obter IP do cliente
+      const ip = ctx.req?.headers["x-forwarded-for"] || 
+                 ctx.req?.headers["x-real-ip"] || 
                  ctx.req?.socket?.remoteAddress || 
-                 'unknown';
+                 "unknown";
       
       const clientIp = Array.isArray(ip) ? ip[0] : ip.toString();
       
       // Verificar rate limit
       if (!checkRateLimit(clientIp)) {
-        throw new Error("Muitas requisições. Por favor, aguarde um momento e tente novamente.");
+        throw new Error("Muitas requisi\u00e7\u00f5es. Por favor, aguarde um momento e tente novamente.");
       }
       
       try {
@@ -188,19 +203,14 @@ export const licenciadosProxyRouter = router({
         // Filtrar resultados no backend
         const filteredResults = searchLicenciados(allLicenciados, input.term);
         
-        // Mascarar dados sensíveis antes de retornar
+        // Mascarar dados sens\u00edveis antes de retornar
         const safeResults = filteredResults.map((lic) => ({
           id: lic.id,
           nome: lic.nome,
           status: lic.status,
-          cnpj_cpf: maskCpfCnpj(lic.cnpj_cpf), // Mascarar CPF/CNPJ
-          polo: lic.polo,
-          telefone: lic.telefone,
-          email: lic.email,
-          endereco: lic.endereco,
-          cidade: lic.cidade,
-          estado: lic.estado
-          // NÃO retornar cnpj_cpf_busca (dados completos)
+          cnpj_cpf: maskCpfCnpj(lic.cnpj_cpf_busca || "", lic.cnpj_cpf || ""),
+          cidade: lic.cidade || null,
+          estado: lic.estado || null,
         }));
         
         // Log de auditoria
@@ -212,7 +222,7 @@ export const licenciadosProxyRouter = router({
         };
         auditLogs.push(log);
         
-        // Manter apenas últimos 1000 logs
+        // Manter apenas \u00faltimos 1000 logs
         if (auditLogs.length > 1000) {
           auditLogs.shift();
         }
