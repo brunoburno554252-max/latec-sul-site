@@ -174,19 +174,20 @@ function SelosSection() {
   const [editingSelo, setEditingSelo] = useState<any>(null);
   const [title, setTitle] = useState('');
   const [image, setImage] = useState('');
+  const [link, setLink] = useState('');
   const [isActive, setIsActive] = useState(true);
 
   const createMutation = trpc.adminSelos.create.useMutation({ onSuccess: () => { toast.success('Selo criado!'); refetch(); resetForm(); } });
   const updateMutation = trpc.adminSelos.update.useMutation({ onSuccess: () => { toast.success('Selo atualizado!'); refetch(); resetForm(); } });
   const deleteMutation = trpc.adminSelos.delete.useMutation({ onSuccess: () => { toast.success('Selo excluído!'); refetch(); } });
 
-  const resetForm = () => { setShowForm(false); setEditingSelo(null); setTitle(''); setImage(''); setIsActive(true); };
-  const handleEdit = (selo: any) => { setEditingSelo(selo); setShowForm(true); setTitle(selo.title); setImage(selo.image); setIsActive(selo.isActive); };
+  const resetForm = () => { setShowForm(false); setEditingSelo(null); setTitle(''); setImage(''); setLink(''); setIsActive(true); };
+  const handleEdit = (selo: any) => { setEditingSelo(selo); setShowForm(true); setTitle(selo.title); setImage(selo.image); setLink(selo.link || ''); setIsActive(selo.isActive); };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !image) return toast.error('Preencha todos os campos');
-    if (editingSelo) updateMutation.mutate({ id: editingSelo.id, title, image, isActive });
-    else createMutation.mutate({ title, image, isActive, order: selos.length + 1 });
+    if (editingSelo) updateMutation.mutate({ id: editingSelo.id, title, image, link: link || undefined, isActive });
+    else createMutation.mutate({ title, image, link: link || undefined, isActive, order: selos.length + 1 });
   };
 
   return (
@@ -202,6 +203,7 @@ function SelosSection() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div><Label>Título</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} /></div>
+                  <div><Label>Link (URL)</Label><Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://exemplo.com.br" /><p className="text-xs text-gray-500 mt-1">Ao clicar no selo, o usuário será redirecionado para este link</p></div>
                   <div className="flex items-center gap-2"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Ativo</Label></div>
                 </div>
                 <div><Label>Imagem</Label><ImageUpload value={image} onChange={setImage} onRemove={() => setImage('')} /></div>
@@ -217,6 +219,7 @@ function SelosSection() {
             <CardContent className="p-4 text-center space-y-2">
               <img src={selo.image} className="h-16 mx-auto object-contain" />
               <p className="font-medium text-sm">{selo.title}</p>
+              {selo.link && <p className="text-xs text-blue-500 truncate">{selo.link}</p>}
               <div className="flex justify-center gap-2">
                 <Button variant="ghost" size="icon" onClick={() => handleEdit(selo)}><Pencil className="w-4 h-4" /></Button>
                 <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: selo.id })}><Trash2 className="w-4 h-4" /></Button>
@@ -235,18 +238,19 @@ function ImprensaSection() {
   const [editing, setEditing] = useState<any>(null);
   const [name, setName] = useState('');
   const [logo, setLogo] = useState('');
+  const [link, setLink] = useState('');
   const [isActive, setIsActive] = useState(true);
 
   const createMutation = trpc.adminImprensa.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetForm(); } });
   const updateMutation = trpc.adminImprensa.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetForm(); } });
   const deleteMutation = trpc.adminImprensa.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); } });
 
-  const resetForm = () => { setShowForm(false); setEditing(null); setName(''); setLogo(''); setIsActive(true); };
-  const handleEdit = (item: any) => { setEditing(item); setShowForm(true); setName(item.name); setLogo(item.logo); setIsActive(item.isActive); };
+  const resetForm = () => { setShowForm(false); setEditing(null); setName(''); setLogo(''); setLink(''); setIsActive(true); };
+  const handleEdit = (item: any) => { setEditing(item); setShowForm(true); setName(item.name); setLogo(item.logo); setLink(item.link || ''); setIsActive(item.isActive); };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editing) updateMutation.mutate({ id: editing.id, name, logo, isActive });
-    else createMutation.mutate({ name, logo, isActive, order: imprensa.length + 1 });
+    if (editing) updateMutation.mutate({ id: editing.id, name, logo, link: link || undefined, isActive });
+    else createMutation.mutate({ name, logo, link: link || undefined, isActive, order: imprensa.length + 1 });
   };
 
   return (
@@ -258,7 +262,10 @@ function ImprensaSection() {
       {showForm && (
         <Card><CardContent className="pt-6"><form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><Label>Nome</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
+            <div className="space-y-4">
+              <div><Label>Nome</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
+              <div><Label>Link (URL)</Label><Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://exemplo.com.br" /><p className="text-xs text-gray-500 mt-1">Ao clicar no logo, o usuário será redirecionado para este link</p></div>
+            </div>
             <div><Label>Logo</Label><ImageUpload value={logo} onChange={setLogo} onRemove={() => setLogo('')} /></div>
           </div>
           <div className="flex items-center gap-2"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Ativo</Label></div>
@@ -270,6 +277,8 @@ function ImprensaSection() {
           <Card key={item.id} className={item.isActive ? '' : 'opacity-50'}>
             <CardContent className="p-4 text-center space-y-2">
               <img src={item.logo} className="h-8 mx-auto object-contain grayscale" />
+              <p className="text-xs text-gray-600 truncate">{item.name}</p>
+              {item.link && <p className="text-xs text-blue-500 truncate">{item.link}</p>}
               <div className="flex justify-center gap-2">
                 <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}><Pencil className="w-4 h-4" /></Button>
                 <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: item.id })}><Trash2 className="w-4 h-4" /></Button>
