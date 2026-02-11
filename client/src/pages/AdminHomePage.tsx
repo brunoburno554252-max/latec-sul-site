@@ -12,7 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2, MoveUp, MoveDown, GraduationCap, BookOpen, Clock, Image as ImageIcon } from 'lucide-react';
+import { Plus, Pencil, Trash2, MoveUp, MoveDown, GraduationCap, BookOpen, Clock, Image as ImageIcon, Globe, ExternalLink, Save, X } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
 
 function BannerSection() {
@@ -355,19 +355,235 @@ function PlataformaSection() {
 }
 
 function EcossistemaSection() {
-  const { data: settings, refetch } = trpc.adminHome.getSettings.useQuery();
-  const updateMutation = trpc.adminHome.updateSettings.useMutation({ onSuccess: () => { toast.success('Salvo!'); refetch(); } });
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
+  const { data: settings, refetch: refetchSettings } = trpc.adminHome.getSettings.useQuery();
+  const updateSettingsMutation = trpc.adminHome.updateSettings.useMutation({ onSuccess: () => { toast.success('Título/Descrição salvos!'); refetchSettings(); } });
+  const [sectionTitle, setSectionTitle] = useState('');
+  const [sectionDesc, setSectionDesc] = useState('');
 
-  React.useEffect(() => { if (settings) { setTitle(settings.ecosystemTitle || ''); setDesc(settings.ecosystemDescription || ''); } }, [settings]);
+  // CRUD de instituições
+  const { data: institutions = [], refetch: refetchInstitutions } = trpc.adminHome.getEcosystemInstitutions.useQuery();
+  const addMutation = trpc.adminHome.addEcosystemInstitution.useMutation({ onSuccess: () => { toast.success('Instituição adicionada!'); refetchInstitutions(); resetForm(); } });
+  const updateMutation = trpc.adminHome.updateEcosystemInstitution.useMutation({ onSuccess: () => { toast.success('Instituição atualizada!'); refetchInstitutions(); resetForm(); } });
+  const deleteMutation = trpc.adminHome.deleteEcosystemInstitution.useMutation({ onSuccess: () => { toast.success('Instituição excluída!'); refetchInstitutions(); } });
+
+  const [showForm, setShowForm] = useState(false);
+  const [editingInst, setEditingInst] = useState<any>(null);
+  const [formId, setFormId] = useState('');
+  const [formName, setFormName] = useState('');
+  const [formLogo, setFormLogo] = useState('');
+  const [formDescription, setFormDescription] = useState('');
+  const [formWebsite, setFormWebsite] = useState('');
+  const [formTipo, setFormTipo] = useState('');
+  const [formCategoria, setFormCategoria] = useState('');
+  const [formBanner, setFormBanner] = useState('');
+
+  React.useEffect(() => { if (settings) { setSectionTitle(settings.ecosystemTitle || ''); setSectionDesc(settings.ecosystemDescription || ''); } }, [settings]);
+
+  const resetForm = () => {
+    setShowForm(false); setEditingInst(null);
+    setFormId(''); setFormName(''); setFormLogo(''); setFormDescription('');
+    setFormWebsite(''); setFormTipo(''); setFormCategoria(''); setFormBanner('');
+  };
+
+  const handleEdit = (inst: any) => {
+    setEditingInst(inst);
+    setShowForm(true);
+    setFormId(inst.id);
+    setFormName(inst.name || '');
+    setFormLogo(inst.logo || '');
+    setFormDescription(inst.description || '');
+    setFormWebsite(inst.website || '');
+    setFormTipo(inst.tipo || '');
+    setFormCategoria(inst.categoria || '');
+    setFormBanner(inst.banner || '');
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formName) return toast.error('Nome é obrigatório');
+    if (editingInst) {
+      updateMutation.mutate({
+        id: editingInst.id,
+        name: formName,
+        logo: formLogo,
+        description: formDescription,
+        website: formWebsite,
+        tipo: formTipo,
+        categoria: formCategoria,
+        banner: formBanner
+      });
+    } else {
+      if (!formId) return toast.error('ID é obrigatório para nova instituição');
+      addMutation.mutate({
+        id: formId,
+        name: formName,
+        logo: formLogo,
+        description: formDescription,
+        website: formWebsite,
+        tipo: formTipo,
+        categoria: formCategoria,
+        banner: formBanner
+      });
+    }
+  };
+
+  const handleDelete = (id: string, name: string) => {
+    if (window.confirm(`Tem certeza que deseja excluir "${name}"?`)) {
+      deleteMutation.mutate({ id });
+    }
+  };
 
   return (
-    <Card><CardContent className="pt-6 space-y-4">
-      <div><Label>Título da Seção Ecossistema</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-      <div><Label>Descrição</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={4} /></div>
-      <Button onClick={() => updateMutation.mutate({ ecosystemTitle: title, ecosystemDescription: desc })}>Salvar Alterações</Button>
-    </CardContent></Card>
+    <div className="space-y-8">
+      {/* Seção 1: Título e Descrição da Seção */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Configurações da Seção</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div><Label>Título da Seção Ecossistema</Label><Input value={sectionTitle} onChange={(e) => setSectionTitle(e.target.value)} placeholder="Ex: Por que somos o maior Ecossistema Educacional do Brasil?" /></div>
+          <div><Label>Descrição</Label><Textarea value={sectionDesc} onChange={(e) => setSectionDesc(e.target.value)} rows={3} placeholder="Descrição da seção do ecossistema" /></div>
+          <Button onClick={() => updateSettingsMutation.mutate({ ecosystemTitle: sectionTitle, ecosystemDescription: sectionDesc })} className="gap-2"><Save className="w-4 h-4" /> Salvar Configurações</Button>
+        </CardContent>
+      </Card>
+
+      {/* Seção 2: Gerenciar Instituições */}
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Instituições do Ecossistema</h2>
+          <Button onClick={() => { resetForm(); setShowForm(true); }} className="gap-2 bg-pink-600 hover:bg-pink-700">
+            <Plus className="w-4 h-4" /> Nova Instituição
+          </Button>
+        </div>
+
+        {/* Formulário de Criar/Editar */}
+        {showForm && (
+          <Card className="border-2 border-pink-200">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-lg">{editingInst ? `Editar: ${editingInst.name}` : 'Nova Instituição'}</CardTitle>
+                <Button variant="ghost" size="icon" onClick={resetForm}><X className="w-4 h-4" /></Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Coluna Esquerda */}
+                  <div className="space-y-4">
+                    {!editingInst && (
+                      <div>
+                        <Label>ID (slug único, ex: mde, la_tecnologia)</Label>
+                        <Input value={formId} onChange={(e) => setFormId(e.target.value.toLowerCase().replace(/\s+/g, '_'))} placeholder="ex: minha_empresa" />
+                      </div>
+                    )}
+                    <div>
+                      <Label>Nome da Instituição *</Label>
+                      <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ex: MDE - Método de Desenvolvimento" />
+                    </div>
+                    <div>
+                      <Label>Tipo</Label>
+                      <Input value={formTipo} onChange={(e) => setFormTipo(e.target.value)} placeholder="Ex: Método Educacional" />
+                    </div>
+                    <div>
+                      <Label>Categoria</Label>
+                      <Input value={formCategoria} onChange={(e) => setFormCategoria(e.target.value)} placeholder="Ex: Educação" />
+                    </div>
+                    <div>
+                      <Label className="flex items-center gap-2"><Globe className="w-4 h-4 text-pink-600" /> Link do Botão "Conhecer mais"</Label>
+                      <Input value={formWebsite} onChange={(e) => setFormWebsite(e.target.value)} placeholder="https://exemplo.com.br" />
+                      <p className="text-xs text-gray-500 mt-1">Se preenchido, o botão "Conhecer mais" aparecerá no site</p>
+                    </div>
+                    <div>
+                      <Label>Descrição</Label>
+                      <Textarea value={formDescription} onChange={(e) => setFormDescription(e.target.value)} rows={4} placeholder="Descrição da instituição que aparece no site" />
+                    </div>
+                  </div>
+                  {/* Coluna Direita - Imagens */}
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-pink-600" /> Logo da Instituição</Label>
+                      <ImageUpload value={formLogo} onChange={setFormLogo} onRemove={() => setFormLogo('')} />
+                    </div>
+                    <div>
+                      <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-blue-600" /> Banner de Fundo</Label>
+                      <ImageUpload value={formBanner} onChange={setFormBanner} onRemove={() => setFormBanner('')} />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 pt-4 border-t">
+                  <Button type="button" variant="outline" onClick={resetForm}>Cancelar</Button>
+                  <Button type="submit" className="bg-pink-600 hover:bg-pink-700 gap-2">
+                    <Save className="w-4 h-4" /> {editingInst ? 'Salvar Alterações' : 'Criar Instituição'}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Lista de Instituições */}
+        {(institutions as any[]).length === 0 ? (
+          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed">
+            <Globe className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500">Nenhuma instituição cadastrada ainda.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {(institutions as any[]).map((inst: any) => (
+              <Card key={inst.id} className="overflow-hidden hover:shadow-md transition-shadow">
+                <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-3 text-white">
+                  <h3 className="font-bold truncate">{inst.name || inst.id}</h3>
+                  <p className="text-xs text-pink-100">{inst.tipo || 'Sem tipo definido'}</p>
+                </div>
+                <CardContent className="p-4 space-y-3">
+                  {/* Logo Preview */}
+                  <div className="flex justify-center bg-gray-50 rounded-lg p-3 min-h-[80px]">
+                    {inst.logo ? (
+                      <img src={inst.logo} alt={inst.name} className="h-16 w-auto object-contain" />
+                    ) : (
+                      <div className="flex items-center justify-center text-gray-300">
+                        <ImageIcon className="w-8 h-8" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="space-y-1">
+                    <p className="text-xs text-gray-500 uppercase font-semibold">Descrição</p>
+                    <p className="text-sm text-gray-700 line-clamp-2">{inst.description || 'Sem descrição'}</p>
+                  </div>
+
+                  {/* Website Status */}
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${
+                      inst.website ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                    }`}>
+                      <ExternalLink className="w-3 h-3" />
+                      {inst.website ? 'Link ativo' : 'Sem link'}
+                    </span>
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${
+                      inst.logo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      Logo: {inst.logo ? 'OK' : 'Falta'}
+                    </span>
+                  </div>
+
+                  {/* Ações */}
+                  <div className="flex gap-2 pt-3 border-t">
+                    <Button variant="outline" size="sm" className="flex-1 gap-1 hover:bg-pink-50 hover:text-pink-700" onClick={() => handleEdit(inst)}>
+                      <Pencil className="w-3 h-3" /> Editar
+                    </Button>
+                    <Button variant="outline" size="sm" className="gap-1 text-red-600 hover:bg-red-50" onClick={() => handleDelete(inst.id, inst.name)} disabled={deleteMutation.isPending}>
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
