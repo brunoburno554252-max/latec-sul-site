@@ -39,7 +39,7 @@ export default function ConsultPage() {
       
       <main className="flex-1">
         {/* Barra Rosa de Título */}
-        <div className="bg-primary py-6 shadow-md">
+        <div className="bg-gradient-to-r from-[#da1069] to-[#3559AC] py-6 shadow-md">
           <div className="container mx-auto px-4">
             <h1 className="text-2xl md:text-3xl font-bold text-white text-center">
               Consulte Polo Parceiro

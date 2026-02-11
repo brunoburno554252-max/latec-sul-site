@@ -4,6 +4,13 @@ import { getDbPool } from "./_core/index";
 
 export const homeRouters = router({
   // ========== HOME SETTINGS ==========
+  getSettings: publicProcedure.query(async () => {
+    const pool = await getDbPool();
+    const [rows] = await pool.query(
+      "SELECT * FROM home_settings WHERE active = TRUE ORDER BY section, sort_order"
+    );
+    return rows;
+  }),
   getHomeSettings: publicProcedure
     .query(async () => {
       const pool = await getDbPool();

@@ -147,6 +147,7 @@ export const heroBanners = mysqlTable("hero_banners", {
   displayDuration: int("displayDuration").default(10),
   textPosition: mysqlEnum("textPosition", ["left", "center", "right"]).default("left"),
   overlayOpacity: int("overlayOpacity").default(50),
+  showContent: boolean("showContent").default(true).notNull(),
   order: int("order").default(0).notNull(),
   isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

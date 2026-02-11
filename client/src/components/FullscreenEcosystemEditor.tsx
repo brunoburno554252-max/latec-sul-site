@@ -270,7 +270,7 @@ export default function FullscreenEcosystemEditor() {
                     e.stopPropagation();
                     handleToggleInverted(cardId);
                   }}
-                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                   title="Inverter cores do botão"
                 >
                   ⚡

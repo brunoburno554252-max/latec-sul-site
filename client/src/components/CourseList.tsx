@@ -10,7 +10,7 @@ const categories = [
     title: "Graduação EAD",
     description: "Flexibilidade total para conquistar seu diploma superior reconhecido pelo MEC.",
     icon: <GraduationCap size={32} className="text-white" />,
-    color: "bg-purple-600",
+    color: "bg-pink-600",
     image: "/images/course-law.jpg",
     link: "/cursos?categoria=graduacao-ead",
     types: ["Bacharelado", "Licenciatura"]
@@ -30,7 +30,7 @@ const categories = [
     title: "Cursos Técnicos",
     description: "Formação rápida e prática para ingressar imediatamente na profissão.",
     icon: <Monitor size={32} className="text-white" />,
-    color: "bg-blue-600",
+    color: "bg-[#2a468a]",
     image: "/images/course-engineering.jpg",
     link: "/cursos?categoria=cursos-tecnicos",
     types: ["Tecnólogo"]
@@ -133,7 +133,7 @@ export default function CourseList() {
 
         <div className="mt-16 text-center">
           <Link href="/cursos">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold px-10 h-14 rounded-full shadow-lg shadow-primary/20 transition-all hover:scale-105">
+            <Button size="lg" className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90 text-white font-bold px-10 h-14 rounded-full shadow-lg shadow-[#3559AC]/30 transition-all hover:scale-105">
               VER CATÁLOGO COMPLETO
             </Button>
           </Link>

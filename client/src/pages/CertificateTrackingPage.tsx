@@ -29,7 +29,7 @@ export default function CertificateTrackingPage() {
       
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-primary py-16 text-white">
+        <section className="bg-gradient-to-r from-[#da1069] to-[#3559AC] py-16 text-white">
           <div className="container mx-auto px-4 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-6">
               <ShieldCheck className="w-10 h-10 text-white" />
@@ -61,7 +61,7 @@ export default function CertificateTrackingPage() {
                         onChange={(e) => setSearchId(e.target.value)}
                       />
                     </div>
-                    <Button type="submit" className="h-12 px-8 bg-primary hover:bg-primary/90 text-white font-bold text-lg" disabled={isLoading}>
+                    <Button type="submit" className="h-12 px-8 bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90 text-white font-bold text-lg" disabled={isLoading}>
                       {isLoading ? <Loader2 className="animate-spin mr-2" /> : "BUSCAR"}
                     </Button>
                   </form>

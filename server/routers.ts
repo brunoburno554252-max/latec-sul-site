@@ -80,6 +80,7 @@ export const appRouter = router({
   adminPartners: adminPartnersRouter,
   adminOmbudsman: adminOmbudsmanRouter,
   adminTestimonials: adminTestimonialsRouter,
+  adminHome: homeRouters,
 });
 
 export type AppRouter = typeof appRouter;

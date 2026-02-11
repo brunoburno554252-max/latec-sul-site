@@ -140,22 +140,22 @@ export default function AdminTestimonialsPage() {
     return (
       <div className="p-8">
         <div className="flex items-center justify-center py-12">
-          <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-gradient-to-br from-purple-50/50 to-pink-50/50 min-h-screen">
+    <div className="p-8 bg-gradient-to-br from-pink-50/50 to-pink-50/50 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-start mb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-pink-500/30">
               <Quote className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-600 bg-clip-text text-transparent">
               Depoimentos dos Parceiros
             </h1>
           </div>
@@ -168,7 +168,7 @@ export default function AdminTestimonialsPage() {
             resetForm();
             setIsDialogOpen(true);
           }}
-          className="gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/30"
+          className="gap-2 bg-gradient-to-r from-pink-600 to-pink-600 hover:from-pink-700 hover:to-pink-700 shadow-lg shadow-pink-500/30"
         >
           <Plus className="w-4 h-4" />
           Novo Depoimento
@@ -177,10 +177,10 @@ export default function AdminTestimonialsPage() {
 
       {/* Cards de Estatísticas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100">
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-pink-100">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center">
-              <Users className="w-7 h-7 text-purple-600" />
+            <div className="w-14 h-14 bg-gradient-to-br from-pink-100 to-pink-200 rounded-xl flex items-center justify-center">
+              <Users className="w-7 h-7 text-pink-600" />
             </div>
             <div>
               <p className="text-sm text-gray-500 font-medium">Total de Depoimentos</p>
@@ -219,7 +219,7 @@ export default function AdminTestimonialsPage() {
         {testimonials && testimonials.length > 0 ? (
           <div className="divide-y divide-gray-100">
             {testimonials.map((testimonial: any) => (
-              <div key={testimonial.id} className="p-6 hover:bg-purple-50/50 transition-colors">
+              <div key={testimonial.id} className="p-6 hover:bg-pink-50/50 transition-colors">
                 <div className="flex items-start gap-6">
                   {/* Avatar/Image */}
                   <div className="flex-shrink-0 relative">
@@ -227,10 +227,10 @@ export default function AdminTestimonialsPage() {
                       <img
                         src={testimonial.image}
                         alt={testimonial.name}
-                        className="w-20 h-20 rounded-full object-cover border-4 border-purple-100"
+                        className="w-20 h-20 rounded-full object-cover border-4 border-pink-100"
                       />
                     ) : (
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center border-4 border-purple-100">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-pink-500 flex items-center justify-center border-4 border-pink-100">
                         <span className="text-2xl font-bold text-white">
                           {testimonial.name.charAt(0)}
                         </span>
@@ -248,7 +248,7 @@ export default function AdminTestimonialsPage() {
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <h3 className="text-lg font-bold text-gray-900">{testimonial.name}</h3>
-                        <p className="text-sm text-purple-600 font-medium">
+                        <p className="text-sm text-pink-600 font-medium">
                           {testimonial.role} • {testimonial.company}
                         </p>
                         {testimonial.location && (
@@ -257,7 +257,7 @@ export default function AdminTestimonialsPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         {testimonial.courseName && (
-                          <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">
+                          <span className="px-3 py-1 bg-pink-100 text-pink-700 text-xs rounded-full font-medium">
                             {testimonial.courseName}
                           </span>
                         )}
@@ -295,7 +295,7 @@ export default function AdminTestimonialsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => handleEdit(testimonial)}
-                        className="gap-2 border-purple-200 text-purple-600 hover:bg-purple-50"
+                        className="gap-2 border-pink-200 text-pink-600 hover:bg-pink-50"
                       >
                         <Edit className="w-4 h-4" />
                         Editar
@@ -318,8 +318,8 @@ export default function AdminTestimonialsPage() {
           </div>
         ) : (
           <div className="p-12 text-center">
-            <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Quote className="w-10 h-10 text-purple-400" />
+            <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Quote className="w-10 h-10 text-pink-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Nenhum depoimento cadastrado</h3>
             <p className="text-gray-600 mb-4">
@@ -330,7 +330,7 @@ export default function AdminTestimonialsPage() {
                 resetForm();
                 setIsDialogOpen(true);
               }}
-              className="gap-2 bg-gradient-to-r from-purple-600 to-pink-600"
+              className="gap-2 bg-gradient-to-r from-pink-600 to-pink-600"
             >
               <Plus className="w-4 h-4" />
               Adicionar Primeiro Depoimento
@@ -344,7 +344,7 @@ export default function AdminTestimonialsPage() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Quote className="w-5 h-5 text-purple-600" />
+              <Quote className="w-5 h-5 text-pink-600" />
               {editingId ? "Editar Depoimento" : "Novo Depoimento"}
             </DialogTitle>
             <DialogDescription>
@@ -504,7 +504,7 @@ export default function AdminTestimonialsPage() {
               <Button 
                 type="submit" 
                 disabled={createMutation.isPending || updateMutation.isPending}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="bg-gradient-to-r from-pink-600 to-pink-600 hover:from-pink-700 hover:to-pink-700"
               >
                 {editingId ? "Atualizar" : "Criar"} Depoimento
               </Button>

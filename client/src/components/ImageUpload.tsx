@@ -1,14 +1,12 @@
 import { useCallback, useState, useRef } from "react";
 import { useDropzone } from "react-dropzone";
-import { Upload, X, Loader2, Crop, Move } from "lucide-react";
+import { Upload, X, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import ReactCrop, { type Crop as CropType, type PixelCrop, centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Slider } from "@/components/ui/slider";
-import { ZoomIn, ZoomOut, RotateCcw, RotateCw, Check } from "lucide-react";
 
 interface ImageUploadProps {
   value?: string;
@@ -18,21 +16,9 @@ interface ImageUploadProps {
   enableCrop?: boolean;
 }
 
-function centerAspectCrop(
-  mediaWidth: number,
-  mediaHeight: number,
-  aspect: number
-) {
+function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: number) {
   return centerCrop(
-    makeAspectCrop(
-      {
-        unit: "%",
-        width: 90,
-      },
-      aspect,
-      mediaWidth,
-      mediaHeight
-    ),
+    makeAspectCrop({ unit: "%", width: 90 }, aspect, mediaWidth, mediaHeight),
     mediaWidth,
     mediaHeight
   );
@@ -50,28 +36,20 @@ export default function ImageUpload({
   const [tempImageSrc, setTempImageSrc] = useState<string>("");
   const [crop, setCrop] = useState<CropType>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-  const [scale, setScale] = useState(1);
-  const [rotate, setRotate] = useState(0);
+  const [originalFile, setOriginalFile] = useState<File | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
   const uploadMutation = trpc.upload.uploadImage.useMutation();
 
-  const onImageLoad = useCallback(
-    (e: React.SyntheticEvent<HTMLImageElement>) => {
-      const { width, height } = e.currentTarget;
-      setCrop(centerAspectCrop(width, height, aspectRatio));
-    },
-    [aspectRatio]
-  );
+  const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { width, height } = e.currentTarget;
+    setCrop(centerAspectCrop(width, height, aspectRatio));
+  }, [aspectRatio]);
 
   const uploadImage = async (base64: string, filename: string, contentType: string) => {
     try {
-      const result = await uploadMutation.mutateAsync({
-        base64,
-        filename,
-        contentType,
-      });
+      const result = await uploadMutation.mutateAsync({ base64, filename, contentType });
       onChange(result.url);
       toast.success("Imagem enviada com sucesso!");
     } catch (error) {
@@ -79,20 +57,40 @@ export default function ImageUpload({
       toast.error("Erro ao fazer upload da imagem");
     } finally {
       setIsUploading(false);
+      setShowCropper(false);
     }
   };
 
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (!file) return;
+    setOriginalFile(file);
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      const src = reader.result?.toString() || "";
+      setTempImageSrc(src);
+      if (enableCrop) {
+        setShowCropper(true);
+      } else {
+        setIsUploading(true);
+        uploadImage(src, file.name, file.type);
+      }
+    });
+    reader.readAsDataURL(file);
+  }, [enableCrop]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [] },
+    multiple: false,
+  });
+
   const handleCropComplete = useCallback(async () => {
-    if (!completedCrop || !imgRef.current || !canvasRef.current) {
-      return;
-    }
-
+    if (!completedCrop || !imgRef.current || !canvasRef.current) return;
     setIsUploading(true);
-
     const image = imgRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-
     if (!ctx) {
       setIsUploading(false);
       return;
@@ -100,332 +98,75 @@ export default function ImageUpload({
 
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
+    canvas.width = completedCrop.width * scaleX;
+    canvas.height = completedCrop.height * scaleY;
 
-    const pixelRatio = window.devicePixelRatio || 1;
-
-    canvas.width = Math.floor(completedCrop.width * scaleX * pixelRatio);
-    canvas.height = Math.floor(completedCrop.height * scaleY * pixelRatio);
-
-    ctx.scale(pixelRatio, pixelRatio);
-    ctx.imageSmoothingQuality = "high";
-
-    const cropX = completedCrop.x * scaleX;
-    const cropY = completedCrop.y * scaleY;
-
-    const rotateRads = (rotate * Math.PI) / 180;
-    const centerX = image.naturalWidth / 2;
-    const centerY = image.naturalHeight / 2;
-
-    ctx.save();
-
-    ctx.translate(-cropX, -cropY);
-    ctx.translate(centerX, centerY);
-    ctx.rotate(rotateRads);
-    ctx.scale(scale, scale);
-    ctx.translate(-centerX, -centerY);
     ctx.drawImage(
       image,
+      completedCrop.x * scaleX,
+      completedCrop.y * scaleY,
+      completedCrop.width * scaleX,
+      completedCrop.height * scaleY,
       0,
       0,
-      image.naturalWidth,
-      image.naturalHeight,
-      0,
-      0,
-      image.naturalWidth,
-      image.naturalHeight
+      canvas.width,
+      canvas.height
     );
 
-    ctx.restore();
+    const base64 = canvas.toDataURL(originalFile?.type || "image/jpeg");
+    uploadImage(base64, originalFile?.name || "image.jpg", originalFile?.type || "image/jpeg");
+  }, [completedCrop, originalFile]);
 
-    // Convert canvas to base64
-    const croppedBase64 = canvas.toDataURL("image/jpeg", 0.95);
-    
-    // Upload cropped image
-    await uploadImage(croppedBase64, `cropped-${Date.now()}.jpg`, "image/jpeg");
-    
-    // Reset cropper state
-    setShowCropper(false);
-    setTempImageSrc("");
-    setScale(1);
-    setRotate(0);
-  }, [completedCrop, scale, rotate, uploadMutation, onChange]);
-
-  const handleCancelCrop = () => {
-    setShowCropper(false);
-    setTempImageSrc("");
-    setScale(1);
-    setRotate(0);
-  };
-
-  const handleReset = () => {
-    setScale(1);
-    setRotate(0);
-    if (imgRef.current) {
-      const { width, height } = imgRef.current;
-      setCrop(centerAspectCrop(width, height, aspectRatio));
+  const handleUploadDirect = () => {
+    if (tempImageSrc && originalFile) {
+      setIsUploading(true);
+      uploadImage(tempImageSrc, originalFile.name, originalFile.type);
     }
   };
 
-  const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
-      if (acceptedFiles.length === 0) return;
-
-      const file = acceptedFiles[0];
-      
-      // Validar tamanho (max 50MB)
-      if (file.size > 50 * 1024 * 1024) {
-        toast.error("Imagem muito grande. Máximo 50MB");
-        return;
-      }
-
-      // Converter para base64
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64 = reader.result as string;
-        
-        if (enableCrop) {
-          // Abrir cropper
-          setTempImageSrc(base64);
-          setShowCropper(true);
-        } else {
-          // Upload direto sem crop
-          setIsUploading(true);
-          await uploadImage(base64, file.name, file.type);
-        }
-      };
-      reader.onerror = () => {
-        toast.error("Erro ao ler o arquivo");
-      };
-      reader.readAsDataURL(file);
-    },
-    [enableCrop, uploadMutation, onChange]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      "image/*": [".png", ".jpg", ".jpeg", ".webp", ".gif"],
-    },
-    maxFiles: 1,
-  });
-
   return (
-    <div>
+    <div className="space-y-4">
       {value ? (
-        <div className="relative group">
-          <img
-            src={value}
-            alt="Upload"
-            className="w-full h-48 object-cover rounded-lg"
-          />
-          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                setTempImageSrc(value);
-                setShowCropper(true);
-              }}
-            >
-              <Crop className="w-4 h-4 mr-1" />
-              Ajustar
+        <div className="relative group rounded-xl overflow-hidden border-2 border-gray-100 shadow-sm">
+          <img src={value} alt="Preview" className="w-full h-48 object-cover" />
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <Button type="button" variant="destructive" size="sm" onClick={onRemove} className="rounded-full">
+              <X className="w-4 h-4 mr-2" /> Remover
             </Button>
-            {onRemove && (
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                onClick={onRemove}
-              >
-                <X className="w-4 h-4 mr-1" />
-                Remover
-              </Button>
-            )}
           </div>
         </div>
       ) : (
-        <div
-          {...getRootProps()}
-          className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-            isDragActive
-              ? "border-purple-500 bg-purple-50"
-              : "border-gray-300 hover:border-purple-400"
-          }`}
-        >
+        <div {...getRootProps()} className={`border-2 border-dashed rounded-xl p-8 transition-all cursor-pointer flex flex-col items-center justify-center gap-3 ${isDragActive ? "border-pink-500 bg-pink-50" : "border-gray-200 hover:border-pink-400 hover:bg-gray-50"}`}>
           <input {...getInputProps()} />
-          {isUploading ? (
-            <div className="flex flex-col items-center gap-2">
-              <Loader2 className="w-8 h-8 text-purple-600 animate-spin" />
-              <p className="text-sm text-gray-600">Fazendo upload...</p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-2">
-              <Upload className="w-8 h-8 text-gray-400" />
-              <p className="text-sm text-gray-600">
-                {isDragActive
-                  ? "Solte a imagem aqui"
-                  : "Arraste uma imagem ou clique para selecionar"}
-              </p>
-              <p className="text-xs text-gray-500">PNG, JPG, WEBP até 50MB</p>
-              {enableCrop && (
-                <p className="text-xs text-purple-600 mt-1">
-                  <Crop className="w-3 h-3 inline mr-1" />
-                  Você poderá ajustar a imagem após selecionar
-                </p>
-              )}
-            </div>
-          )}
+          <div className="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center text-pink-500">
+            {isUploading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Upload className="w-6 h-6" />}
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-semibold text-gray-700">Clique ou arraste uma imagem</p>
+            <p className="text-xs text-gray-500 mt-1">PNG, JPG, WEBP até 50MB</p>
+          </div>
         </div>
       )}
 
-      {/* Modal de Crop */}
-      <Dialog open={showCropper} onOpenChange={() => handleCancelCrop()}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Move className="w-5 h-5" />
-              Ajustar Imagem
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="flex flex-col gap-4">
-            {/* Instruções */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
-              <strong>Dica:</strong> Arraste a área de seleção para posicionar a imagem. Use os controles abaixo para zoom e rotação.
-            </div>
-
-            {/* Área de Crop */}
+      <Dialog open={showCropper} onOpenChange={setShowCropper}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader><DialogTitle>Ajustar Imagem</DialogTitle></DialogHeader>
+          <div className="space-y-6">
             <div className="relative bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center" style={{ maxHeight: "45vh" }}>
               {tempImageSrc && (
-                <ReactCrop
-                  crop={crop}
-                  onChange={(_, percentCrop) => setCrop(percentCrop)}
-                  onComplete={(c) => setCompletedCrop(c)}
-                  aspect={aspectRatio}
-                  minWidth={50}
-                  minHeight={50}
-                  className="max-h-[45vh]"
-                >
-                  <img
-                    ref={imgRef}
-                    src={tempImageSrc}
-                    alt="Imagem para cortar"
-                    style={{
-                      transform: `scale(${scale}) rotate(${rotate}deg)`,
-                      maxHeight: "45vh",
-                      maxWidth: "100%",
-                    }}
-                    onLoad={onImageLoad}
-                  />
+                <ReactCrop crop={crop} onChange={(_, percentCrop) => setCrop(percentCrop)} onComplete={(c) => setCompletedCrop(c)} aspectRatio={aspectRatio} className="max-h-[45vh]">
+                  <img ref={imgRef} src={tempImageSrc} alt="Crop" style={{ maxHeight: "45vh", maxWidth: "100%" }} onLoad={onImageLoad} />
                 </ReactCrop>
               )}
             </div>
-
-            {/* Controles */}
-            <div className="flex flex-col gap-4 bg-gray-50 rounded-lg p-4">
-              {/* Zoom */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-gray-700 w-16">Zoom:</span>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setScale((prev) => Math.max(prev - 0.1, 0.5))}
-                  disabled={scale <= 0.5}
-                >
-                  <ZoomOut className="w-4 h-4" />
-                </Button>
-                <Slider
-                  value={[scale]}
-                  min={0.5}
-                  max={3}
-                  step={0.1}
-                  onValueChange={([value]) => setScale(value)}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setScale((prev) => Math.min(prev + 0.1, 3))}
-                  disabled={scale >= 3}
-                >
-                  <ZoomIn className="w-4 h-4" />
-                </Button>
-                <span className="text-sm text-gray-500 w-12">{Math.round(scale * 100)}%</span>
-              </div>
-
-              {/* Rotação */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-gray-700 w-16">Rotação:</span>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setRotate((prev) => prev - 90)}
-                >
-                  <RotateCcw className="w-4 h-4" />
-                </Button>
-                <Slider
-                  value={[rotate]}
-                  min={-180}
-                  max={180}
-                  step={1}
-                  onValueChange={([value]) => setRotate(value)}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setRotate((prev) => prev + 90)}
-                >
-                  <RotateCw className="w-4 h-4" />
-                </Button>
-                <span className="text-sm text-gray-500 w-12">{rotate}°</span>
-              </div>
-
-              {/* Reset */}
-              <div className="flex justify-center">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={handleReset}
-                  className="text-gray-600"
-                >
-                  Resetar ajustes
-                </Button>
-              </div>
-            </div>
           </div>
-
           <DialogFooter className="flex gap-2">
-            <Button type="button" variant="outline" onClick={handleCancelCrop}>
-              <X className="w-4 h-4 mr-2" />
-              Cancelar
-            </Button>
-            <Button 
-              type="button" 
-              onClick={handleCropComplete} 
-              className="bg-purple-600 hover:bg-purple-700"
-              disabled={isUploading}
-            >
-              {isUploading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Enviando...
-                </>
-              ) : (
-                <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Aplicar e Enviar
-                </>
-              )}
+            <Button type="button" variant="outline" onClick={() => setShowCropper(false)}>Cancelar</Button>
+            <Button type="button" variant="secondary" onClick={handleUploadDirect} disabled={isUploading}>Enviar sem cortar</Button>
+            <Button type="button" onClick={handleCropComplete} className="bg-pink-600 hover:bg-pink-700" disabled={isUploading}>
+              {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 mr-2" />} Aplicar Corte
             </Button>
           </DialogFooter>
-
-          {/* Canvas oculto para processamento */}
           <canvas ref={canvasRef} className="hidden" />
         </DialogContent>
       </Dialog>

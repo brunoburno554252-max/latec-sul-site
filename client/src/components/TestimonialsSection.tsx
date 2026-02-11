@@ -50,7 +50,7 @@ function VideoModal({ videoUrl, onClose }: { videoUrl: string; onClose: () => vo
     >
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-[#9d197d] transition-colors"
+        className="absolute top-4 right-4 text-white hover:text-[#da1069] transition-colors"
       >
         <X className="w-8 h-8" />
       </button>
@@ -95,7 +95,7 @@ function TestimonialCard({
         transition-all duration-500 flex flex-col h-full
         border-2
         ${isCenter 
-          ? "scale-105 shadow-2xl shadow-[#9d197d]/20 border-[#9d197d]/30 z-10" 
+          ? "scale-105 shadow-2xl shadow-[#da1069]/20 border-[#da1069]/30 z-10" 
           : "scale-95 opacity-80 hover:opacity-100 border-gray-100 shadow-lg"
         }
       `}
@@ -103,7 +103,7 @@ function TestimonialCard({
       {/* Ícone de aspas decorativo */}
       <div className={`
         absolute -top-4 left-8 w-12 h-12 rounded-xl flex items-center justify-center
-        ${isCenter ? "bg-gradient-to-br from-[#9d197d] to-[#c41e8a]" : "bg-gradient-to-br from-[#9d197d]/70 to-[#c41e8a]/70"}
+        ${isCenter ? "bg-gradient-to-br from-[#da1069] to-[#c41e8a]" : "bg-gradient-to-br from-[#da1069]/70 to-[#c41e8a]/70"}
         shadow-lg
       `}>
         <Quote className="w-6 h-6 text-white" />
@@ -132,10 +132,10 @@ function TestimonialCard({
       {testimonial.videoUrl && onPlayVideo && (
         <button
           onClick={() => onPlayVideo(testimonial.videoUrl!)}
-          className="flex items-center gap-2 text-[#9d197d] hover:text-[#c41e8a] text-sm mb-4 transition-colors group"
+          className="flex items-center gap-2 text-[#da1069] hover:text-[#c41e8a] text-sm mb-4 transition-colors group"
         >
-          <div className="w-10 h-10 rounded-full bg-[#9d197d]/10 group-hover:bg-[#9d197d]/20 flex items-center justify-center transition-colors">
-            <Play className="w-5 h-5 fill-[#9d197d]" />
+          <div className="w-10 h-10 rounded-full bg-[#da1069]/10 group-hover:bg-[#da1069]/20 flex items-center justify-center transition-colors">
+            <Play className="w-5 h-5 fill-[#da1069]" />
           </div>
           <span className="font-medium">Assistir depoimento em vídeo</span>
         </button>
@@ -149,20 +149,20 @@ function TestimonialCard({
             <img
               src={testimonial.image}
               alt={testimonial.name}
-              className="w-14 h-14 rounded-full object-cover border-3 border-[#9d197d]/20"
+              className="w-14 h-14 rounded-full object-cover border-3 border-[#da1069]/20"
             />
           ) : (
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#9d197d] to-[#c41e8a] flex items-center justify-center text-white font-bold text-xl shadow-lg">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#da1069] to-[#c41e8a] flex items-center justify-center text-white font-bold text-xl shadow-lg">
               {testimonial.name.charAt(0)}
             </div>
           )}
           <div className="flex-1 min-w-0">
             <h4 className="text-gray-900 font-bold text-lg truncate">{testimonial.name}</h4>
-            <p className="text-[#9d197d] text-sm font-medium truncate">{testimonial.role}</p>
+            <p className="text-[#da1069] text-sm font-medium truncate">{testimonial.role}</p>
             <p className="text-gray-500 text-sm truncate">{testimonial.company}</p>
           </div>
           {/* Ícone de aspas decorativo pequeno */}
-          <div className="text-[#9d197d]/20">
+          <div className="text-[#da1069]/20">
             <Quote className="w-8 h-8" />
           </div>
         </div>
@@ -176,7 +176,7 @@ function TestimonialCard({
             </span>
           )}
           {testimonial.courseName && (
-            <span className="inline-block px-3 py-1 bg-[#9d197d]/10 text-[#9d197d] text-xs rounded-full font-medium">
+            <span className="inline-block px-3 py-1 bg-[#da1069]/10 text-[#da1069] text-xs rounded-full font-medium">
               {testimonial.courseName}
             </span>
           )}
@@ -250,19 +250,19 @@ export default function TestimonialsSection() {
     <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
       {/* Background decorativo */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#9d197d]/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-[#da1069]/5 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#c41e8a]/5 rounded-full blur-3xl" />
       </div>
 
       <div className="container relative">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#9d197d]/10 rounded-full text-[#9d197d] text-sm font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#da1069]/10 rounded-full text-[#da1069] text-sm font-semibold mb-4">
             <Users className="w-4 h-4" />
             HISTÓRIAS DE SUCESSO
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            O que nossos <span className="text-[#9d197d]">Parceiros</span> dizem
+            O que nossos <span className="text-[#da1069]">Parceiros</span> dizem
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Conheça as experiências de sucesso de quem já faz parte da nossa rede
@@ -272,7 +272,7 @@ export default function TestimonialsSection() {
         {/* Loading state */}
         {isLoading && (
           <div className="flex justify-center py-12">
-            <div className="w-12 h-12 border-4 border-[#9d197d]/30 border-t-[#9d197d] rounded-full animate-spin" />
+            <div className="w-12 h-12 border-4 border-[#da1069]/30 border-t-[#da1069] rounded-full animate-spin" />
           </div>
         )}
 
@@ -282,7 +282,7 @@ export default function TestimonialsSection() {
             {/* Botão anterior */}
             <button
               onClick={handlePrev}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white hover:bg-[#9d197d] rounded-full flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-lg border border-gray-100 hover:border-[#9d197d]"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white hover:bg-[#da1069] rounded-full flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-lg border border-gray-100 hover:border-[#da1069]"
               aria-label="Anterior"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -309,7 +309,7 @@ export default function TestimonialsSection() {
             {/* Botão próximo */}
             <button
               onClick={handleNext}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white hover:bg-[#9d197d] rounded-full flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-lg border border-gray-100 hover:border-[#9d197d]"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white hover:bg-[#da1069] rounded-full flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-lg border border-gray-100 hover:border-[#da1069]"
               aria-label="Próximo"
             >
               <ChevronRight className="w-6 h-6" />
@@ -326,8 +326,8 @@ export default function TestimonialsSection() {
                 onClick={() => handleDotClick(index)}
                 className={`transition-all duration-300 rounded-full ${
                   index === currentIndex
-                    ? "w-8 h-2 bg-[#9d197d]"
-                    : "w-2 h-2 bg-gray-300 hover:bg-[#9d197d]/50"
+                    ? "w-8 h-2 bg-[#da1069]"
+                    : "w-2 h-2 bg-gray-300 hover:bg-[#da1069]/50"
                 }`}
                 aria-label={`Ir para depoimento ${index + 1}`}
               />

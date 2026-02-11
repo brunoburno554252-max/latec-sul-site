@@ -20,23 +20,21 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      // Login simplificado para ambiente de desenvolvimento/sandbox
-      if (username === "admin" && password === "admin") {
-        const token = btoa(`${username}:${password}:${Date.now()}`);
-        localStorage.setItem("admin_token", token);
-        localStorage.setItem("admin_user", JSON.stringify({
-          id: 1,
-          username: "admin",
-          name: "Administrador Manus",
-          email: "admin@laeducacao.com.br",
-        }));
-        toast.success("Login realizado com sucesso!");
+      const result = await loginMutation.mutateAsync({
+        username,
+        password,
+      });
+
+      if (result.token) {
+        localStorage.setItem("admin_token", result.token);
+        localStorage.setItem("admin_user", JSON.stringify(result.admin));
         setLocation("/admin-la-educacao/dashboard");
       } else {
-        toast.error("Usuário ou senha incorretos (Use admin/admin)");
+        toast.error("Erro ao processar login");
       }
-    } catch (error) {
-      toast.error("Erro ao fazer login");
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast.error(error.message || "Usuário ou senha incorretos");
     } finally {
       setIsLoading(false);
     }

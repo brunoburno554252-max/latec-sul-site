@@ -137,7 +137,7 @@ export default function OmbudsmanPage() {
                 <Button
                   type="submit"
                   disabled={createMutation.isPending}
-                  className="w-full bg-accent hover:bg-accent/90 text-white font-bold h-12 rounded-xl shadow-lg shadow-accent/20 transition-all hover:-translate-y-1"
+                  className="w-full bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90 text-white font-bold h-12 rounded-xl shadow-lg shadow-[#3559AC]/30 transition-all hover:-translate-y-1"
                 >
                   {createMutation.isPending ? "ENVIANDO..." : "ENVIAR MANIFESTAÇÃO"}
                 </Button>

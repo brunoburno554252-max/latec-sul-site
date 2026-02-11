@@ -1,0 +1,1 @@
+ALTER TABLE `hero_banners` ADD `showContent` boolean DEFAULT true NOT NULL;

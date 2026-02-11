@@ -267,7 +267,7 @@ export default function CanvasEditor() {
                         e.stopPropagation();
                         handleToggleInverted(cardId);
                       }}
-                      className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                      className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                       title="Inverter cores do botão"
                     >
                       ⚡
@@ -298,7 +298,7 @@ export default function CanvasEditor() {
             </button>
             <button
               onClick={() => setShowCode(!showCode)}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition"
+              className="flex-1 bg-[#2a468a] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition"
             >
               {showCode ? "🙈 Ocultar" : "👁️ Ver"} JSON
             </button>

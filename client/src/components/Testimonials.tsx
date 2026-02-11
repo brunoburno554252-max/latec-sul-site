@@ -45,7 +45,7 @@ export default function Testimonials() {
   const currentTestimonial = testimonials[currentIndex];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-purple-50 via-white to-pink-50 relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-pink-50 via-white to-pink-50 relative overflow-hidden">
       {/* Decorative Elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
@@ -100,7 +100,7 @@ export default function Testimonials() {
                       className="w-20 h-20 rounded-full object-cover ring-4 ring-primary/20"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center ring-4 ring-primary/20">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#da1069] to-[#3559AC] flex items-center justify-center ring-4 ring-primary/20">
                       <span className="text-3xl font-bold text-white">
                         {currentTestimonial.name.charAt(0)}
                       </span>
@@ -163,7 +163,7 @@ export default function Testimonials() {
                   onClick={() => setCurrentIndex(index)}
                   className={`transition-all duration-300 rounded-full ${
                     index === currentIndex
-                      ? "w-8 h-3 bg-primary"
+                      ? "w-8 h-3 bg-gradient-to-r from-[#da1069] to-[#3559AC]"
                       : "w-3 h-3 bg-gray-300 hover:bg-gray-400"
                   }`}
                   aria-label={`Ir para depoimento ${index + 1}`}

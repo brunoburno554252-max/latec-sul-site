@@ -272,7 +272,7 @@ export default function ImageCropper({
             <X className="w-4 h-4 mr-2" />
             Cancelar
           </Button>
-          <Button type="button" onClick={handleCropComplete} className="bg-primary hover:bg-primary/90">
+          <Button type="button" onClick={handleCropComplete} className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90">
             <Check className="w-4 h-4 mr-2" />
             Aplicar Ajustes
           </Button>

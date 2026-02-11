@@ -9,16 +9,16 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        gradient: "bg-gradient-to-br from-purple-600 to-[#da1069] text-white hover:from-purple-700 hover:to-[#c4105e] hover:shadow-lg hover:shadow-pink-500/50 hover:-translate-y-0.5",
+        default: "bg-gradient-to-r from-[#da1069] to-[#3559AC] text-primary-foreground hover:from-[#c4105e] hover:to-[#2a468a]/90",
+        gradient: "bg-gradient-to-br from-[#da1069] to-[#3559AC] text-white hover:from-[#c4105e] hover:to-[#2a468a] hover:shadow-lg hover:shadow-[#3559AC]/30 hover:-translate-y-0.5",
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border bg-transparent shadow-xs hover:bg-accent dark:bg-transparent dark:border-input dark:hover:bg-input/50",
+          "border bg-transparent shadow-xs hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] dark:bg-transparent dark:border-input dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
-          "hover:bg-accent dark:hover:bg-accent/50",
+          "hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] dark:hover:from-[#c4105e] hover:to-[#2a468a]/50",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

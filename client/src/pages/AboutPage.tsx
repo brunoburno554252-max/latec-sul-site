@@ -72,7 +72,7 @@ export default function AboutPage() {
               {/* 2020-2021 */}
               <div className="relative bg-white rounded-3xl p-8 shadow-lg border-t-4 border-primary hover:-translate-y-2 transition-all duration-300">
                 <div className="absolute -top-6 left-8">
-                  <div className="bg-primary text-white px-4 py-2 rounded-full font-bold text-lg">
+                  <div className="bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white px-4 py-2 rounded-full font-bold text-lg">
                     2020 - 2021
                   </div>
                 </div>
@@ -117,7 +117,7 @@ export default function AboutPage() {
               {/* 2024 */}
               <div className="relative bg-white rounded-3xl p-8 shadow-lg border-t-4 border-primary hover:-translate-y-2 transition-all duration-300">
                 <div className="absolute -top-6 left-8">
-                  <div className="bg-primary text-white px-4 py-2 rounded-full font-bold text-lg">
+                  <div className="bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white px-4 py-2 rounded-full font-bold text-lg">
                     2024
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export default function AboutPage() {
                     <span><strong>Gratidão:</strong> Cultivar a gratidão em todas as situações.</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <Users size={18} className="text-blue-500 flex-shrink-0" /> 
+                    <Users size={18} className="text-[#3559AC] flex-shrink-0" /> 
                     <span><strong>Liberdade:</strong> A chave para o potencial humano.</span>
                   </li>
                 </ul>

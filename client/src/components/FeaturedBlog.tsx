@@ -129,7 +129,7 @@ export default function FeaturedBlog() {
         {/* View All Button */}
         <div className="text-center">
           <Button
-            className="bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-bold px-10 h-14 rounded-full shadow-xl shadow-primary/20 transition-all hover:-translate-y-1 text-lg gap-2"
+            className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-14 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 text-lg gap-2"
             onClick={() => setLocation("/blog")}
           >
             Ver Todas as Notícias

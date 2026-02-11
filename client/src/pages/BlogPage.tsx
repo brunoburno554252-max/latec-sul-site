@@ -38,7 +38,7 @@ export default function BlogPage() {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-6 py-2 rounded-full font-semibold text-sm transition-all ${
                     selectedCategory === category
-                      ? "bg-gradient-to-r from-primary to-accent text-white shadow-lg scale-105"
+                      ? "bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white shadow-lg scale-105"
                       : "bg-white text-gray-600 hover:bg-gray-100 shadow"
                   }`}
                 >
@@ -58,7 +58,7 @@ export default function BlogPage() {
                     alt={post.title} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <div className="absolute top-4 left-4 bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                     {post.category}
                   </div>
                 </div>

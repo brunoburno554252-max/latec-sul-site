@@ -25,7 +25,7 @@ export default function About() {
   };
 
   // Valores padrão (fallback)
-  const title = getFieldValue("title", "Empresários Educacionais: transformem propósito em rentabilidade real com o maior ecossistema de cursos do mundo");
+  const title = getFieldValue("title", "Empresários Educacionais: transformem propósito em rentabilidade real");
   const subtitle = getFieldValue("subtitle", "Ser parceiro da LA Educação é sair do jogo pequeno.");
   const description = getFieldValue("description", "Enquanto o mercado paga 30%, aqui você constrói autoridade, domina seu negócio e pode lucrar até 1000% sobre cada matrícula.");
   const sectionTitle = getFieldValue("section_title", "Conheça agora os diferenciais de Ser LA:");
@@ -90,7 +90,7 @@ export default function About() {
             {/* Floating Stat Card */}
             <div className="absolute -bottom-10 -right-10 bg-white p-8 rounded-3xl shadow-2xl border border-gray-100 z-20 hidden md:block animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 max-w-xs">
               <div className="flex flex-col gap-2">
-                <span className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                <span className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#da1069] to-[#3559AC]">
                   +1.500
                 </span>
                 <span className="text-gray-600 font-bold text-lg leading-tight">
@@ -127,7 +127,7 @@ export default function About() {
             <div className="grid grid-cols-2 gap-5 mb-12">
               {benefits.map((benefit, index) => (
                 <div key={index} className="flex items-start gap-3 group">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center shrink-0 shadow-md shadow-accent/30 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#da1069] to-[#3559AC] flex items-center justify-center shrink-0 shadow-md shadow-accent/30 group-hover:scale-110 transition-transform duration-300">
                     {benefit.icon}
                   </div>
                   <div>
@@ -138,7 +138,7 @@ export default function About() {
               ))}
             </div>
 
-            <Button className="bg-gradient-to-r from-accent to-primary hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-accent/20 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg">
+            <Button className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg">
               QUERO SER UM PARCEIRO
             </Button>
           </div>

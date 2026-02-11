@@ -29,6 +29,7 @@ export default function AdminBannerFormPage() {
   const [textPosition, setTextPosition] = useState<"left" | "center" | "right">("left");
   const [overlayOpacity, setOverlayOpacity] = useState(50);
   const [isActive, setIsActive] = useState(true);
+  const [showContent, setShowContent] = useState(true);
 
   const { data: banner } = trpc.adminBanners.getAll.useQuery(undefined, {
     enabled: isEditing,
@@ -67,6 +68,7 @@ export default function AdminBannerFormPage() {
         setTextPosition(currentBanner.textPosition || "left");
         setOverlayOpacity(currentBanner.overlayOpacity || 50);
         setIsActive(currentBanner.isActive);
+        setShowContent(currentBanner.showContent ?? true);
       }
     }
   }, [banner, bannerId, isEditing]);
@@ -96,6 +98,7 @@ export default function AdminBannerFormPage() {
         textPosition,
         overlayOpacity,
         isActive,
+      showContent,
       });
     } else {
       // Get max order for new banner
@@ -111,6 +114,7 @@ export default function AdminBannerFormPage() {
         overlayOpacity,
         order: maxOrder + 1,
         isActive,
+      showContent,
       });
     }
   };
@@ -175,7 +179,7 @@ export default function AdminBannerFormPage() {
                       value={image}
                       onChange={setImage}
                       onRemove={() => setImage("")}
-                      aspectRatio={16 / 9}
+                      aspectRatio={4 / 1}
                     />
                     <p className="text-sm text-gray-500">
                       Recomendado: 1920x1080px (16:9)
@@ -223,6 +227,7 @@ export default function AdminBannerFormPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Configurações Visuais</CardTitle>
+                <div className="flex items-center justify-between p-4 border rounded-lg bg-blue-50 border-blue-100"><div><Label htmlFor="showContent">Mostrar Texto/Botão</Label><p className="text-xs text-blue-600">Desative se a imagem já tiver texto</p></div><Switch id="showContent" checked={showContent} onCheckedChange={setShowContent} /></div>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">

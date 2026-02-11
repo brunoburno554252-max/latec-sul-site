@@ -59,22 +59,22 @@ export default function Footer() {
               </p>
               <div className="flex gap-3">
                 {instagram && (
-                  <a href={instagram} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all hover:scale-110">
+                  <a href={instagram} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:text-white transition-all hover:scale-110">
                     <Instagram size={16} />
                   </a>
                 )}
                 {facebook && (
-                  <a href={facebook} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all hover:scale-110">
+                  <a href={facebook} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:text-white transition-all hover:scale-110">
                     <Facebook size={16} />
                   </a>
                 )}
                 {youtube && (
-                  <a href={youtube} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all hover:scale-110">
+                  <a href={youtube} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:text-white transition-all hover:scale-110">
                     <Youtube size={16} />
                   </a>
                 )}
                 {linkedin && (
-                  <a href={linkedin} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all hover:scale-110">
+                  <a href={linkedin} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:text-white transition-all hover:scale-110">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
                   </a>
                 )}
@@ -83,7 +83,7 @@ export default function Footer() {
 
             {/* Quick Links - 2 cols */}
             <div className="lg:col-span-2">
-              <h3 className="text-sm font-heading font-bold mb-5 text-white inline-block relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-0.5 after:bg-accent after:rounded-full">Institucional</h3>
+              <h3 className="text-sm font-heading font-bold mb-5 text-white inline-block relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-0.5 after:bg-gradient-to-r from-[#da1069] to-[#3559AC] after:rounded-full">Institucional</h3>
               <ul className="space-y-2.5">
                 <li><a href="/sobre" className="text-gray-400 hover:text-accent transition-colors flex items-center gap-2 text-sm"><span className="w-1 h-1 rounded-full bg-gray-600"></span>Sobre Nós</a></li>
                 <li><a href="/parceiro" className="text-gray-400 hover:text-accent transition-colors flex items-center gap-2 text-sm"><span className="w-1 h-1 rounded-full bg-gray-600"></span>Seja um Parceiro</a></li>
@@ -97,22 +97,22 @@ export default function Footer() {
 
             {/* Contact Info - 2 cols */}
             <div className="lg:col-span-2">
-              <h3 className="text-sm font-heading font-bold mb-5 text-white inline-block relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-0.5 after:bg-accent after:rounded-full">Fale Conosco</h3>
+              <h3 className="text-sm font-heading font-bold mb-5 text-white inline-block relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-0.5 after:bg-gradient-to-r from-[#da1069] to-[#3559AC] after:rounded-full">Fale Conosco</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2.5 text-gray-400 group">
-                  <div className="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] group-hover:text-white transition-colors">
                     <MapPin size={14} />
                   </div>
                   <span className="text-xs leading-relaxed whitespace-pre-line">{address}</span>
                 </li>
                 <li className="flex items-center gap-2.5 text-gray-400 group">
-                  <div className="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] group-hover:text-white transition-colors">
                     <Phone size={14} />
                   </div>
                   <a href={`tel:${phone.replace(/\D/g, '')}`} className="text-xs hover:text-accent transition-colors">{phone}</a>
                 </li>
                 <li className="flex items-center gap-2.5 text-gray-400 group">
-                  <div className="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gradient-to-r from-[#da1069] to-[#3559AC] group-hover:text-white transition-colors">
                     <Mail size={14} />
                   </div>
                   <a href={`mailto:${email}`} className="text-xs hover:text-accent transition-colors">{email}</a>
@@ -122,7 +122,7 @@ export default function Footer() {
 
             {/* Newsletter - 3 cols */}
             <div className="lg:col-span-3">
-              <h3 className="text-sm font-heading font-bold mb-5 text-white inline-block relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-0.5 after:bg-accent after:rounded-full">Newsletter</h3>
+              <h3 className="text-sm font-heading font-bold mb-5 text-white inline-block relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-8 after:h-0.5 after:bg-gradient-to-r from-[#da1069] to-[#3559AC] after:rounded-full">Newsletter</h3>
               <p className="text-gray-400 mb-3 text-xs leading-relaxed">
                 Receba novidades sobre cursos e promoções.
               </p>
@@ -132,7 +132,7 @@ export default function Footer() {
                   placeholder="Seu e-mail" 
                   className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:border-primary text-sm h-9"
                 />
-                <Button className="bg-primary hover:bg-primary/90 text-white shrink-0 h-9 px-3 text-sm">
+                <Button className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90 text-white shrink-0 h-9 px-3 text-sm">
                   Inscrever
                 </Button>
               </div>
