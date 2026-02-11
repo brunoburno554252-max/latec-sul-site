@@ -25,11 +25,11 @@ export default function Header() {
     { name: "Início", href: "/", hasDropdown: false },
     { name: "Sobre Nós", href: "/sobre", hasDropdown: false },
     { name: "Cursos", href: "/cursos", hasDropdown: true },
-    { name: "Consulta", href: "/consulta", hasDropdown: false },
+    { name: "Consulte Nossos Parceiros", href: "/consulta", hasDropdown: false },
     { name: "Blog", href: "/blog", hasDropdown: false },
     { name: "Seja um Parceiro", href: "/parceiro", hasDropdown: false },
     { name: "Ouvidoria", href: "/ouvidoria", hasDropdown: false },
-    { name: "Rastreio", href: "/rastreio-certificado", hasDropdown: false },
+    { name: "Validação e Rastreio", href: "/rastreio-certificado", hasDropdown: false },
     { name: "FAQ", href: "/faq", hasDropdown: false },
   ];
 
