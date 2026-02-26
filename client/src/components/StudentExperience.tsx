@@ -27,22 +27,22 @@ export default function StudentExperience() {
     return item?.value || defaultValue;
   };
 
-  // Valores do banco (com fallback)
-  const label = getFieldValue("label", "EXPERIÊNCIA DO ALUNO");
-  const title = getFieldValue("title", "Plataforma intuitiva e repleta de recursos");
-  const description = getFieldValue("description", "Seus alunos terão acesso a uma plataforma moderna, extremamente fácil de usar e com inúmeras vantagens que transformam o aprendizado em uma experiência envolvente e eficiente.");
+  // Valores do banco (SEM fallback - se vazio, fica vazio)
+  const label = getFieldValue("label");
+  const title = getFieldValue("title");
+  const description = getFieldValue("description");
   
   // IMAGEM - puxar do banco
-  const sectionImage = getFieldValue("image", "/images/plataforma-alunos.jpg");
+  const sectionImage = getFieldValue("image");
   
   // CONTADOR - puxar do banco
-  const counterNumber = getFieldValue("counter_number", "+15000");
-  const counterText = getFieldValue("counter_text", "ALUNOS");
-  const counterSubtext = getFieldValue("counter_subtext", "Transformando vidas");
+  const counterNumber = getFieldValue("counter_number");
+  const counterText = getFieldValue("counter_text");
+  const counterSubtext = getFieldValue("counter_subtext");
   
   // BOTÃO - puxar do banco
-  const buttonText = getFieldValue("button_text", "CONHECER CURSOS");
-  const buttonLink = getFieldValue("button_link", "/cursos");
+  const buttonText = getFieldValue("button_text");
+  const buttonLink = getFieldValue("button_link");
 
   // Usar features do banco ou fallback
   const platformFeatures = (platformFeaturesData as any[]).length > 0
@@ -99,19 +99,25 @@ export default function StudentExperience() {
           
           {/* Content (Now Left on Desktop) */}
           <div className="w-full lg:w-1/2 order-1">
-            <span className="text-accent font-bold tracking-widest text-sm uppercase mb-3 block">{label}</span>
-            <h2 className="text-4xl md:text-5xl font-heading font-extrabold text-gray-900 mb-8 leading-tight">
-              {title.split(/(intuitiva)/gi).map((part, i) => {
-                if (part.toLowerCase() === "intuitiva") {
-                  return <span key={i} className="text-accent">{part}</span>;
-                }
-                return part;
-              })}
-            </h2>
+            {label && (
+              <span className="text-accent font-bold tracking-widest text-sm uppercase mb-3 block">{label}</span>
+            )}
+            {title && (
+              <h2 className="text-4xl md:text-5xl font-heading font-extrabold text-gray-900 mb-8 leading-tight">
+                {title.split(/(intuitiva)/gi).map((part, i) => {
+                  if (part.toLowerCase() === "intuitiva") {
+                    return <span key={i} className="text-accent">{part}</span>;
+                  }
+                  return part;
+                })}
+              </h2>
+            )}
             
-            <p className="text-gray-600 text-lg mb-10 leading-relaxed">
-              {description}
-            </p>
+            {description && (
+              <p className="text-gray-600 text-lg mb-10 leading-relaxed">
+                {description}
+              </p>
+            )}
 
             <div className="grid grid-cols-2 gap-5 mb-12">
               {platformFeatures.map((feature, index) => (
@@ -127,12 +133,14 @@ export default function StudentExperience() {
               ))}
             </div>
 
-            <Button 
-              className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
-              onClick={() => window.location.href = buttonLink}
-            >
-              {buttonText}
-            </Button>
+            {buttonText && buttonLink && (
+              <Button 
+                className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
+                onClick={() => window.location.href = buttonLink}
+              >
+                {buttonText}
+              </Button>
+            )}
           </div>
 
           {/* Image (Now Right on Desktop) */}

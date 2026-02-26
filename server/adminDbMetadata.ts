@@ -10,14 +10,14 @@ export async function getAllCategories() {
   return await db.select().from(courseCategories).orderBy(courseCategories.name);
 }
 
-export async function createCategory(data: { name: string; slug: string; description?: string }) {
+export async function createCategory(data: { name: string; slug: string; description?: string; image?: string }) {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
   const result = await db.insert(courseCategories).values(data);
   return result[0].insertId;
 }
 
-export async function updateCategory(id: number, data: Partial<{ name: string; slug: string; description: string; isActive: boolean }>) {
+export async function updateCategory(id: number, data: Partial<{ name: string; slug: string; description: string; image: string; isActive: boolean }>) {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
   await db.update(courseCategories).set(data).where(eq(courseCategories.id, id));

@@ -6,15 +6,19 @@ export default function Certifications() {
   if (certifications.length === 0) return null;
 
   return (
-    <section className="pt-12 pb-2 bg-white overflow-hidden">
-      <div className="container mx-auto px-4 mb-6 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-[#E91E8C]">
-          Selo de Confiança Nacional e Internacional
-        </h2>
+    <section className="bg-white overflow-hidden">
+      {/* Faixa Azul Oficial do Site - Fina e Elegante */}
+      <div className="bg-[#3559AC] py-3 w-full"> {/* Azul oficial do site */}
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-xl md:text-2xl font-bold text-white tracking-widest uppercase">
+            SELOS DE CONFIANÇA
+          </h2>
+        </div>
       </div>
 
+      {/* Carrossel de Selos */}
       <div 
-        className="relative w-full overflow-hidden"
+        className="relative w-full overflow-hidden py-10"
         style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}
       >
         <div className="flex items-center gap-16 animate-scroll-infinite py-4">
@@ -29,7 +33,7 @@ export default function Certifications() {
               <img 
                 src={cert.image_url} 
                 alt={cert.name} 
-                className="h-20 md:h-24 w-auto object-contain"
+                className="h-16 md:h-20 w-auto object-contain"
               />
             </a>
           ))}

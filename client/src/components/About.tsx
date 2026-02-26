@@ -27,22 +27,22 @@ export default function About() {
     return item?.value || defaultValue;
   };
 
-  // Valores do banco (com fallback)
-  const title = getFieldValue("title", "Empresários Educacionais: transformem propósito em rentabilidade real");
-  const subtitle = getFieldValue("subtitle", "Ser parceiro da LA Educação é sair do jogo pequeno.");
-  const description = getFieldValue("description", "Enquanto o mercado paga 30%, aqui você constrói autoridade, domina seu negócio e pode lucrar até 1000% sobre cada matrícula.");
-  const sectionTitle = getFieldValue("section_title", "Conheça agora os diferenciais de Ser LA:");
+  // Valores do banco (SEM fallback - se vazio, fica vazio)
+  const title = getFieldValue("title");
+  const subtitle = getFieldValue("subtitle");
+  const description = getFieldValue("description");
+  const sectionTitle = getFieldValue("section_title");
   
   // IMAGEM - puxar do banco
-  const sectionImage = getFieldValue("image", "/images/about-building-new.jpg");
+  const sectionImage = getFieldValue("image");
   
   // CONTADOR - puxar do banco
-  const counterNumber = getFieldValue("counter_number", "+1.500");
-  const counterText = getFieldValue("counter_text", "Parceiros ativos em todo o Brasil");
+  const counterNumber = getFieldValue("counter_number");
+  const counterText = getFieldValue("counter_text");
   
   // BOTÃO - puxar do banco
-  const buttonText = getFieldValue("button_text", "QUERO SER UM PARCEIRO");
-  const buttonLink = getFieldValue("button_link", "/seja-um-parceiro");
+  const buttonText = getFieldValue("button_text");
+  const buttonLink = getFieldValue("button_link");
 
   // Usar diferenciais do banco ou fallback
   const benefits = (diferenciais as any[]).length > 0
@@ -116,26 +116,34 @@ export default function About() {
 
           {/* Content */}
           <div className="w-full lg:w-1/2 order-1 lg:order-2">
-            <h2 className="text-4xl md:text-5xl font-heading font-extrabold text-gray-900 mb-8 leading-tight">
-              {title.split(/(\bEmpresários Educacionais:|\brentabilidade\b)/g).map((part, i) => {
-                if (part === "Empresários Educacionais:" || part === "rentabilidade") {
-                  return <span key={i} className="text-primary">{part}</span>;
-                }
-                return part;
-              })}
-            </h2>
+            {title && (
+              <h2 className="text-4xl md:text-5xl font-heading font-extrabold text-gray-900 mb-8 leading-tight">
+                {title.split(/(Empresários Educacionais:|rentabilidade)/g).map((part, i) => {
+                  if (part === "Empresários Educacionais:" || part === "rentabilidade") {
+                    return <span key={i} className="text-primary">{part}</span>;
+                  }
+                  return part;
+                })}
+              </h2>
+            )}
             
-            <p className="text-gray-700 text-lg mb-4 leading-relaxed font-semibold">
-              {subtitle}
-            </p>
+            {subtitle && (
+              <p className="text-gray-700 text-lg mb-4 leading-relaxed font-semibold">
+                {subtitle}
+              </p>
+            )}
 
-            <p className="text-gray-600 text-lg mb-10 leading-relaxed">
-              {description}
-            </p>
+            {description && (
+              <p className="text-gray-600 text-lg mb-10 leading-relaxed">
+                {description}
+              </p>
+            )}
 
-            <h3 className="text-xl font-bold text-primary mb-6">
-              {sectionTitle}
-            </h3>
+            {sectionTitle && (
+              <h3 className="text-xl font-bold text-primary mb-6">
+                {sectionTitle}
+              </h3>
+            )}
 
             {/* Grid de 2 colunas para os diferenciais */}
             <div className="grid grid-cols-2 gap-5 mb-12">
@@ -152,12 +160,14 @@ export default function About() {
               ))}
             </div>
 
-            <Button 
-              className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
-              onClick={() => window.location.href = buttonLink}
-            >
-              {buttonText}
-            </Button>
+            {buttonText && buttonLink && (
+              <Button 
+                className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
+                onClick={() => window.location.href = buttonLink}
+              >
+                {buttonText}
+              </Button>
+            )}
           </div>
         </div>
       </div>

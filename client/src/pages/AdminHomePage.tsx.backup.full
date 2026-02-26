@@ -1,0 +1,904 @@
+import React, { useState } from 'react';
+import { useLocation } from 'wouter';
+import { trpc } from '@/lib/trpc';
+import AdminLayout from '@/components/AdminLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { toast } from 'sonner';
+import { Plus, Pencil, Trash2, MoveUp, MoveDown, GraduationCap, BookOpen, Clock, Image as ImageIcon, Globe, ExternalLink, Save, X, Building2 } from 'lucide-react';
+import ImageUpload from '@/components/ImageUpload';
+import AboutSection from './AboutSection';
+
+function BannerSection() {
+  const [showForm, setShowForm] = useState(false);
+  const [editingBanner, setEditingBanner] = useState<any>(null);
+  const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
+  const [image, setImage] = useState('');
+  const [ctaText, setCtaText] = useState('');
+  const [ctaLink, setCtaLink] = useState('');
+  const [displayDuration, setDisplayDuration] = useState(10);
+  const [textPosition, setTextPosition] = useState<'left' | 'center' | 'right'>('left');
+  const [overlayOpacity, setOverlayOpacity] = useState(50);
+  const [isActive, setIsActive] = useState(true);
+  const [showContent, setShowContent] = useState(true);
+
+  const { data: banners = [], refetch } = trpc.adminBanners.getAll.useQuery();
+
+  const createMutation = trpc.adminBanners.create.useMutation({
+    onSuccess: () => { toast.success('Banner criado!'); refetch(); resetForm(); },
+    onError: (e: any) => toast.error('Erro: ' + e.message),
+  });
+
+  const updateMutation = trpc.adminBanners.update.useMutation({
+    onSuccess: () => { toast.success('Banner atualizado!'); refetch(); resetForm(); },
+    onError: (e: any) => toast.error('Erro: ' + e.message),
+  });
+
+  const deleteMutation = trpc.adminBanners.delete.useMutation({
+    onSuccess: () => { toast.success('Banner excluído!'); refetch(); },
+    onError: (e: any) => toast.error('Erro: ' + e.message),
+  });
+
+  const reorderMutation = trpc.adminBanners.reorder.useMutation({
+    onSuccess: () => { toast.success('Ordem atualizada!'); refetch(); },
+  });
+
+  const resetForm = () => {
+    setEditingBanner(null);
+    setShowForm(false);
+    setTitle(''); setSubtitle(''); setImage(''); setCtaText(''); setCtaLink('');
+    setDisplayDuration(10); setTextPosition('left'); setOverlayOpacity(50); setIsActive(true); setShowContent(true);
+  };
+
+  const handleEdit = (banner: any) => {
+    setEditingBanner(banner);
+    setShowForm(true);
+    setTitle(banner.title); setSubtitle(banner.subtitle || ''); setImage(banner.image);
+    setCtaText(banner.ctaText || ''); setCtaLink(banner.ctaLink || '');
+    setDisplayDuration(banner.displayDuration || 10); setTextPosition(banner.textPosition || 'left');
+    setOverlayOpacity(banner.overlayOpacity || 50); setIsActive(banner.isActive);
+    setShowContent(banner.showContent ?? true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim() || !image) { toast.error('Título e imagem são obrigatórios'); return; }
+    const data = { title, subtitle: subtitle || undefined, image, ctaText: ctaText || undefined, ctaLink: ctaLink || undefined, displayDuration, textPosition, overlayOpacity, isActive, showContent };
+    if (editingBanner) { updateMutation.mutate({ id: editingBanner.id, ...data }); }
+    else { const maxOrder = banners.length > 0 ? Math.max(...banners.map((b: any) => b.order), 0) : 0; createMutation.mutate({ ...data, order: maxOrder + 1 }); }
+  };
+
+  const handleMove = (id: number, direction: 'up' | 'down') => {
+    const index = sortedBanners.findIndex(b => b.id === id);
+    if (direction === 'up' && index > 0) {
+      reorderMutation.mutate({ id1: id, id2: sortedBanners[index - 1].id });
+    } else if (direction === 'down' && index < sortedBanners.length - 1) {
+      reorderMutation.mutate({ id1: id, id2: sortedBanners[index + 1].id });
+    }
+  };
+
+  const sortedBanners = [...banners].sort((a: any, b: any) => a.order - b.order);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Banners do Hero</h2>
+        <Button onClick={() => { resetForm(); setShowForm(true); }} className="gap-2"><Plus className="w-4 h-4" /> Novo Banner</Button>
+      </div>
+
+      {showForm && (
+        <Card className="border-primary">
+          <CardHeader><CardTitle>{editingBanner ? 'Editar Banner' : 'Novo Banner'}</CardTitle></CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div><Label>Título *</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Título do banner" /></div>
+                  <div><Label>Subtítulo</Label><Textarea value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="Subtítulo" rows={2} /></div>
+                  <div><Label>Texto do Botão</Label><Input value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="Ex: Quero ser Parceiro" /></div>
+                  <div><Label>Link do Botão</Label><Input value={ctaLink} onChange={(e) => setCtaLink(e.target.value)} placeholder="Ex: /parceiro" /></div>
+                  <div className="flex items-center justify-between p-4 border rounded-lg bg-blue-50 border-blue-100">
+                    <div>
+                      <Label htmlFor="showContent">Mostrar Texto/Botão</Label>
+                      <p className="text-xs text-blue-600">Desative se a imagem já tiver texto</p>
+                    </div>
+                    <Switch id="showContent" checked={showContent} onCheckedChange={setShowContent} />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div><Label>Imagem do Banner *</Label><ImageUpload value={image} onChange={setImage} onRemove={() => setImage('')} aspectRatio={4/1} /></div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Posição do Texto</Label>
+                      <Select value={textPosition} onValueChange={(v: any) => setTextPosition(v)}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="left">Esquerda</SelectItem>
+                          <SelectItem value="center">Centro</SelectItem>
+                          <SelectItem value="right">Direita</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div><Label>Duração (s)</Label><Input type="number" value={displayDuration} onChange={(e) => setDisplayDuration(Number(e.target.value))} min={3} max={30} /></div>
+                  </div>
+                  <div><Label>Opacidade do Overlay: {overlayOpacity}%</Label><Slider value={[overlayOpacity]} onValueChange={(v) => setOverlayOpacity(v[0])} min={0} max={100} step={5} /></div>
+                  <div className="flex items-center gap-2"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Banner Ativo</Label></div>
+                </div>
+              </div>
+              <div className="flex justify-end gap-3">
+                <Button type="button" variant="outline" onClick={resetForm}>Cancelar</Button>
+                <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
+                  {editingBanner ? 'Atualizar Banner' : 'Criar Banner'}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid grid-cols-1 gap-4">
+        {sortedBanners.map((banner: any) => (
+          <Card key={banner.id} className={banner.isActive ? '' : 'opacity-60'}>
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="w-32 h-20 rounded overflow-hidden bg-gray-100 flex-shrink-0">
+                <img src={banner.image} alt="" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-medium truncate">{banner.title || 'Sem título'}</h3>
+                <p className="text-sm text-gray-500">Ordem: {banner.order} | {banner.isActive ? 'Ativo' : 'Inativo'}</p>
+              </div>
+              <div className="flex items-center gap-1">
+                <Button variant="ghost" size="icon" onClick={() => handleMove(banner.id, 'up')}><MoveUp className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => handleMove(banner.id, 'down')}><MoveDown className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" onClick={() => handleEdit(banner)}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="text-red-600" onClick={() => { if(window.confirm('Excluir?')) deleteMutation.mutate({ id: banner.id }) }}><Trash2 className="w-4 h-4" /></Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SelosSection() {
+  const { data: selos = [], refetch } = trpc.adminSelos.getAll.useQuery();
+  const [showForm, setShowForm] = useState(false);
+  const [editingSelo, setEditingSelo] = useState<any>(null);
+  const [title, setTitle] = useState('');
+  const [image, setImage] = useState('');
+  const [link, setLink] = useState('');
+  const [isActive, setIsActive] = useState(true);
+
+  const createMutation = trpc.adminSelos.create.useMutation({ onSuccess: () => { toast.success('Selo criado!'); refetch(); resetForm(); } });
+  const updateMutation = trpc.adminSelos.update.useMutation({ onSuccess: () => { toast.success('Selo atualizado!'); refetch(); resetForm(); } });
+  const deleteMutation = trpc.adminSelos.delete.useMutation({ onSuccess: () => { toast.success('Selo excluído!'); refetch(); } });
+
+  const resetForm = () => { setShowForm(false); setEditingSelo(null); setTitle(''); setImage(''); setLink(''); setIsActive(true); };
+  const handleEdit = (selo: any) => { setEditingSelo(selo); setShowForm(true); setTitle(selo.title); setImage(selo.image); setLink(selo.link || ''); setIsActive(selo.isActive); };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || !image) return toast.error('Preencha todos os campos');
+    if (editingSelo) updateMutation.mutate({ id: editingSelo.id, title, image, link: link || undefined, isActive });
+    else createMutation.mutate({ title, image, link: link || undefined, isActive, order: selos.length + 1 });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Selos e Certificações</h2>
+        <Button onClick={() => setShowForm(true)} className="gap-2"><Plus className="w-4 h-4" /> Novo Selo</Button>
+      </div>
+      {showForm && (
+        <Card>
+          <CardContent className="pt-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div><Label>Título</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} /></div>
+                  <div><Label>Link (URL)</Label><Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://exemplo.com.br" /><p className="text-xs text-gray-500 mt-1">Ao clicar no selo, o usuário será redirecionado para este link</p></div>
+                  <div className="flex items-center gap-2"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Ativo</Label></div>
+                </div>
+                <div><Label>Imagem</Label><ImageUpload value={image} onChange={setImage} onRemove={() => setImage('')} /></div>
+              </div>
+              <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={resetForm}>Cancelar</Button><Button type="submit">Salvar</Button></div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {selos.map((selo: any) => (
+          <Card key={selo.id} className={selo.isActive ? '' : 'opacity-50'}>
+            <CardContent className="p-4 text-center space-y-2">
+              <img src={selo.image} className="h-16 mx-auto object-contain" />
+              <p className="font-medium text-sm">{selo.title}</p>
+              {selo.link && <p className="text-xs text-blue-500 truncate">{selo.link}</p>}
+              <div className="flex justify-center gap-2">
+                <Button variant="ghost" size="icon" onClick={() => handleEdit(selo)}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: selo.id })}><Trash2 className="w-4 h-4" /></Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ImprensaSection() {
+  const { data: imprensa = [], refetch } = trpc.adminImprensa.getAll.useQuery();
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+  const [name, setName] = useState('');
+  const [logo, setLogo] = useState('');
+  const [link, setLink] = useState('');
+  const [isActive, setIsActive] = useState(true);
+
+  const createMutation = trpc.adminImprensa.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetForm(); } });
+  const updateMutation = trpc.adminImprensa.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetForm(); } });
+  const deleteMutation = trpc.adminImprensa.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); } });
+
+  const resetForm = () => { setShowForm(false); setEditing(null); setName(''); setLogo(''); setLink(''); setIsActive(true); };
+  const handleEdit = (item: any) => { setEditing(item); setShowForm(true); setName(item.name); setLogo(item.logo); setLink(item.link || ''); setIsActive(item.isActive); };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editing) updateMutation.mutate({ id: editing.id, name, logo, link: link || undefined, isActive });
+    else createMutation.mutate({ name, logo, link: link || undefined, isActive, order: imprensa.length + 1 });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Logos da Imprensa</h2>
+        <Button onClick={() => setShowForm(true)} className="gap-2"><Plus className="w-4 h-4" /> Novo Logo</Button>
+      </div>
+      {showForm && (
+        <Card><CardContent className="pt-6"><form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div><Label>Nome</Label><Input value={name} onChange={(e) => setName(e.target.value)} /></div>
+              <div><Label>Link (URL)</Label><Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://exemplo.com.br" /><p className="text-xs text-gray-500 mt-1">Ao clicar no logo, o usuário será redirecionado para este link</p></div>
+            </div>
+            <div><Label>Logo</Label><ImageUpload value={logo} onChange={setLogo} onRemove={() => setLogo('')} /></div>
+          </div>
+          <div className="flex items-center gap-2"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Ativo</Label></div>
+          <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={resetForm}>Cancelar</Button><Button type="submit">Salvar</Button></div>
+        </form></CardContent></Card>
+      )}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        {imprensa.map((item: any) => (
+          <Card key={item.id} className={item.isActive ? '' : 'opacity-50'}>
+            <CardContent className="p-4 text-center space-y-2">
+              <img src={item.logo} className="h-8 mx-auto object-contain grayscale" />
+              <p className="text-xs text-gray-600 truncate">{item.name}</p>
+              {item.link && <p className="text-xs text-blue-500 truncate">{item.link}</p>}
+              <div className="flex justify-center gap-2">
+                <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: item.id })}><Trash2 className="w-4 h-4" /></Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DiferenciaisSection() {
+  // Settings da seção about
+  const { data: aboutSettings = [], refetch: refetchSettings } = trpc.adminSectionSettings.getBySection.useQuery({ section: 'about' });
+  const bulkUpdateMutation = trpc.adminSectionSettings.bulkUpdate.useMutation({ onSuccess: () => { toast.success('Configurações salvas!'); refetchSettings(); } });
+
+  // Cards de diferenciais
+  const { data: diferenciais = [], refetch } = trpc.adminDiferenciais.getAll.useQuery();
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+  const [cardTitle, setCardTitle] = useState('');
+  const [sShowTitle, setSShowTitle] = useState(true);
+  const [cardDesc, setCardDesc] = useState('');
+  const [cardIcon, setCardIcon] = useState('');
+  const [cardActive, setCardActive] = useState(true);
+
+  const createMutation = trpc.adminDiferenciais.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetCardForm(); }, onError: (err: any) => { toast.error('Erro ao criar: ' + err.message); console.error('Create error:', err); } });
+  const updateMutation = trpc.adminDiferenciais.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetCardForm(); }, onError: (err: any) => { toast.error('Erro ao atualizar: ' + err.message); console.error('Update error:', err); } });
+  const deleteMutation = trpc.adminDiferenciais.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); }, onError: (err: any) => { toast.error('Erro ao excluir: ' + err.message); console.error('Delete error:', err); } });
+
+  const resetCardForm = () => { setShowForm(false); setEditing(null); setCardTitle(''); setCardDesc(''); setCardIcon(''); setCardActive(true); };
+      setSShowTitle(getVal("show_title", "true") === "true");
+  const cardFormRef = React.useRef<HTMLDivElement>(null);
+  const handleEditCard = (item: any) => { setEditing(item); setShowForm(true); setCardTitle(item.title); setCardDesc(item.description); setCardIcon(item.icon || ''); setCardActive(!!item.isActive); setTimeout(() => cardFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100); };
+  const handleSubmitCard = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editing) updateMutation.mutate({ id: editing.id, title: cardTitle, description: cardDesc, icon: cardIcon, isActive: Boolean(cardActive) });
+    else createMutation.mutate({ title: cardTitle, description: cardDesc, icon: cardIcon, isActive: Boolean(cardActive), order: diferenciais.length + 1 });
+  };
+
+  // Helper para pegar valor do settings
+  const getVal = (field: string, def: string = '') => {
+    const item = (aboutSettings as any[]).find((s: any) => s.field === field);
+    return item?.value || def;
+  };
+
+  // Form states para settings
+  const [sTitle, setSTitle] = useState('');
+  const [sSubtitle, setSSubtitle] = useState('');
+  const [sDescription, setSDescription] = useState('');
+  const [sSectionTitle, setSSectionTitle] = useState('');
+  const [sImage, setSImage] = useState('');
+  const [sCounterText, setSCounterText] = useState('');
+  const [sBtnText, setSBtnText] = useState('');
+  const [sBtnLink, setSBtnLink] = useState('');
+
+  React.useEffect(() => {
+    if ((aboutSettings as any[]).length > 0) {
+      setSTitle(getVal('title', 'Empresários Educacionais: transformem propósito em rentabilidade real'));
+      setSSubtitle(getVal('subtitle', 'Ser parceiro da LA Educação é sair do jogo pequeno.'));
+          <div className="flex items-center gap-2 pb-2"><Switch checked={sShowTitle} onCheckedChange={setSShowTitle} /><Label className="font-bold text-primary">Exibir Título Principal</Label></div>
+      setSDescription(getVal('description', ''));
+      setSSectionTitle(getVal('section_title', 'Conheça agora os diferenciais de Ser LA:'));
+      setSImage(getVal('image', '/images/about-building-new.jpg'));
+          <div className="flex items-center gap-2 pb-2"><Switch checked={sShowTitle} onCheckedChange={setSShowTitle} /><Label className="font-bold text-primary">Exibir Título Principal</Label></div>
+      setSCounterNum(getVal('counter_number', '+1.500'));
+      setSCounterText(getVal('counter_text', 'Parceiros ativos em todo o Brasil'));
+      setSBtnText(getVal('button_text', 'QUERO SER UM PARCEIRO'));
+      setSBtnLink(getVal('button_link', '/seja-um-parceiro'));
+    }
+  }, [aboutSettings]);
+
+  const handleSaveSettings = () => {
+    bulkUpdateMutation.mutate({
+      section: 'about',
+      fields: [
+        { field: "show_title", value: String(sShowTitle) },
+        { field: 'title', value: sTitle },
+        { field: 'subtitle', value: sSubtitle },
+        { field: 'description', value: sDescription },
+        { field: 'section_title', value: sSectionTitle },
+        { field: 'image', value: sImage },
+        { field: 'counter_number', value: sCounterNum },
+        { field: 'counter_text', value: sCounterText },
+        { field: 'button_text', value: sBtnText },
+        { field: 'button_link', value: sBtnLink },
+      ],
+    });
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Configurações da Seção */}
+      <Card>
+        <CardHeader><CardTitle className="flex items-center gap-2"><Save className="w-5 h-5" /> Configurações da Seção Diferenciais</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div><Label className="font-semibold">Título Principal</Label><Input value={sTitle} onChange={(e) => setSTitle(e.target.value)} placeholder="Ex: Empresários Educacionais: transformem propósito em rentabilidade real" /></div>
+          <div><Label className="font-semibold">Subtítulo (negrito)</Label><Input value={sSubtitle} onChange={(e) => setSSubtitle(e.target.value)} placeholder="Ex: Ser parceiro da LA Educação é sair do jogo pequeno." /></div>
+          <div><Label className="font-semibold">Descrição</Label><Textarea value={sDescription} onChange={(e) => setSDescription(e.target.value)} rows={3} placeholder="Ex: Enquanto o mercado paga 30%..." /></div>
+          <div><Label className="font-semibold">Título dos Cards</Label><Input value={sSectionTitle} onChange={(e) => setSSectionTitle(e.target.value)} placeholder="Ex: Conheça agora os diferenciais de Ser LA:" /></div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="font-semibold">Imagem da Seção</Label><ImageUpload value={sImage} onChange={setSImage} onRemove={() => setSImage('')} /></div>
+            <div className="space-y-4">
+              <div><Label className="font-semibold">Contador (número)</Label><Input value={sCounterNum} onChange={(e) => setSCounterNum(e.target.value)} placeholder="Ex: +1.500" /></div>
+              <div><Label className="font-semibold">Contador (texto)</Label><Input value={sCounterText} onChange={(e) => setSCounterText(e.target.value)} placeholder="Ex: Parceiros ativos em todo o Brasil" /></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="font-semibold">Texto do Botão</Label><Input value={sBtnText} onChange={(e) => setSBtnText(e.target.value)} placeholder="Ex: QUERO SER UM PARCEIRO" /></div>
+            <div><Label className="font-semibold">Link do Botão</Label><Input value={sBtnLink} onChange={(e) => setSBtnLink(e.target.value)} placeholder="Ex: /seja-um-parceiro" /></div>
+          </div>
+          <Button onClick={handleSaveSettings} className="gap-2"><Save className="w-4 h-4" /> Salvar Configurações</Button>
+        </CardContent>
+      </Card>
+
+      {/* Cards de Diferenciais */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Cards de Diferenciais</h2>
+        <Button onClick={() => setShowForm(true)} className="gap-2"><Plus className="w-4 h-4" /> Novo Diferencial</Button>
+      </div>
+      {showForm && (
+        <Card ref={cardFormRef}><CardContent className="pt-6"><form onSubmit={handleSubmitCard} className="space-y-4">
+          <div><Label>Título</Label><Input value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} /></div>
+          <div><Label>Descrição</Label><Textarea value={cardDesc} onChange={(e) => setCardDesc(e.target.value)} /></div>
+          <div><Label>Ícone (Lucide name)</Label><Input value={cardIcon} onChange={(e) => setCardIcon(e.target.value)} placeholder="Ex: DollarSign, BookOpen, Wallet, TrendingUp, Users" /></div>
+          <div className="flex items-center gap-2"><Switch checked={cardActive} onCheckedChange={setCardActive} /><Label>Ativo</Label></div>
+          <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={resetCardForm}>Cancelar</Button><Button type="submit">Salvar</Button></div>
+        </form></CardContent></Card>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {diferenciais.map((item: any) => (
+          <Card key={item.id} className={item.isActive ? '' : 'opacity-50'}>
+            <CardContent className="p-4 flex justify-between items-start">
+              <div><h3 className="font-bold">{item.title}</h3><p className="text-sm text-gray-500">{item.description}</p></div>
+              <div className="flex gap-1">
+                <Button variant="ghost" size="icon" onClick={() => handleEditCard(item)}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: item.id })}><Trash2 className="w-4 h-4" /></Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PlataformaSection() {
+  // Settings da seção student_experience
+  const { data: platSettings = [], refetch: refetchSettings } = trpc.adminSectionSettings.getBySection.useQuery({ section: 'student_experience' });
+  const bulkUpdateMutation = trpc.adminSectionSettings.bulkUpdate.useMutation({ onSuccess: () => { toast.success('Configurações salvas!'); refetchSettings(); } });
+
+  // Features da plataforma
+  const { data: features = [], refetch } = trpc.adminPlatformFeatures.getAll.useQuery();
+  const [showForm, setShowForm] = useState(false);
+  const [editing, setEditing] = useState<any>(null);
+  const [fTitle, setFTitle] = useState('');
+  const [fDesc, setFDesc] = useState('');
+  const [fIcon, setFIcon] = useState('');
+  const [fActive, setFActive] = useState(true);
+
+  const createMutation = trpc.adminPlatformFeatures.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetFeatureForm(); }, onError: (err: any) => { toast.error('Erro ao criar: ' + err.message); console.error('Create error:', err); } });
+  const updateMutation = trpc.adminPlatformFeatures.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetFeatureForm(); }, onError: (err: any) => { toast.error('Erro ao atualizar: ' + err.message); console.error('Update error:', err); } });
+  const deleteMutation = trpc.adminPlatformFeatures.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); }, onError: (err: any) => { toast.error('Erro ao excluir: ' + err.message); console.error('Delete error:', err); } });
+
+  const resetFeatureForm = () => { setShowForm(false); setEditing(null); setFTitle(''); setFDesc(''); setFIcon(''); setFActive(true); };
+  const featureFormRef = React.useRef<HTMLDivElement>(null);
+  const handleEditFeature = (item: any) => { setEditing(item); setShowForm(true); setFTitle(item.title); setFDesc(item.description || ''); setFIcon(item.icon || ''); setFActive(!!item.isActive); setTimeout(() => featureFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100); };
+  const handleSubmitFeature = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editing) updateMutation.mutate({ id: editing.id, title: fTitle, description: fDesc, icon: fIcon, isActive: Boolean(fActive) });
+    else createMutation.mutate({ title: fTitle, description: fDesc, icon: fIcon, isActive: Boolean(fActive), order: features.length + 1 });
+  };
+
+  // Helper para pegar valor do settings
+  const getVal = (field: string, def: string = '') => {
+    const item = (platSettings as any[]).find((s: any) => s.field === field);
+    return item?.value || def;
+  };
+
+  // Form states para settings
+  const [sShowTitle, setSShowTitle] = useState(true);
+  const [sLabel, setSLabel] = useState('');
+  const [sDescription, setSDescription] = useState('');
+  const [sImage, setSImage] = useState('');
+  const [sCounterNum, setSCounterNum] = useState('');
+  const [sCounterText, setSCounterText] = useState('');
+  const [sCounterSub, setSCounterSub] = useState('');
+  const [sBtnText, setSBtnText] = useState('');
+  const [sBtnLink, setSBtnLink] = useState('');
+
+      setSShowTitle(getVal("show_title", "true") === "true");
+  React.useEffect(() => {
+    if ((platSettings as any[]).length > 0) {
+      setSLabel(getVal('label', 'EXPERIÊNCIA DO ALUNO'));
+      setSTitle(getVal('title', 'Plataforma Super Intuitiva'));
+      setSDescription(getVal('description', ''));
+      setSImage(getVal('image', '/images/plataforma-alunos.jpg'));
+      setSCounterNum(getVal('counter_number', '+15000'));
+      setSCounterText(getVal('counter_text', 'ALUNOS'));
+      setSCounterSub(getVal('counter_subtext', 'Transformando vidas'));
+      setSBtnText(getVal('button_text', 'CONHECER CURSOS'));
+      setSBtnLink(getVal('button_link', '/cursos'));
+    }
+  }, [platSettings]);
+  const handleSaveSettings = () => {
+
+    bulkUpdateMutation.mutate({
+      section: "student_experience",
+      fields: [
+        { field: "show_title", value: String(sShowTitle) },
+        { field: 'title', value: sTitle },
+        { field: 'description', value: sDescription },
+        { field: 'image', value: sImage },
+        { field: 'counter_text', value: sCounterText },
+        { field: 'counter_subtext', value: sCounterSub },
+        { field: 'button_text', value: sBtnText },
+        { field: 'button_link', value: sBtnLink },
+      ],
+    });
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Configurações da Seção */}
+      <Card>
+        <CardHeader><CardTitle className="flex items-center gap-2"><Save className="w-5 h-5" /> Configurações da Seção Plataforma</CardTitle></CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-2 pb-2"><Switch checked={sShowTitle} onCheckedChange={setSShowTitle} /><Label className="font-bold text-accent">Exibir Título Principal</Label></div>
+          <div><Label className="font-semibold">Tag / Label</Label><Input value={sLabel} onChange={(e) => setSLabel(e.target.value)} placeholder="Ex: EXPERIÊNCIA DO ALUNO" /></div>
+          <div><Label className="font-semibold">Título Principal</Label><Input value={sTitle} onChange={(e) => setSTitle(e.target.value)} placeholder="Ex: Plataforma Super Intuitiva" /></div>
+          <div><Label className="font-semibold">Descrição</Label><Textarea value={sDescription} onChange={(e) => setSDescription(e.target.value)} rows={3} placeholder="Ex: Seus alunos terão acesso a uma plataforma moderna..." /></div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="font-semibold">Imagem da Plataforma</Label><ImageUpload value={sImage} onChange={setSImage} onRemove={() => setSImage('')} /></div>
+            <div className="space-y-4">
+              <div><Label className="font-semibold">Contador (número)</Label><Input value={sCounterNum} onChange={(e) => setSCounterNum(e.target.value)} placeholder="Ex: +15000" /></div>
+              <div><Label className="font-semibold">Contador (texto principal)</Label><Input value={sCounterText} onChange={(e) => setSCounterText(e.target.value)} placeholder="Ex: ALUNOS" /></div>
+              <div><Label className="font-semibold">Contador (subtexto)</Label><Input value={sCounterSub} onChange={(e) => setSCounterSub(e.target.value)} placeholder="Ex: Transformando vidas" /></div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div><Label className="font-semibold">Texto do Botão</Label><Input value={sBtnText} onChange={(e) => setSBtnText(e.target.value)} placeholder="Ex: CONHECER CURSOS" /></div>
+            <div><Label className="font-semibold">Link do Botão</Label><Input value={sBtnLink} onChange={(e) => setSBtnLink(e.target.value)} placeholder="Ex: /cursos" /></div>
+          </div>
+          <Button onClick={handleSaveSettings} className="gap-2"><Save className="w-4 h-4" /> Salvar Configurações</Button>
+        </CardContent>
+      </Card>
+
+      {/* Features da Plataforma */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Features da Plataforma</h2>
+        <Button onClick={() => setShowForm(true)} className="gap-2"><Plus className="w-4 h-4" /> Nova Feature</Button>
+      </div>
+      {showForm && (
+        <Card ref={featureFormRef}><CardContent className="pt-6"><form onSubmit={handleSubmitFeature} className="space-y-4">
+          <div><Label>Título</Label><Input value={fTitle} onChange={(e) => setFTitle(e.target.value)} placeholder="Ex: Acesso 24h" /></div>
+          <div><Label>Descrição</Label><Textarea value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ex: Estude quando e onde quiser" /></div>
+          <div><Label>Ícone (Lucide name)</Label><Input value={fIcon} onChange={(e) => setFIcon(e.target.value)} placeholder="Ex: Clock, Award, Users, BookOpen, Monitor, CheckCircle2" /></div>
+          <div className="flex items-center gap-2"><Switch checked={fActive} onCheckedChange={setFActive} /><Label>Ativo</Label></div>
+          <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={resetFeatureForm}>Cancelar</Button><Button type="submit">Salvar</Button></div>
+        </form></CardContent></Card>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {features.map((item: any) => (
+          <Card key={item.id} className={item.isActive ? '' : 'opacity-50'}>
+            <CardContent className="p-4 flex justify-between items-start">
+              <div><h3 className="font-bold">{item.title}</h3><p className="text-sm text-gray-500">{item.description}</p><p className="text-xs text-blue-500 mt-1">Ícone: {item.icon}</p></div>
+              <div className="flex gap-1">
+                <Button variant="ghost" size="icon" onClick={() => handleEditFeature(item)}><Pencil className="w-4 h-4" /></Button>
+                <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: item.id })}><Trash2 className="w-4 h-4" /></Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+}
+function EcossistemaSection() {
+  const { data: settings, refetch: refetchSettings } = trpc.adminHome.getSettings.useQuery();
+  const updateSettingsMutation = trpc.adminHome.updateSettings.useMutation({ onSuccess: () => { toast.success('Título/Descrição salvos!'); refetchSettings(); } });
+  const [sectionTitle, setSectionTitle] = useState('');
+  const [sectionDesc, setSectionDesc] = useState('');
+
+  // CRUD de instituições
+  const { data: institutions = [], refetch: refetchInstitutions } = trpc.adminHome.getEcosystemInstitutions.useQuery();
+  const addMutation = trpc.adminHome.addEcosystemInstitution.useMutation({ onSuccess: () => { toast.success('Instituição adicionada!'); refetchInstitutions(); resetForm(); } });
+  const updateMutation = trpc.adminHome.updateEcosystemInstitution.useMutation({ onSuccess: () => { toast.success('Instituição atualizada!'); refetchInstitutions(); resetForm(); } });
+  const deleteMutation = trpc.adminHome.deleteEcosystemInstitution.useMutation({ onSuccess: () => { toast.success('Instituição excluída!'); refetchInstitutions(); } });
+
+  const [showForm, setShowForm] = useState(false);
+  const [editingInst, setEditingInst] = useState<any>(null);
+  const [formId, setFormId] = useState('');
+  const [formName, setFormName] = useState('');
+  const [formLogo, setFormLogo] = useState('');
+  const [formDescription, setFormDescription] = useState('');
+  const [formWebsite, setFormWebsite] = useState('');
+  const [formTipo, setFormTipo] = useState('');
+  const [formCategoria, setFormCategoria] = useState('');
+  const [formBanner, setFormBanner] = useState('');
+
+  React.useEffect(() => { if (settings) { setSectionTitle(settings.ecosystemTitle || ''); setSectionDesc(settings.ecosystemDescription || ''); } }, [settings]);
+
+  const resetForm = () => {
+    setShowForm(false); setEditingInst(null);
+    setFormId(''); setFormName(''); setFormLogo(''); setFormDescription('');
+    setFormWebsite(''); setFormTipo(''); setFormCategoria(''); setFormBanner('');
+  };
+
+  const handleEdit = (inst: any) => {
+    setEditingInst(inst);
+    setShowForm(true);
+    setFormId(inst.id);
+    setFormName(inst.name || '');
+    setFormLogo(inst.logo || '');
+    setFormDescription(inst.description || '');
+    setFormWebsite(inst.website || '');
+    setFormTipo(inst.tipo || '');
+    setFormCategoria(inst.categoria || '');
+    setFormBanner(inst.banner || '');
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formName) return toast.error('Nome é obrigatório');
+    if (editingInst) {
+      updateMutation.mutate({
+        id: editingInst.id,
+        name: formName,
+        logo: formLogo,
+        description: formDescription,
+        website: formWebsite,
+        tipo: formTipo,
+        categoria: formCategoria,
+        banner: formBanner
+      });
+    } else {
+      if (!formId) return toast.error('ID é obrigatório para nova instituição');
+      addMutation.mutate({
+        id: formId,
+        name: formName,
+        logo: formLogo,
+        description: formDescription,
+        website: formWebsite,
+        tipo: formTipo,
+        categoria: formCategoria,
+        banner: formBanner
+      });
+    }
+  };
+
+  const handleDelete = (id: string, name: string) => {
+    if (window.confirm(`Tem certeza que deseja excluir "${name}"?`)) {
+      deleteMutation.mutate({ id });
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Seção 1: Título e Descrição da Seção */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Configurações da Seção</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div><Label>Título da Seção Ecossistema</Label><Input value={sectionTitle} onChange={(e) => setSectionTitle(e.target.value)} placeholder="Ex: Por que somos o maior Ecossistema Educacional do Brasil?" /></div>
+          <div><Label>Descrição</Label><Textarea value={sectionDesc} onChange={(e) => setSectionDesc(e.target.value)} rows={3} placeholder="Descrição da seção do ecossistema" /></div>
+          <Button onClick={() => updateSettingsMutation.mutate({ ecosystemTitle: sectionTitle, ecosystemDescription: sectionDesc })} className="gap-2"><Save className="w-4 h-4" /> Salvar Configurações</Button>
+        </CardContent>
+      </Card>
+
+      {/* Seção 2: Gerenciar Instituições */}
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Instituições do Ecossistema</h2>
+          <Button onClick={() => { resetForm(); setShowForm(true); }} className="gap-2 bg-pink-600 hover:bg-pink-700">
+            <Plus className="w-4 h-4" /> Nova Instituição
+          </Button>
+        </div>
+
+        {/* Formulário de Criar/Editar */}
+        {showForm && (
+          <Card className="border-2 border-pink-200">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-lg">{editingInst ? `Editar: ${editingInst.name}` : 'Nova Instituição'}</CardTitle>
+                <Button variant="ghost" size="icon" onClick={resetForm}><X className="w-4 h-4" /></Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Coluna Esquerda */}
+                  <div className="space-y-4">
+                    {!editingInst && (
+                      <div>
+                        <Label>ID (slug único, ex: mde, la_tecnologia)</Label>
+                        <Input value={formId} onChange={(e) => setFormId(e.target.value.toLowerCase().replace(/\s+/g, '_'))} placeholder="ex: minha_empresa" />
+                      </div>
+                    )}
+                    <div>
+                      <Label>Nome da Instituição *</Label>
+                      <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Ex: MDE - Método de Desenvolvimento" />
+                    </div>
+                    <div>
+                      <Label>Tipo</Label>
+                      <Input value={formTipo} onChange={(e) => setFormTipo(e.target.value)} placeholder="Ex: Método Educacional" />
+                    </div>
+                    <div>
+                      <Label>Categoria</Label>
+                      <Input value={formCategoria} onChange={(e) => setFormCategoria(e.target.value)} placeholder="Ex: Educação" />
+                    </div>
+                    <div>
+                      <Label className="flex items-center gap-2"><Globe className="w-4 h-4 text-pink-600" /> Link do Botão "Conhecer mais"</Label>
+                      <Input value={formWebsite} onChange={(e) => setFormWebsite(e.target.value)} placeholder="https://exemplo.com.br" />
+                      <p className="text-xs text-gray-500 mt-1">Se preenchido, o botão "Conhecer mais" aparecerá no site</p>
+                    </div>
+                    <div>
+                      <Label>Descrição</Label>
+                      <Textarea value={formDescription} onChange={(e) => setFormDescription(e.target.value)} rows={4} placeholder="Descrição da instituição que aparece no site" />
+                    </div>
+                  </div>
+                  {/* Coluna Direita - Imagens */}
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-pink-600" /> Logo da Instituição</Label>
+                      <ImageUpload value={formLogo} onChange={setFormLogo} onRemove={() => setFormLogo('')} />
+                    </div>
+                    <div>
+                      <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-blue-600" /> Banner de Fundo</Label>
+                      <ImageUpload value={formBanner} onChange={setFormBanner} onRemove={() => setFormBanner('')} />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 pt-4 border-t">
+                  <Button type="button" variant="outline" onClick={resetForm}>Cancelar</Button>
+                  <Button type="submit" className="bg-pink-600 hover:bg-pink-700 gap-2">
+                    <Save className="w-4 h-4" /> {editingInst ? 'Salvar Alterações' : 'Criar Instituição'}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Lista de Instituições */}
+        {(institutions as any[]).length === 0 ? (
+          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed">
+            <Globe className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500">Nenhuma instituição cadastrada ainda.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {(institutions as any[]).map((inst: any) => (
+              <Card key={inst.id} className="overflow-hidden hover:shadow-md transition-shadow">
+                <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-3 text-white">
+                  <h3 className="font-bold truncate">{inst.name || inst.id}</h3>
+                  <p className="text-xs text-pink-100">{inst.tipo || 'Sem tipo definido'}</p>
+                </div>
+                <CardContent className="p-4 space-y-3">
+                  {/* Logo Preview */}
+                  <div className="flex justify-center bg-gray-50 rounded-lg p-3 min-h-[80px]">
+                    {inst.logo ? (
+                      <img src={inst.logo} alt={inst.name} className="h-16 w-auto object-contain" />
+                    ) : (
+                      <div className="flex items-center justify-center text-gray-300">
+                        <ImageIcon className="w-8 h-8" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="space-y-1">
+                    <p className="text-xs text-gray-500 uppercase font-semibold">Descrição</p>
+                    <p className="text-sm text-gray-700 line-clamp-2">{inst.description || 'Sem descrição'}</p>
+                  </div>
+
+                  {/* Website Status */}
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${
+                      inst.website ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                    }`}>
+                      <ExternalLink className="w-3 h-3" />
+                      {inst.website ? 'Link ativo' : 'Sem link'}
+                    </span>
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${
+                      inst.logo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      Logo: {inst.logo ? 'OK' : 'Falta'}
+                    </span>
+                  </div>
+
+                  {/* Ações */}
+                  <div className="flex gap-2 pt-3 border-t">
+                    <Button variant="outline" size="sm" className="flex-1 gap-1 hover:bg-pink-50 hover:text-pink-700" onClick={() => handleEdit(inst)}>
+                      <Pencil className="w-3 h-3" /> Editar
+                    </Button>
+                    <Button variant="outline" size="sm" className="gap-1 text-red-600 hover:bg-red-50" onClick={() => handleDelete(inst.id, inst.name)} disabled={deleteMutation.isPending}>
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CursosSection() {
+  const [, setLocation] = useLocation();
+  const { data: courses = [], refetch } = trpc.adminCourses.getAll.useQuery();
+  const deleteMutation = trpc.adminCourses.delete.useMutation({
+    onSuccess: () => { toast.success('Curso excluído!'); refetch(); },
+    onError: (e: any) => toast.error('Erro: ' + e.message),
+  });
+
+  const handleDelete = (id: number, title: string) => {
+    if (window.confirm('Tem certeza que deseja excluir o curso "' + title + '"?')) {
+      deleteMutation.mutate({ id });
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Cursos em Destaque</h2>
+        <Button onClick={() => setLocation('/admin-la-educacao/cursos/novo')} className="gap-2">
+          <Plus className="w-4 h-4" /> Novo Curso
+        </Button>
+      </div>
+      {courses.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed">
+          <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-500">Nenhum curso cadastrado ainda.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4">
+          {courses.map((course: any) => (
+            <Card key={course.id} className="overflow-hidden hover:shadow-md transition-shadow">
+              <CardContent className="p-0">
+                <div className="flex flex-col md:flex-row">
+                  <div className="w-full md:w-48 h-32 bg-gray-100 flex-shrink-0">
+                    <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 p-4 min-w-0">
+                    <div className="flex items-start justify-between gap-4 mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-gray-900 mb-1">{course.title}</h3>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-pink-100 text-pink-700 rounded text-xs font-medium">
+                            <GraduationCap className="w-3 h-3" /> {course.category}
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                            <BookOpen className="w-3 h-3" /> {course.modality}
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+                            <Clock className="w-3 h-3" /> {course.duration}
+                          </span>
+                          <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-semibold ${course.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                            {course.isActive ? '✓ Ativo' : '○ Inativo'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 mt-3">
+                      <Button variant="outline" size="sm" className="gap-1 hover:bg-pink-50 hover:text-pink-700" onClick={() => setLocation('/admin-la-educacao/cursos/' + course.id + '/grade')}>
+                        <BookOpen className="w-3 h-3" /> Grade
+                      </Button>
+                      <Button variant="outline" size="sm" className="gap-1 hover:bg-blue-50 hover:text-blue-700" onClick={() => setLocation('/admin-la-educacao/cursos/' + course.id)}>
+                        <Pencil className="w-3 h-3" /> Editar
+                      </Button>
+                      <Button variant="outline" size="sm" className="gap-1 text-red-600 hover:bg-red-50" onClick={() => handleDelete(course.id, course.title)} disabled={deleteMutation.isPending}>
+                        <Trash2 className="w-3 h-3" /> Excluir
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function AdminHomePage() {
+  return (
+    <AdminLayout>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Editar Página Home</h1>
+          <p className="text-gray-600 mt-1">Gerencie todos os elementos da página inicial</p>
+        </div>
+        <Tabs defaultValue="banners" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+            <TabsTrigger value="banners">Banners</TabsTrigger>
+            <TabsTrigger value="selos">Selos</TabsTrigger>
+            <TabsTrigger value="imprensa">Imprensa</TabsTrigger>
+            <TabsTrigger value="diferenciais">Diferenciais</TabsTrigger>
+            <TabsTrigger value="plataforma">Plataforma</TabsTrigger>
+            <TabsTrigger value="ecossistema">Ecossistema</TabsTrigger>
+            <TabsTrigger value="cursos">Cursos</TabsTrigger>
+            <TabsTrigger value="sobre">Sobre Nós</TabsTrigger>
+          </TabsList>
+          <TabsContent value="banners" className="mt-6"><BannerSection /></TabsContent>
+          <TabsContent value="selos" className="mt-6"><SelosSection /></TabsContent>
+          <TabsContent value="imprensa" className="mt-6"><ImprensaSection /></TabsContent>
+          <TabsContent value="diferenciais" className="mt-6"><DiferenciaisSection /></TabsContent>
+          <TabsContent value="plataforma" className="mt-6"><PlataformaSection /></TabsContent>
+          <TabsContent value="ecossistema" className="mt-6"><EcossistemaSection /></TabsContent>
+          <TabsContent value="cursos" className="mt-6"><CursosSection /></TabsContent>
+          <TabsContent value="sobre" className="mt-6"><AboutSection /></TabsContent>
+        </Tabs>
+      </div>
+    </AdminLayout>
+  );
+}

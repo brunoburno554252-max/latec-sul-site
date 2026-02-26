@@ -15,6 +15,20 @@ async function getDbPool() {
   return pool;
 }
 
+// Helper: aceita boolean OU number (0/1) e converte para boolean
+const zBooleanLike = z.preprocess((val) => {
+  if (typeof val === 'number') return val !== 0;
+  if (typeof val === 'string') return val === 'true' || val === '1';
+  return val;
+}, z.boolean());
+
+const zBooleanLikeOptional = z.preprocess((val) => {
+  if (val === undefined || val === null) return undefined;
+  if (typeof val === 'number') return val !== 0;
+  if (typeof val === 'string') return val === 'true' || val === '1';
+  return val;
+}, z.boolean().optional());
+
 // ========== ADMIN SELOS (home_certifications) ==========
 export const adminSelosRouter = router({
   getAll: publicProcedure.query(async () => {
@@ -30,7 +44,7 @@ export const adminSelosRouter = router({
       title: z.string(),
       image: z.string(),
       link: z.string().optional(),
-      isActive: z.boolean().default(true),
+      isActive: zBooleanLike.default(true),
       order: z.number().default(0),
     }))
     .mutation(async ({ input }) => {
@@ -48,7 +62,7 @@ export const adminSelosRouter = router({
       title: z.string().optional(),
       image: z.string().optional(),
       link: z.string().optional().nullable(),
-      isActive: z.boolean().optional(),
+      isActive: zBooleanLikeOptional,
       order: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
@@ -91,7 +105,7 @@ export const adminImprensaRouter = router({
       name: z.string(),
       logo: z.string(),
       link: z.string().optional(),
-      isActive: z.boolean().default(true),
+      isActive: zBooleanLike.default(true),
       order: z.number().default(0),
     }))
     .mutation(async ({ input }) => {
@@ -109,7 +123,7 @@ export const adminImprensaRouter = router({
       name: z.string().optional(),
       logo: z.string().optional(),
       link: z.string().optional().nullable(),
-      isActive: z.boolean().optional(),
+      isActive: zBooleanLikeOptional,
       order: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
@@ -152,7 +166,7 @@ export const adminDiferenciaisRouter = router({
       title: z.string(),
       description: z.string().optional(),
       icon: z.string().optional(),
-      isActive: z.boolean().default(true),
+      isActive: zBooleanLike.default(true),
       order: z.number().default(0),
     }))
     .mutation(async ({ input }) => {
@@ -170,7 +184,7 @@ export const adminDiferenciaisRouter = router({
       title: z.string().optional(),
       description: z.string().optional(),
       icon: z.string().optional(),
-      isActive: z.boolean().optional(),
+      isActive: zBooleanLikeOptional,
       order: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
@@ -219,7 +233,6 @@ export const adminSectionSettingsRouter = router({
     }))
     .mutation(async ({ input }) => {
       const db = await getDbPool();
-      // Check if exists
       const [existing]: any = await db.query(
         "SELECT id FROM home_settings WHERE section = ? AND field = ?",
         [input.section, input.field]
@@ -284,7 +297,7 @@ export const adminPlatformFeaturesRouter = router({
       title: z.string(),
       description: z.string().optional(),
       icon: z.string().optional(),
-      isActive: z.boolean().default(true),
+      isActive: zBooleanLike.default(true),
       order: z.number().default(0),
     }))
     .mutation(async ({ input }) => {
@@ -302,7 +315,7 @@ export const adminPlatformFeaturesRouter = router({
       title: z.string().optional(),
       description: z.string().optional(),
       icon: z.string().optional(),
-      isActive: z.boolean().optional(),
+      isActive: zBooleanLikeOptional,
       order: z.number().optional(),
     }))
     .mutation(async ({ input }) => {

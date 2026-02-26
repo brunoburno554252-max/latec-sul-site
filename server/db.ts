@@ -1,3 +1,4 @@
+import { mysqlTable, int, text, timestamp } from "drizzle-orm/mysql-core";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users } from "../drizzle/schema";
@@ -90,3 +91,9 @@ export async function getUserByOpenId(openId: string) {
 }
 
 // TODO: add feature queries here as your schema grows.
+export const aboutStory = mysqlTable('about_story', {
+  id: int('id').primaryKey().autoincrement(),
+  title: text('title'),
+  content: text('content'),
+  updatedAt: timestamp('updated_at').defaultNow().onUpdateNow(),
+});

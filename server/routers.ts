@@ -15,6 +15,7 @@ import {
   adminPartnersRouter,
   adminOmbudsmanRouter,
   adminTestimonialsRouter,
+  adminAboutRouter,
 } from "./adminRouters";
 import {
   publicCoursesRouter,
@@ -24,7 +25,7 @@ import {
   publicSettingsRouter,
   publicCategoriesRouter,
   publicTypesRouter,
-  publicTestimonialsRouter,
+  publicTestimonialsRouter, publicAboutRouter,
 } from "./publicRouters";
 import { publicPartnersRouter } from "./publicPartnersRouter";
 import { publicOmbudsmanRouter } from "./publicOmbudsmanRouter";
@@ -58,7 +59,7 @@ export const appRouter = router({
   settings: publicSettingsRouter,
   categories: publicCategoriesRouter,
   types: publicTypesRouter,
-  testimonials: publicTestimonialsRouter,
+  testimonials: publicTestimonialsRouter, about: publicAboutRouter,
   partners: publicPartnersRouter,
   ombudsman: publicOmbudsmanRouter,
   licenciados: licenciadosProxyRouter,
@@ -87,6 +88,7 @@ export const appRouter = router({
   adminDiferenciais: adminDiferenciaisRouter,
   adminSectionSettings: adminSectionSettingsRouter,
   adminPlatformFeatures: adminPlatformFeaturesRouter,
+  adminAbout: adminAboutRouter,
 });
 
 export type AppRouter = typeof appRouter;

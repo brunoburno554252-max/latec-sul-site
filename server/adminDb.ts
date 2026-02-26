@@ -13,6 +13,9 @@ import {
   blogPosts,
   InsertBlogPost,
   BlogPost,
+  blogPostGallery,
+  InsertBlogPostGalleryImage,
+  BlogPostGalleryImage,
   heroBanners,
   InsertHeroBanner,
   HeroBanner,
@@ -31,6 +34,14 @@ import {
   testimonials,
   InsertTestimonial,
   Testimonial,
+  aboutHero,
+  InsertAboutHero,
+  aboutTimeline,
+  InsertAboutTimeline,
+  aboutUnits,
+  InsertAboutUnit,
+  aboutFooterQuote,
+  InsertAboutFooterQuote,
 } from "../drizzle/schema";
 
 // ==================== Admin Users ====================
@@ -188,7 +199,42 @@ export async function deleteBlogPost(id: number): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
+  // Delete gallery images first
+  await db.delete(blogPostGallery).where(eq(blogPostGallery.postId, id));
+  // Then delete the post
   await db.delete(blogPosts).where(eq(blogPosts.id, id));
+}
+
+// ==================== Blog Post Gallery ====================
+
+export async function getPostGallery(postId: number): Promise<BlogPostGalleryImage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(blogPostGallery)
+    .where(eq(blogPostGallery.postId, postId))
+    .orderBy(blogPostGallery.orderIndex);
+}
+
+export async function addPostGalleryImage(postId: number, imageUrl: string, orderIndex: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(blogPostGallery).values({ postId, imageUrl, orderIndex });
+}
+
+export async function deletePostGallery(postId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(blogPostGallery).where(eq(blogPostGallery.postId, postId));
+}
+
+export async function deletePostGalleryImage(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(blogPostGallery).where(eq(blogPostGallery.id, id));
 }
 
 export async function toggleBlogPostFeatured(id: number, featured: boolean): Promise<void> {
@@ -344,11 +390,17 @@ export async function deleteSetting(key: string): Promise<void> {
 
 // ==================== Course Categories ====================
 
-export async function getAllCategories(): Promise<CourseCategory[]> {
+export async function getAllCategories(): Promise<any[]> {
   const db = await getDb();
   if (!db) return [];
   
-  return await db.select().from(courseCategories).orderBy(courseCategories.name);
+  const categories = await db.select().from(courseCategories).orderBy(courseCategories.name);
+  const allCourses = await getAllCourses();
+  
+  return categories.map(cat => ({
+    ...cat,
+    courseCount: allCourses.filter(c => c.category === cat.name && c.isActive).length,
+  }));
 }
 
 export async function getCategoryById(id: number): Promise<CourseCategory | undefined> {
@@ -456,4 +508,90 @@ export async function deleteTestimonial(id: number): Promise<void> {
   if (!db) throw new Error("Database not available");
   
   await db.delete(testimonials).where(eq(testimonials.id, id));
+}
+
+// ==================== About Page ====================
+
+export async function getAboutHero() {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(aboutHero).limit(1);
+  return result[0];
+}
+
+export async function updateAboutHero(id: number, data: Partial<InsertAboutHero>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(aboutHero).set(data).where(eq(aboutHero.id, id));
+}
+
+export async function getAllAboutTimeline() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(aboutTimeline).orderBy(aboutTimeline.orderIndex);
+}
+
+export async function createAboutTimeline(item: InsertAboutTimeline) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(aboutTimeline).values(item);
+}
+
+export async function updateAboutTimeline(id: number, data: Partial<InsertAboutTimeline>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(aboutTimeline).set(data).where(eq(aboutTimeline.id, id));
+}
+
+export async function deleteAboutTimeline(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(aboutTimeline).where(eq(aboutTimeline.id, id));
+}
+
+export async function getAllAboutUnits() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(aboutUnits).orderBy(aboutUnits.orderIndex);
+}
+
+export async function createAboutUnit(unit: InsertAboutUnit) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(aboutUnits).values(unit);
+}
+
+export async function updateAboutUnit(id: number, data: Partial<InsertAboutUnit>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(aboutUnits).set(data).where(eq(aboutUnits.id, id));
+}
+
+export async function deleteAboutUnit(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(aboutUnits).where(eq(aboutUnits.id, id));
+}
+
+export async function getAboutFooterQuote() {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(aboutFooterQuote).limit(1);
+  return result[0];
+}
+
+export async function updateAboutFooterQuote(id: number, data: Partial<InsertAboutFooterQuote>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(aboutFooterQuote).set(data).where(eq(aboutFooterQuote.id, id));
+}
+export async function getAboutStory() {
+  try {
+    // @ts-ignore
+    const result = await db.select().from(aboutStory).limit(1);
+    return result[0] || null;
+  } catch (error) {
+    console.error('Error fetching about story:', error);
+    return null;
+  }
 }

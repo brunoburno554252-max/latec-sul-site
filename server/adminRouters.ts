@@ -114,7 +114,7 @@ export const adminCoursesRouter = router({
       slug: z.string().optional(),
       category: z.string().optional(),
       type: z.string().optional(),
-      description: z.string().optional(),
+      description: z.string().min(0).optional(),
       objectives: z.string().optional(),
       syllabus: z.string().optional(),
       jobMarket: z.string().optional(),
@@ -152,7 +152,7 @@ export const adminCurriculumRouter = router({
       semester: z.number(),
       subjectName: z.string(),
       workload: z.number(),
-      description: z.string().optional(),
+      description: z.string().min(0).optional(),
       order: z.number().default(0),
     }))
     .mutation(async ({ input }) => {
@@ -166,7 +166,7 @@ export const adminCurriculumRouter = router({
       semester: z.number().optional(),
       subjectName: z.string().optional(),
       workload: z.number().optional(),
-      description: z.string().optional(),
+      description: z.string().min(0).optional(),
       order: z.number().optional(),
     }))
     .mutation(async ({ input }) => {
@@ -210,7 +210,7 @@ export const adminCurriculumRouter = router({
         semester: z.number(),
         subjectName: z.string(),
         workload: z.number(),
-        description: z.string().optional(),
+        description: z.string().min(0).optional(),
       })),
     }))
     .mutation(async ({ input }) => {
@@ -264,6 +264,7 @@ export const adminBlogRouter = router({
       readTime: z.string().optional(),
       isPublished: z.boolean().default(true),
       publishedAt: z.date().optional(),
+      externalLink: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       const postId = await adminDb.createBlogPost(input);
@@ -283,10 +284,11 @@ export const adminBlogRouter = router({
       readTime: z.string().optional(),
       isPublished: z.boolean().optional(),
       publishedAt: z.date().optional(),
+      externalLink: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       const { id, ...data } = input;
-      await adminDb.updateBlogPost(id, data);
+      console.log("Updating post", id, "with data:", data); await adminDb.updateBlogPost(id, data);
       return { success: true };
     }),
   
@@ -301,6 +303,111 @@ export const adminBlogRouter = router({
     .input(z.object({ id: z.number(), featured: z.boolean() }))
     .mutation(async ({ input }) => {
       await adminDb.toggleBlogPostFeatured(input.id, input.featured);
+      return { success: true };
+    }),
+});
+
+export const adminAboutRouter = router({
+  getHero: adminProcedure.query(async () => {
+    return await adminDb.getAboutHero();
+  }),
+  updateHero: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      title: z.string().optional(),
+      description: z.string().min(0).optional(),
+      imageUrl: z.string().optional(),
+      badgeText: z.string().optional(),
+      badgeValue: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await adminDb.updateAboutHero(id, data);
+      return { success: true };
+    }),
+  getTimeline: adminProcedure.query(async () => {
+    return await adminDb.getAllAboutTimeline();
+  }),
+  createTimeline: adminProcedure
+    .input(z.object({
+      year: z.string(),
+      title: z.string(),
+      description: z.string(),
+      tag: z.string().optional(),
+      imageUrl: z.string().optional(),
+      orderIndex: z.number().default(0),
+    }))
+    .mutation(async ({ input }) => {
+      await adminDb.createAboutTimeline(input);
+      return { success: true };
+    }),
+  updateTimeline: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      year: z.string().optional(),
+      title: z.string().optional(),
+      description: z.string().min(0).optional(),
+      tag: z.string().optional(),
+      imageUrl: z.string().optional(),
+      orderIndex: z.number().optional(),
+      isActive: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await adminDb.updateAboutTimeline(id, data);
+      return { success: true };
+    }),
+  deleteTimeline: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      await adminDb.deleteAboutTimeline(input.id);
+      return { success: true };
+    }),
+  getUnits: adminProcedure.query(async () => {
+    return await adminDb.getAllAboutUnits();
+  }),
+  createUnit: adminProcedure
+    .input(z.object({
+      name: z.string(),
+      imageUrl: z.string().optional(),
+      orderIndex: z.number().default(0),
+    }))
+    .mutation(async ({ input }) => {
+      await adminDb.createAboutUnit(input);
+      return { success: true };
+    }),
+  updateUnit: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string().optional(),
+      imageUrl: z.string().optional(),
+      orderIndex: z.number().optional(),
+      isActive: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await adminDb.updateAboutUnit(id, data);
+      return { success: true };
+    }),
+  deleteUnit: adminProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      await adminDb.deleteAboutUnit(input.id);
+      return { success: true };
+    }),
+  getFooterQuote: adminProcedure.query(async () => {
+    return await adminDb.getAboutFooterQuote();
+  }),
+  updateFooterQuote: adminProcedure
+    .input(z.object({
+      id: z.number(),
+      quote: z.string().optional(),
+      author: z.string().optional(),
+      authorRole: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await adminDb.updateAboutFooterQuote(id, data);
       return { success: true };
     }),
 });
@@ -413,7 +520,7 @@ export const adminSettingsRouter = router({
     .input(z.object({
       key: z.string(),
       value: z.string(),
-      description: z.string().optional(),
+      description: z.string().min(0).optional(),
     }))
     .mutation(async ({ input }) => {
       await adminDb.upsertSetting(input);
@@ -440,7 +547,8 @@ export const adminCategoriesRouter = router({
     .input(z.object({
       name: z.string(),
       slug: z.string(),
-      description: z.string().optional(),
+      description: z.string().min(0).optional(),
+      image: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       await adminDbMetadata.createCategory(input);
@@ -452,7 +560,8 @@ export const adminCategoriesRouter = router({
       id: z.number(),
       name: z.string().optional(),
       slug: z.string().optional(),
-      description: z.string().optional(),
+      description: z.string().min(0).optional(),
+      image: z.string().optional(),
       isActive: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {
@@ -478,7 +587,7 @@ export const adminTypesRouter = router({
     .input(z.object({
       name: z.string(),
       slug: z.string(),
-      description: z.string().optional(),
+      description: z.string().min(0).optional(),
     }))
     .mutation(async ({ input }) => {
       await adminDbMetadata.createType(input);
@@ -490,7 +599,7 @@ export const adminTypesRouter = router({
       id: z.number(),
       name: z.string().optional(),
       slug: z.string().optional(),
-      description: z.string().optional(),
+      description: z.string().min(0).optional(),
       isActive: z.boolean().optional(),
     }))
     .mutation(async ({ input }) => {

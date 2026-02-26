@@ -481,4 +481,13 @@ export const homeRouters = router({
       await pool.query("DELETE FROM ecosystem_institutions WHERE id = ?", [input.id]);
       return { success: true };
     }),
+
+  getCategories: publicProcedure
+    .query(async () => {
+      const pool = await getDbPool();
+      const [rows] = await pool.query(
+        "SELECT id, name, slug, description, image FROM course_categories WHERE isActive = TRUE AND image IS NOT NULL ORDER BY name"
+      );
+      return rows;
+    }),
 });

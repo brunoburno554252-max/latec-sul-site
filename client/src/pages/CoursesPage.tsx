@@ -36,32 +36,34 @@ export default function CoursesPage() {
   // Criar lista de categorias com "Todos" no início
   const categories = ["Todos", ...(categoriesFromDb?.map(c => c.name) || [])];
 
+  // Mapear slug para nome da categoria no banco de dados
+  const slugToCategoryName = useMemo(() => {
+    const map: Record<string, string> = {};
+    categoriesFromDb?.forEach(cat => {
+      map[cat.slug] = cat.name;
+    });
+    return map;
+  }, [categoriesFromDb]);
+
   useEffect(() => {
+    // Scroll para o topo da página
+    window.scrollTo(0, 0);
+    
     const params = new URLSearchParams(searchString);
     const categoryParam = params.get("categoria");
     
     if (categoryParam) {
-      switch(categoryParam) {
-        case "graduacao-ead":
-          setSelectedCategory("Graduação");
-          break;
-        case "pos-graduacao":
-          setSelectedCategory("Pós-Graduação");
-          break;
-        case "cursos-tecnicos":
-          setSelectedCategory("Técnico");
-          break;
-        case "profissionalizantes":
-          setSelectedCategory("Cursos Livres");
-          break;
-        case "eja":
-          setSelectedCategory("EJA");
-          break;
-        default:
-          setSelectedCategory("Todos");
+      // Usar o mapa de slug para categoria para encontrar o nome correto
+      const categoryName = slugToCategoryName[categoryParam];
+      if (categoryName) {
+        setSelectedCategory(categoryName);
+      } else {
+        setSelectedCategory("Todos");
       }
+    } else {
+      setSelectedCategory("Todos");
     }
-  }, [searchString]);
+  }, [searchString, slugToCategoryName]);
   
   const filteredCourses = (coursesFromDb || []).filter(course => {
     const matchesCategory = selectedCategory === "Todos" || course.category === selectedCategory;

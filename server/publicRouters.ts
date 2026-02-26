@@ -13,9 +13,8 @@ export const publicCoursesRouter = router({
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input }) => {
-      const courses = await adminDb.getAllCourses();
-      const course = courses.find(c => c.slug === input.slug && c.isActive);
-      if (!course) {
+      const course = await adminDb.getCourseBySlug(input.slug);
+      if (!course || !course.isActive) {
         return null;
       }
       const curriculum = await adminDb.getCourseCurriculum(course.id);
@@ -40,8 +39,13 @@ export const publicBlogRouter = router({
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input }) => {
-      const posts = await adminDb.getAllBlogPosts();
-      return posts.find(p => p.slug === input.slug && p.isPublished) || null;
+      const post = await adminDb.getBlogPostBySlug(input.slug);
+      if (!post || !post.isPublished) return null;
+      const galleryImages = await adminDb.getPostGallery(post.id);
+      return {
+        ...post,
+        gallery: galleryImages.map(g => g.imageUrl),
+      };
     }),
 });
 
@@ -84,5 +88,26 @@ export const publicTestimonialsRouter = router({
   getAll: publicProcedure.query(async () => {
     const testimonials = await adminDb.getAllTestimonials();
     return testimonials.filter((t: any) => t.isActive);
+  }),
+});
+export const publicAboutRouter = router({
+  getHero: publicProcedure.query(async () => {
+    return await adminDb.getAboutHero();
+  }),
+  getTimeline: publicProcedure.query(async () => {
+    const timeline = await adminDb.getAllAboutTimeline();
+    return timeline.filter((t: any) => t.isActive).sort((a: any, b: any) => a.orderIndex - b.orderIndex);
+  }),
+  getUnits: publicProcedure.query(async () => {
+    const units = await adminDb.getAllAboutUnits();
+    return units.filter((u: any) => u.isActive).sort((a: any, b: any) => a.orderIndex - b.orderIndex);
+  }),
+  getFooterQuote: publicProcedure.query(async () => {
+    return await adminDb.getAboutFooterQuote();
+  }),
+  getStory: publicProcedure.query(async () => {
+    // @ts-ignore - about_story might not be in types yet
+    const story = await adminDb.getAboutStory();
+    return story;
   }),
 });

@@ -12,8 +12,9 @@ import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash2, MoveUp, MoveDown, GraduationCap, BookOpen, Clock, Image as ImageIcon, Globe, ExternalLink, Save, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, MoveUp, MoveDown, GraduationCap, BookOpen, Clock, Image as ImageIcon, Globe, ExternalLink, Save, X, Building2 } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import AboutSection from './AboutSection';
 
 function BannerSection() {
   const [showForm, setShowForm] = useState(false);
@@ -301,20 +302,22 @@ function DiferenciaisSection() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<any>(null);
   const [cardTitle, setCardTitle] = useState('');
+  const [sShowTitle, setSShowTitle] = useState(true);
   const [cardDesc, setCardDesc] = useState('');
   const [cardIcon, setCardIcon] = useState('');
   const [cardActive, setCardActive] = useState(true);
 
-  const createMutation = trpc.adminDiferenciais.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetCardForm(); } });
-  const updateMutation = trpc.adminDiferenciais.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetCardForm(); } });
-  const deleteMutation = trpc.adminDiferenciais.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); } });
+  const createMutation = trpc.adminDiferenciais.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetCardForm(); }, onError: (err: any) => { toast.error('Erro ao criar: ' + err.message); console.error('Create error:', err); } });
+  const updateMutation = trpc.adminDiferenciais.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetCardForm(); }, onError: (err: any) => { toast.error('Erro ao atualizar: ' + err.message); console.error('Update error:', err); } });
+  const deleteMutation = trpc.adminDiferenciais.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); }, onError: (err: any) => { toast.error('Erro ao excluir: ' + err.message); console.error('Delete error:', err); } });
 
   const resetCardForm = () => { setShowForm(false); setEditing(null); setCardTitle(''); setCardDesc(''); setCardIcon(''); setCardActive(true); };
-  const handleEditCard = (item: any) => { setEditing(item); setShowForm(true); setCardTitle(item.title); setCardDesc(item.description); setCardIcon(item.icon || ''); setCardActive(item.isActive); };
+  const cardFormRef = React.useRef<HTMLDivElement>(null);
+  const handleEditCard = (item: any) => { setEditing(item); setShowForm(true); setCardTitle(item.title); setCardDesc(item.description); setCardIcon(item.icon || ''); setCardActive(!!item.isActive); setTimeout(() => cardFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100); };
   const handleSubmitCard = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editing) updateMutation.mutate({ id: editing.id, title: cardTitle, description: cardDesc, icon: cardIcon, isActive: cardActive });
-    else createMutation.mutate({ title: cardTitle, description: cardDesc, icon: cardIcon, isActive: cardActive, order: diferenciais.length + 1 });
+    if (editing) updateMutation.mutate({ id: editing.id, title: cardTitle, description: cardDesc, icon: cardIcon, isActive: Boolean(cardActive) });
+    else createMutation.mutate({ title: cardTitle, description: cardDesc, icon: cardIcon, isActive: Boolean(cardActive), order: diferenciais.length + 1 });
   };
 
   // Helper para pegar valor do settings
@@ -352,6 +355,7 @@ function DiferenciaisSection() {
     bulkUpdateMutation.mutate({
       section: 'about',
       fields: [
+        { field: "show_title", value: String(sShowTitle) },
         { field: 'title', value: sTitle },
         { field: 'subtitle', value: sSubtitle },
         { field: 'description', value: sDescription },
@@ -396,7 +400,7 @@ function DiferenciaisSection() {
         <Button onClick={() => setShowForm(true)} className="gap-2"><Plus className="w-4 h-4" /> Novo Diferencial</Button>
       </div>
       {showForm && (
-        <Card><CardContent className="pt-6"><form onSubmit={handleSubmitCard} className="space-y-4">
+        <Card ref={cardFormRef}><CardContent className="pt-6"><form onSubmit={handleSubmitCard} className="space-y-4">
           <div><Label>Título</Label><Input value={cardTitle} onChange={(e) => setCardTitle(e.target.value)} /></div>
           <div><Label>Descrição</Label><Textarea value={cardDesc} onChange={(e) => setCardDesc(e.target.value)} /></div>
           <div><Label>Ícone (Lucide name)</Label><Input value={cardIcon} onChange={(e) => setCardIcon(e.target.value)} placeholder="Ex: DollarSign, BookOpen, Wallet, TrendingUp, Users" /></div>
@@ -435,16 +439,17 @@ function PlataformaSection() {
   const [fIcon, setFIcon] = useState('');
   const [fActive, setFActive] = useState(true);
 
-  const createMutation = trpc.adminPlatformFeatures.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetFeatureForm(); } });
-  const updateMutation = trpc.adminPlatformFeatures.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetFeatureForm(); } });
-  const deleteMutation = trpc.adminPlatformFeatures.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); } });
+  const createMutation = trpc.adminPlatformFeatures.create.useMutation({ onSuccess: () => { toast.success('Criado!'); refetch(); resetFeatureForm(); }, onError: (err: any) => { toast.error('Erro ao criar: ' + err.message); console.error('Create error:', err); } });
+  const updateMutation = trpc.adminPlatformFeatures.update.useMutation({ onSuccess: () => { toast.success('Atualizado!'); refetch(); resetFeatureForm(); }, onError: (err: any) => { toast.error('Erro ao atualizar: ' + err.message); console.error('Update error:', err); } });
+  const deleteMutation = trpc.adminPlatformFeatures.delete.useMutation({ onSuccess: () => { toast.success('Excluído!'); refetch(); }, onError: (err: any) => { toast.error('Erro ao excluir: ' + err.message); console.error('Delete error:', err); } });
 
   const resetFeatureForm = () => { setShowForm(false); setEditing(null); setFTitle(''); setFDesc(''); setFIcon(''); setFActive(true); };
-  const handleEditFeature = (item: any) => { setEditing(item); setShowForm(true); setFTitle(item.title); setFDesc(item.description || ''); setFIcon(item.icon || ''); setFActive(item.isActive); };
+  const featureFormRef = React.useRef<HTMLDivElement>(null);
+  const handleEditFeature = (item: any) => { setEditing(item); setShowForm(true); setFTitle(item.title); setFDesc(item.description || ''); setFIcon(item.icon || ''); setFActive(!!item.isActive); setTimeout(() => featureFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100); };
   const handleSubmitFeature = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editing) updateMutation.mutate({ id: editing.id, title: fTitle, description: fDesc, icon: fIcon, isActive: fActive });
-    else createMutation.mutate({ title: fTitle, description: fDesc, icon: fIcon, isActive: fActive, order: features.length + 1 });
+    if (editing) updateMutation.mutate({ id: editing.id, title: fTitle, description: fDesc, icon: fIcon, isActive: Boolean(fActive) });
+    else createMutation.mutate({ title: fTitle, description: fDesc, icon: fIcon, isActive: Boolean(fActive), order: features.length + 1 });
   };
 
   // Helper para pegar valor do settings
@@ -454,13 +459,14 @@ function PlataformaSection() {
   };
 
   // Form states para settings
+  const [sShowTitle, setSShowTitle] = useState(true);
   const [sLabel, setSLabel] = useState('');
-  const [sTitle, setSTitle] = useState('');
   const [sDescription, setSDescription] = useState('');
   const [sImage, setSImage] = useState('');
   const [sCounterNum, setSCounterNum] = useState('');
   const [sCounterText, setSCounterText] = useState('');
   const [sCounterSub, setSCounterSub] = useState('');
+  const [sTitle, setSTitle] = useState('');
   const [sBtnText, setSBtnText] = useState('');
   const [sBtnLink, setSBtnLink] = useState('');
 
@@ -477,16 +483,15 @@ function PlataformaSection() {
       setSBtnLink(getVal('button_link', '/cursos'));
     }
   }, [platSettings]);
-
   const handleSaveSettings = () => {
+
     bulkUpdateMutation.mutate({
-      section: 'student_experience',
+      section: "student_experience",
       fields: [
-        { field: 'label', value: sLabel },
+        { field: "show_title", value: String(sShowTitle) },
         { field: 'title', value: sTitle },
         { field: 'description', value: sDescription },
         { field: 'image', value: sImage },
-        { field: 'counter_number', value: sCounterNum },
         { field: 'counter_text', value: sCounterText },
         { field: 'counter_subtext', value: sCounterSub },
         { field: 'button_text', value: sBtnText },
@@ -501,6 +506,7 @@ function PlataformaSection() {
       <Card>
         <CardHeader><CardTitle className="flex items-center gap-2"><Save className="w-5 h-5" /> Configurações da Seção Plataforma</CardTitle></CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex items-center gap-2 pb-2"><Switch checked={sShowTitle} onCheckedChange={setSShowTitle} /><Label className="font-bold text-accent">Exibir Título Principal</Label></div>
           <div><Label className="font-semibold">Tag / Label</Label><Input value={sLabel} onChange={(e) => setSLabel(e.target.value)} placeholder="Ex: EXPERIÊNCIA DO ALUNO" /></div>
           <div><Label className="font-semibold">Título Principal</Label><Input value={sTitle} onChange={(e) => setSTitle(e.target.value)} placeholder="Ex: Plataforma Super Intuitiva" /></div>
           <div><Label className="font-semibold">Descrição</Label><Textarea value={sDescription} onChange={(e) => setSDescription(e.target.value)} rows={3} placeholder="Ex: Seus alunos terão acesso a uma plataforma moderna..." /></div>
@@ -526,7 +532,7 @@ function PlataformaSection() {
         <Button onClick={() => setShowForm(true)} className="gap-2"><Plus className="w-4 h-4" /> Nova Feature</Button>
       </div>
       {showForm && (
-        <Card><CardContent className="pt-6"><form onSubmit={handleSubmitFeature} className="space-y-4">
+        <Card ref={featureFormRef}><CardContent className="pt-6"><form onSubmit={handleSubmitFeature} className="space-y-4">
           <div><Label>Título</Label><Input value={fTitle} onChange={(e) => setFTitle(e.target.value)} placeholder="Ex: Acesso 24h" /></div>
           <div><Label>Descrição</Label><Textarea value={fDesc} onChange={(e) => setFDesc(e.target.value)} placeholder="Ex: Estude quando e onde quiser" /></div>
           <div><Label>Ícone (Lucide name)</Label><Input value={fIcon} onChange={(e) => setFIcon(e.target.value)} placeholder="Ex: Clock, Award, Users, BookOpen, Monitor, CheckCircle2" /></div>
@@ -549,8 +555,8 @@ function PlataformaSection() {
       </div>
     </div>
   );
-}
 
+}
 function EcossistemaSection() {
   const { data: settings, refetch: refetchSettings } = trpc.adminHome.getSettings.useQuery();
   const updateSettingsMutation = trpc.adminHome.updateSettings.useMutation({ onSuccess: () => { toast.success('Título/Descrição salvos!'); refetchSettings(); } });
@@ -871,7 +877,7 @@ export default function AdminHomePage() {
           <p className="text-gray-600 mt-1">Gerencie todos os elementos da página inicial</p>
         </div>
         <Tabs defaultValue="banners" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
             <TabsTrigger value="banners">Banners</TabsTrigger>
             <TabsTrigger value="selos">Selos</TabsTrigger>
             <TabsTrigger value="imprensa">Imprensa</TabsTrigger>
@@ -879,6 +885,7 @@ export default function AdminHomePage() {
             <TabsTrigger value="plataforma">Plataforma</TabsTrigger>
             <TabsTrigger value="ecossistema">Ecossistema</TabsTrigger>
             <TabsTrigger value="cursos">Cursos</TabsTrigger>
+            <TabsTrigger value="sobre">Sobre Nós</TabsTrigger>
           </TabsList>
           <TabsContent value="banners" className="mt-6"><BannerSection /></TabsContent>
           <TabsContent value="selos" className="mt-6"><SelosSection /></TabsContent>
@@ -887,6 +894,7 @@ export default function AdminHomePage() {
           <TabsContent value="plataforma" className="mt-6"><PlataformaSection /></TabsContent>
           <TabsContent value="ecossistema" className="mt-6"><EcossistemaSection /></TabsContent>
           <TabsContent value="cursos" className="mt-6"><CursosSection /></TabsContent>
+          <TabsContent value="sobre" className="mt-6"><AboutSection /></TabsContent>
         </Tabs>
       </div>
     </AdminLayout>

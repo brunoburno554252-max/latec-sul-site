@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function AdminCourseCategoriesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -16,6 +17,7 @@ export default function AdminCourseCategoriesPage() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
 
   const { data: categories, refetch } = trpc.adminCategories.getAll.useQuery();
 
@@ -57,11 +59,13 @@ export default function AdminCourseCategoriesPage() {
       setName(category.name);
       setSlug(category.slug);
       setDescription(category.description || "");
+      setImage(category.image || "");
     } else {
       setEditingId(null);
       setName("");
       setSlug("");
       setDescription("");
+      setImage("");
     }
     setIsDialogOpen(true);
   };
@@ -72,15 +76,16 @@ export default function AdminCourseCategoriesPage() {
     setName("");
     setSlug("");
     setDescription("");
+    setImage("");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (editingId) {
-      updateMutation.mutate({ id: editingId, name, slug, description });
+      updateMutation.mutate({ id: editingId, name, slug, description, image });
     } else {
-      createMutation.mutate({ name, slug, description });
+      createMutation.mutate({ name, slug, description, image });
     }
   };
 
@@ -112,12 +117,25 @@ export default function AdminCourseCategoriesPage() {
                   key={category.id}
                   className="flex items-center justify-between p-4 border rounded-lg"
                 >
-                  <div>
+                  {category.image && (
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-24 h-16 object-cover rounded mr-4 flex-shrink-0"
+                    />
+                  )}
+                  <div className="flex-1">
                     <h3 className="font-semibold">{category.name}</h3>
                     <p className="text-sm text-gray-500">{category.slug}</p>
                     {category.description && (
                       <p className="text-sm text-gray-600 mt-1">{category.description}</p>
                     )}
+                    <div className="flex gap-4 mt-2">
+                      <p className="text-xs text-gray-400">ID: {category.id}</p>
+                      <p className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                        {category.courseCount || 0} curso{category.courseCount !== 1 ? 's' : ''}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -171,6 +189,15 @@ export default function AdminCourseCategoriesPage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
+                />
+              </div>
+              <div>
+                <Label>Imagem da Categoria</Label>
+                <ImageUpload
+                  value={image}
+                  onChange={(url) => setImage(url)}
+                  onRemove={() => setImage("")}
+                  aspectRatio={16 / 9}
                 />
               </div>
               <div className="flex gap-2 justify-end">

@@ -32,8 +32,11 @@ export default function AdminBlogFormPage() {
     author: "Equipe LA. Educação",
     category: "Notícias",
     image: "",
+    gallery: [] as string[],
     readTime: "5 min",
     isPublished: true,
+    externalLink: "",
+    publishedAt: new Date().toISOString().split('T')[0],
   });
 
   const { data: postData } = trpc.adminBlog.getById.useQuery(
@@ -52,8 +55,11 @@ export default function AdminBlogFormPage() {
         author: postData.author,
         category: postData.category,
         image: postData.image || "",
+        gallery: (postData as any).gallery || [],
         readTime: postData.readTime || "5 min",
         isPublished: postData.isPublished,
+        externalLink: postData.externalLink || "",
+        publishedAt: postData.publishedAt ? new Date(postData.publishedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
       });
     }
   }, [postData]);
@@ -67,7 +73,7 @@ export default function AdminBlogFormPage() {
     try {
       const data = {
         ...formData,
-        publishedAt: new Date(),
+        publishedAt: new Date(formData.publishedAt),
       };
 
       if (isEditing) {
@@ -201,11 +207,64 @@ export default function AdminBlogFormPage() {
           </div>
 
           <div className="space-y-2">
+            <Label>Galeria de Imagens (Instagram Style)</Label>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {formData.gallery.map((url, index) => (
+                <div key={index} className="relative">
+                  <ImageUpload
+                    value={url}
+                    onChange={(newUrl) => {
+                      const newGallery = [...formData.gallery];
+                      newGallery[index] = newUrl;
+                      setFormData({ ...formData, gallery: newGallery });
+                    }}
+                    onRemove={() => {
+                      const newGallery = formData.gallery.filter((_, i) => i !== index);
+                      setFormData({ ...formData, gallery: newGallery });
+                    }}
+                    aspectRatio={1}
+                  />
+                </div>
+              ))}
+              <div className="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-primary transition-colors cursor-pointer"
+                   onClick={() => setFormData({ ...formData, gallery: [...formData.gallery, ""] })}>
+                <span className="text-sm text-gray-500">+ Adicionar Foto</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500">Adicione as fotos que aparecerão no carrossel do post.</p>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="content">Conteúdo do Post *</Label>
             <RichTextEditor
               content={formData.content}
               onChange={(content) => setFormData({ ...formData, content })}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="publishedAt">Data de Publicação *</Label>
+            <Input
+              id="publishedAt"
+              type="date"
+              value={formData.publishedAt}
+              onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="externalLink">Link da Matéria Completa</Label>
+            <Input
+              id="externalLink"
+              type="url"
+              value={formData.externalLink}
+              onChange={(e) => setFormData({ ...formData, externalLink: e.target.value })}
+              placeholder="Ex: https://www.youtube.com/watch?v=... ou https://www.record.com.br/..."
+            />
+            <p className="text-xs text-gray-500">
+              Cole o link do vídeo ou da matéria completa que será exibido como botão no final do post
+            </p>
           </div>
 
           <div className="flex items-center gap-2">

@@ -103,6 +103,7 @@ export const blogPosts = mysqlTable("blog_posts", {
   readTime: varchar("readTime", { length: 50 }),
   isPublished: boolean("isPublished").default(true).notNull(),
   featured: boolean("featured").default(false).notNull(),
+  externalLink: text("externalLink"),
   publishedAt: timestamp("publishedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -110,6 +111,20 @@ export const blogPosts = mysqlTable("blog_posts", {
 
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = typeof blogPosts.$inferInsert;
+
+/**
+ * Blog post gallery table - images for blog post carousel
+ */
+export const blogPostGallery = mysqlTable("blog_post_gallery", {
+  id: int("id").autoincrement().primaryKey(),
+  postId: int("post_id").notNull(),
+  imageUrl: text("image_url").notNull(),
+  orderIndex: int("order_index").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type BlogPostGalleryImage = typeof blogPostGallery.$inferSelect;
+export type InsertBlogPostGalleryImage = typeof blogPostGallery.$inferInsert;
 
 /**
  * Testimonials table - partner testimonials management
@@ -195,6 +210,7 @@ export const courseCategories = mysqlTable("course_categories", {
   name: varchar("name", { length: 100 }).notNull().unique(),
   slug: varchar("slug", { length: 100 }).notNull().unique(),
   description: text("description"),
+  image: text("image"),
   isActive: boolean("isActive").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -274,3 +290,63 @@ export const pageviews = mysqlTable("pageviews", {
 export type Pageview = typeof pageviews.$inferSelect;
 export type InsertPageview = typeof pageviews.$inferInsert;
 
+
+/**
+ * About page hero section management
+ */
+export const aboutHero = mysqlTable("about_hero", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  imageUrl: varchar("image_url", { length: 255 }),
+  badgeText: varchar("badge_text", { length: 50 }),
+  badgeValue: varchar("badge_value", { length: 50 }),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+});
+
+export type AboutHero = typeof aboutHero.$inferSelect;
+export type InsertAboutHero = typeof aboutHero.$inferInsert;
+
+/**
+ * About page timeline management
+ */
+export const aboutTimeline = mysqlTable("about_timeline", {
+  id: int("id").autoincrement().primaryKey(),
+  year: varchar("year", { length: 20 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  tag: varchar("tag", { length: 50 }),
+  imageUrl: varchar("image_url", { length: 255 }),
+  orderIndex: int("order_index").default(0),
+  isActive: boolean("is_active").default(true),
+});
+
+export type AboutTimeline = typeof aboutTimeline.$inferSelect;
+export type InsertAboutTimeline = typeof aboutTimeline.$inferInsert;
+
+/**
+ * About page units management
+ */
+export const aboutUnits = mysqlTable("about_units", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  imageUrl: varchar("image_url", { length: 255 }),
+  orderIndex: int("order_index").default(0),
+  isActive: boolean("is_active").default(true),
+});
+
+export type AboutUnit = typeof aboutUnits.$inferSelect;
+export type InsertAboutUnit = typeof aboutUnits.$inferInsert;
+
+/**
+ * About page footer quote management
+ */
+export const aboutFooterQuote = mysqlTable("about_footer_quote", {
+  id: int("id").autoincrement().primaryKey(),
+  quote: text("quote").notNull(),
+  author: varchar("author", { length: 255 }),
+  authorRole: varchar("author_role", { length: 255 }),
+});
+
+export type AboutFooterQuote = typeof aboutFooterQuote.$inferSelect;
+export type InsertAboutFooterQuote = typeof aboutFooterQuote.$inferInsert;

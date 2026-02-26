@@ -1,0 +1,306 @@
+import React from 'react';
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { trpc } from '@/lib/trpc';
+import { Target, Globe, ShieldCheck, Building2, History, Quote, Calendar } from "lucide-react";
+
+export default function AboutPage() {
+  // Fetch dynamic data from our new tables for images and badge
+  const { data: hero } = trpc.adminAbout.getHero.useQuery();
+  const { data: timelineDb = [] } = trpc.adminAbout.getTimeline.useQuery();
+  const { data: unitsDb = [] } = trpc.adminAbout.getUnits.useQuery();
+  const { data: footerQuoteDb } = trpc.adminAbout.getFooterQuote.useQuery();
+
+  // Hardcoded timeline data with Canva texts to ensure "weight" and quality
+  const timeline = [
+    {
+      year: "2020 - 2021",
+      title: "A ideia ganha forma",
+      description: "Durante a pandemia, o ideal de fortalecer, empoderar e educar o Brasil de forma que busca oferecer ensino acessível, de qualidade e com impacto humanitário.",
+      tag: "Idealização",
+      color: "from-[#da1069] to-[#3559AC]",
+      imageUrl: timelineDb.find(t => t.year === "2020 - 2021")?.imageUrl
+    },
+    {
+      year: "2023",
+      title: "Nasce oficialmente a LA Educação",
+      description: "A empresa estabelece o primeiro escritório na cidade de Maringá-PR. Com muita coragem e trabalho intenso, iniciou-se a construção de um grande sonho educacional.",
+      tag: "Surgimento",
+      color: "from-[#c41e8a] to-[#da1069]",
+      imageUrl: timelineDb.find(t => t.year === "2023" && t.tag === "Surgimento")?.imageUrl
+    },
+    {
+      year: "2023",
+      title: "Crescimento Exponencial",
+      description: "Logo no primeiro ano, a LA Educação expande sua rede de representantes em todo o país, conectando mais de 100 instituições de ensino e criando um portfólio com mais de 500 cursos.",
+      tag: "Expansão",
+      color: "from-[#3559AC] to-[#2a468a]",
+      imageUrl: timelineDb.find(t => t.year === "2023" && t.tag === "Expansão")?.imageUrl
+    },
+    {
+      year: "2024",
+      title: "Passo Estratégico",
+      description: "Aquisição de um novo prédio e início do processo de credenciamento da primeira Escola Técnica do Grupo, a LA TEC-PR, consolidando a expansão institucional.",
+      tag: "Estrutura",
+      color: "from-[#da1069] to-[#3559AC]",
+      imageUrl: timelineDb.find(t => t.year === "2024" && t.tag === "Estrutura")?.imageUrl
+    },
+    {
+      year: "2024",
+      title: "Consolidação da Marca",
+      description: "Processo de rebranding e aquisição do Instituto Átila, ampliando o ecossistema educacional e o suporte técnico aos parceiros.",
+      tag: "A Marca",
+      color: "from-[#c41e8a] to-[#da1069]",
+      imageUrl: timelineDb.find(t => t.year === "2024" && t.tag === "A Marca")?.imageUrl
+    },
+    {
+      year: "2024",
+      title: "Grupo Educacional",
+      description: "Atualmente, o Grupo LA Educação conta com uma estrutura sólida de 4 andares em Maringá-PR, com mais de 1000 m² de área construída.",
+      tag: "Destaque",
+      color: "from-[#3559AC] to-[#2a468a]",
+      imageUrl: timelineDb.find(t => t.year === "2024" && t.tag === "Destaque")?.imageUrl
+    },
+    {
+      year: "2025",
+      title: "O crescimento não para",
+      description: "Inauguração da segunda sede administrativa em Curitiba-PR, ampliando a capacidade de atendimento e focando na inovação tecnológica e operacional.",
+      tag: "Futuro",
+      color: "from-[#da1069] to-[#3559AC]",
+      imageUrl: timelineDb.find(t => t.year === "2025")?.imageUrl
+    }
+  ];
+
+  const units = [
+    { name: "Sede Administrativa I", image: unitsDb.find(u => u.name.includes("Sede Administrativa I"))?.imageUrl || "/sede_la_educacao.webp" },
+    { name: "Escola Técnica LA TEC-PR", image: unitsDb.find(u => u.name.includes("Escola Técnica LA TEC-PR"))?.imageUrl || "/sede_la_educacao.webp" },
+    { name: "Unidade Administrativa II", image: unitsDb.find(u => u.name.includes("Unidade Administrativa II"))?.imageUrl || "/sede_la_educacao.webp" },
+    { name: "Escola Técnica LA TEC-PR (Fachada)", image: unitsDb.find(u => u.name.includes("Fachada"))?.imageUrl || "/sede_la_educacao.webp" },
+    { name: "Unidade Administrativa II (Fachada)", image: unitsDb.find(u => u.name.includes("Fachada"))?.imageUrl || "/sede_la_educacao.webp" }
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <Header />
+      
+      <main className="flex-grow">
+        {/* Hero Section - Layout Rosa Original */}
+        <section className="relative py-24 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-[#c41e8a] to-primary"></div>
+          <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
+          
+          <div className="container relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="text-white">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                  Sobre a <span>LA Educação</span>
+                </h1>
+                <p className="text-xl text-white/90 leading-relaxed mb-6">
+                  E se cada matrícula fosse uma semente de futuro, e também o motor do seu crescimento? 
+                  A LA Educação nasceu para te colocar no centro dessa história: conectamos instituições 
+                  de ensino de todo o Brasil a polos parceiros que compartilham o mesmo propósito de 
+                  levar <strong>conhecimento a quem mais precisa</strong>.
+                </p>
+                <p className="text-lg text-white/80 leading-relaxed">
+                  Enquanto abrimos portas para sonhadores, do Ensino Médio ao Superior, você recebe um 
+                  <strong> portfólio completo</strong> de cursos EAD, <strong>preços competitivos</strong> e 
+                  um <strong>time de especialistas</strong> guiando cada etapa. Resultado: mais visibilidade 
+                  para as escolas, mais alunos conquistados por você, <strong>mais vidas transformadas</strong>.
+                </p>
+              </div>
+              <div className="relative">
+                <div className="absolute -inset-4 bg-white/20 rounded-3xl blur-xl"></div>
+                <img 
+                  src={hero?.imageUrl || "/sede_la_educacao.webp"} 
+                  alt="Sede LA Educação" 
+                  className="relative rounded-3xl shadow-2xl w-full h-[400px] object-cover border-4 border-white/30"
+                />
+                <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl p-4 shadow-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                      <Building2 className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">{hero?.badgeText || "Nossa Sede"}</p>
+                      <p className="font-bold text-gray-900">{hero?.badgeValue || "+500 m²"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Nossa História - Texto Principal do Canva com Peso */}
+        <section className="py-20 bg-white">
+          <div className="container">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center gap-3 mb-8 text-primary">
+                <History className="w-10 h-10" />
+                <h2 className="text-3xl md:text-5xl font-bold text-gray-900">Nossa História</h2>
+              </div>
+              <div className="space-y-8 text-gray-700 text-xl leading-relaxed">
+                <p className="font-bold text-2xl text-gray-900 border-l-4 border-primary pl-6 py-2">
+                  A história do Grupo LA Educação nasce da coragem, da persistência e da convicção de que a educação transforma realidades.
+                </p>
+                <p>
+                  Fredison Carneiro, fundador do Grupo, iniciou sua trajetória empreendedora ainda muito jovem. De origem humilde, enfrentou desafios que moldaram sua visão de mundo e fortaleceram seu propósito.
+                </p>
+                <p>
+                  Em 2007, ingressou no Banco Bradesco como estagiário. Durante oito anos, construiu uma carreira sólida, sendo promovido nove vezes. A vivência corporativa proporcionou formação estratégica, disciplina comercial e visão de gestão.
+                </p>
+                <p className="bg-gray-50 p-8 rounded-2xl font-semibold text-gray-800 italic border border-gray-100">
+                  "Em 2018, ao atuar como consultor regional na Unicesumar e, posteriormente, como coordenador comercial do EAD na PUCPR, passou a compreender profundamente o cenário da educação a distância no Brasil."
+                </p>
+                <p>
+                  Em 2023, nasce a LA Educação — um nome que carrega significado familiar e representa os valores que sustentam a organização: <strong>trabalho, família e fé</strong>.
+                </p>
+                <p>
+                  Hoje, o Grupo LA Educação atua como ponte entre oportunidades e crescimento, impulsionando negócios educacionais e ampliando o acesso à educação de qualidade em todo o país.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Linha do Tempo - Layout Alternado Original (Cards Brancos) */}
+        <section className="py-20 bg-gray-50 overflow-hidden">
+          <div className="container">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Uma trajetória de <span className="text-primary">crescimento</span>
+              </h2>
+              <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                Inovação e compromisso com a educação brasileira
+              </p>
+            </div>
+
+            <div className="relative">
+              {/* Vertical Line for Desktop */}
+              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-gray-200 -translate-x-1/2"></div>
+
+              <div className="space-y-16">
+                {timeline.map((item, index) => (
+                  <div key={index} className={`relative flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                    {/* Dot */}
+                    <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-white shadow-sm z-10 hidden md:block"></div>
+                    
+                    {/* Content Card */}
+                    <div className="w-full md:w-1/2 px-4 md:px-12">
+                      <div className="bg-white rounded-3xl p-8 shadow-lg border-l-4 border-primary hover:shadow-xl transition-all duration-300 group">
+                        <div className={`inline-block bg-gradient-to-r ${item.color} text-white px-4 py-1 rounded-full font-bold text-sm mb-4`}>
+                          {item.year} • {item.tag}
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">{item.title}</h3>
+                        <p className="text-gray-600 leading-relaxed text-lg mb-6">{item.description}</p>
+                        {item.imageUrl && (
+                          <div className="rounded-2xl overflow-hidden shadow-md aspect-video">
+                            <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="hidden md:block md:w-1/2"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Missão, Visão, Valores - Cards Brancos Originais */}
+        <section className="py-20 bg-white">
+          <div className="container">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Missão */}
+              <div className="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6">
+                  <Target size={36} />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Missão</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Revolucionar o cenário educacional brasileiro, conectando instituições de ensino a parceiros de pequeno porte e promovendo maior equilíbrio competitivo frente aos grandes grupos do setor.
+                </p>
+              </div>
+
+              {/* Visão */}
+              <div className="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div className="w-16 h-16 bg-[#c41e8a]/10 rounded-2xl flex items-center justify-center text-[#c41e8a] mb-6">
+                  <Globe size={36} />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Visão</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  Ser reconhecido como o principal ecossistema de suporte educacional do Brasil, transformando a vida de milhares de estudantes através de parcerias sólidas e inovação constante.
+                </p>
+              </div>
+
+              {/* Valores */}
+              <div className="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6">
+                  <ShieldCheck size={36} />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Valores</h3>
+                <div className="space-y-4">
+                  {["Trabalho", "Família", "Fé"].map(v => (
+                    <div key={v} className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <span className="text-xl font-bold text-gray-700">{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Unidades - Cards Brancos Originais */}
+        <section className="py-20 bg-gray-50">
+          <div className="container">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                Nossas <span className="text-primary">Unidades</span>
+              </h2>
+              <p className="text-gray-600 text-lg">Estrutura de Excelência</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {units.map((unit, index) => (
+                <div key={index} className="group bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
+                  <div className="h-56 overflow-hidden">
+                    <img 
+                      src={unit.image} 
+                      alt={unit.name} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">{unit.name}</h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Frase Final - Design Limpo Original */}
+        <section className="py-24 bg-white">
+          <div className="container">
+            <div className="max-w-4xl mx-auto text-center relative">
+              <Quote className="absolute -top-10 -left-10 w-20 h-20 text-primary/10" />
+              <div className="bg-gray-50 rounded-[48px] p-12 md:p-20 border border-gray-100 shadow-inner">
+                <p className="text-2xl md:text-4xl font-bold text-gray-900 leading-tight mb-10 italic">
+                  "{footerQuoteDb?.quote || "Acreditamos que a educação é a ferramenta mais poderosa para transformar vidas e realidades."}"
+                </p>
+                <div className="w-12 h-1 bg-primary mx-auto mb-6"></div>
+                <p className="text-2xl font-bold text-gray-900">{footerQuoteDb?.author || "Fredison Carneiro"}</p>
+                <p className="text-primary font-semibold uppercase tracking-widest text-sm mt-1">{footerQuoteDb?.authorRole || "Fundador do Grupo LA Educação"}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

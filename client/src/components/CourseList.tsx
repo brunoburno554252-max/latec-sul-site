@@ -1,61 +1,60 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { BookOpen, Monitor, Briefcase, ArrowRight, GraduationCap } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 
-const categories = [
-  {
-    id: 1,
-    title: "Graduação EAD",
-    description: "Flexibilidade total para conquistar seu diploma superior reconhecido pelo MEC.",
-    icon: <GraduationCap size={32} className="text-white" />,
-    color: "bg-pink-600",
-    image: "/images/course-law.jpg",
-    link: "/cursos?categoria=graduacao-ead",
-    types: ["Bacharelado", "Licenciatura"]
-  },
-  {
-    id: 2,
-    title: "Pós-Graduação",
-    description: "Especialize-se e destaque-se no mercado de trabalho com cursos de excelência.",
-    icon: <BookOpen size={32} className="text-white" />,
-    color: "bg-pink-600",
-    image: "/images/course-health.jpg",
-    link: "/cursos?categoria=pos-graduacao",
-    types: ["Pós-Graduação"]
-  },
-  {
-    id: 3,
-    title: "Cursos Técnicos",
-    description: "Formação rápida e prática para ingressar imediatamente na profissão.",
-    icon: <Monitor size={32} className="text-white" />,
-    color: "bg-[#2a468a]",
-    image: "/images/course-engineering.jpg",
-    link: "/cursos?categoria=cursos-tecnicos",
-    types: ["Tecnólogo"]
-  },
-  {
-    id: 4,
-    title: "Profissionalizantes",
-    description: "Desenvolva habilidades específicas e turbine seu currículo em pouco tempo.",
-    icon: <Briefcase size={32} className="text-white" />,
-    color: "bg-orange-500",
-    image: "/images/hero-students.jpg",
-    link: "/cursos?categoria=profissionalizantes",
-    types: ["Cursos Livres"]
-  }
-];
+// Icon mapping for categories
+const categoryIcons: Record<string, React.ReactNode> = {
+  "graduacao-ead": <GraduationCap size={32} className="text-white" />,
+  "pos-graduacao": <BookOpen size={32} className="text-white" />,
+  "cursos-tecnicos": <Monitor size={32} className="text-white" />,
+  "profissionalizantes": <Briefcase size={32} className="text-white" />,
+  "eja": <BookOpen size={32} className="text-white" />,
+};
+
+// Color mapping for categories
+const categoryColors: Record<string, string> = {
+  "graduacao-ead": "bg-pink-600",
+  "pos-graduacao": "bg-pink-600",
+  "cursos-tecnicos": "bg-[#2a468a]",
+  "profissionalizantes": "bg-orange-500",
+  "eja": "bg-blue-600",
+};
 
 export default function CourseList() {
-  const { data: coursesData = [], isLoading } = trpc.courses.getAll.useQuery();
+  const { data: coursesData = [], isLoading: loadingCourses } = trpc.courses.getAll.useQuery();
+  const { data: dbCategories = [], isLoading: loadingCategories } = trpc.home.getCategories.useQuery();
 
-  // Helper function to count courses by category
-  const getCourseCount = (categoryTypes: string[]) => {
-    return coursesData.filter((c: any) => categoryTypes.includes(c.type)).length;
+  // Helper function to count courses by category name
+  const getCourseCount = (categoryName: string) => {
+    return coursesData.filter((c: any) => 
+      c.category === categoryName && c.isActive
+    ).length;
   };
 
-  const totalCourses = coursesData.length;
+  const isLoading = loadingCourses || loadingCategories;
+
+  // Filter categories: only show those with image AND at least one course
+  const displayCategories = useMemo(() => {
+    return dbCategories
+      .filter((cat: any) => cat.image) // Only categories with image
+      .map((dbCat: any) => {
+        const courseCount = getCourseCount(dbCat.name);
+        return {
+          id: dbCat.id,
+          title: dbCat.name,
+          description: dbCat.description || "Explore nossos cursos nesta categoria",
+          icon: categoryIcons[dbCat.slug] || <BookOpen size={32} className="text-white" />,
+          color: categoryColors[dbCat.slug] || "bg-primary",
+          image: dbCat.image,
+          link: `/cursos?categoria=${dbCat.slug}`,
+          slug: dbCat.slug,
+          courseCount: courseCount
+        };
+      })
+      .sort((a: any, b: any) => b.courseCount - a.courseCount); // Sort by course count descending
+  }, [dbCategories, coursesData]);
 
   if (isLoading) {
     return (
@@ -67,6 +66,11 @@ export default function CourseList() {
         </div>
       </section>
     );
+  }
+
+  // Don't render section if no categories with images
+  if (displayCategories.length === 0) {
+    return null;
   }
 
   return (
@@ -89,7 +93,7 @@ export default function CourseList() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {categories.map((category) => (
+          {displayCategories.map((category: any) => (
             <Link key={category.id} href={category.link}>
               <div 
                 className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 cursor-pointer h-full flex flex-col"
@@ -99,7 +103,8 @@ export default function CourseList() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
                   <img 
                     src={category.image} 
-                    alt={category.title} 
+                    alt={category.title}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className={`absolute top-4 right-4 w-14 h-14 ${category.color} rounded-2xl flex items-center justify-center shadow-lg z-20 group-hover:rotate-12 transition-transform duration-300`}>
@@ -107,7 +112,7 @@ export default function CourseList() {
                   </div>
                   <div className="absolute bottom-4 left-4 z-20">
                     <span className="text-white/90 text-sm font-bold bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
-                      {getCourseCount(category.types)} Cursos
+                      {category.courseCount} Curso{category.courseCount !== 1 ? 's' : ''}
                     </span>
                   </div>
                 </div>
