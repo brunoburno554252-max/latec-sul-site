@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
-            <img src="/images/logo-la-educacao.jpg" alt="LA Educação" className="h-16 object-contain" />
+            <img src="/images/logo-la-educacao.png" alt="LATec Sul" className="h-16 object-contain" />
           </div>
           <CardTitle className="text-2xl text-center">Painel Administrativo</CardTitle>
           <CardDescription className="text-center">

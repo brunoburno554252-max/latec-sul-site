@@ -49,7 +49,7 @@ export default function Footer() {
             <div className="lg:col-span-3">
               <div className="flex items-center gap-3 mb-5">
                 <img 
-                  src="/images/logo-la-educacao.jpg" 
+                  src="/images/logo-la-educacao.png" 
                   alt="LA. Educação" 
                   className="h-16 w-auto object-contain bg-white rounded-lg p-1"
                 />

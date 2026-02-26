@@ -74,7 +74,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
-              <img src="/images/logo-la-educacao.jpg" alt="LA Educação" className="w-10 h-10 rounded-lg object-contain" />
+              <img src="/images/logo-la-educacao.png" alt="LATec Sul" className="w-10 h-10 rounded-lg object-contain" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">LA. Educação</h2>

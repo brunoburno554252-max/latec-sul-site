@@ -74,7 +74,7 @@ export default function Header() {
           <Link href="/">
             <div className="cursor-pointer hover:opacity-90 transition-opacity">
               <img 
-                src="/images/logo-la-educacao.jpg" 
+                src="/images/logo-la-educacao.png" 
                 alt="LA. Educação" 
                 className="h-16 w-auto object-contain"
               />
