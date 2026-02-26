@@ -64,7 +64,7 @@ export default function Ecosystem() {
               {/* Texto */}
               <div className="w-full lg:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-[#da1069] to-[#3559AC] flex items-center justify-center shadow-lg shadow-primary/30">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] flex items-center justify-center shadow-lg shadow-primary/30">
                     {block.icon}
                   </div>
                   <span className="text-primary font-bold tracking-widest text-sm uppercase">{block.subtitle}</span>
@@ -75,7 +75,7 @@ export default function Ecosystem() {
                 <p className="text-gray-600 text-lg mb-8 leading-relaxed">
                   {block.desc}
                 </p>
-                <div className="h-1.5 w-20 bg-gradient-to-r from-[#da1069] to-[#3559AC] rounded-full"></div>
+                <div className="h-1.5 w-20 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] rounded-full"></div>
               </div>
             </div>
           </div>

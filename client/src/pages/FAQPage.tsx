@@ -62,7 +62,7 @@ export function FAQPage() {
       <Header />
       
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white py-16 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] text-white py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <div className="inline-flex items-center justify-center p-3 bg-white/10 rounded-full mb-6 backdrop-blur-sm">
@@ -93,7 +93,7 @@ export function FAQPage() {
           {faqs.map((section, sectionIndex) => (
             <div key={sectionIndex} className="animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: `${sectionIndex * 100}ms` }}>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <span className="w-1.5 h-8 bg-gradient-to-r from-[#da1069] to-[#3559AC] rounded-full"></span>
+                <span className="w-1.5 h-8 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] rounded-full"></span>
                 {section.category}
               </h2>
               
@@ -152,7 +152,7 @@ export function FAQPage() {
             href="https://wa.me/5544998455042" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white font-bold rounded-xl hover:from-[#c4105e] hover:to-[#2a468a]/90 transition-colors shadow-lg shadow-[#3559AC]/30"
+            className="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] text-white font-bold rounded-xl hover:from-[#146B2F] hover:to-[#B8860B]/90 transition-colors shadow-lg shadow-[#D4A017]/30"
           >
             Falar no WhatsApp
           </a>

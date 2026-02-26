@@ -140,22 +140,22 @@ export default function AdminTestimonialsPage() {
     return (
       <div className="p-8">
         <div className="flex items-center justify-center py-12">
-          <div className="w-12 h-12 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-gradient-to-br from-pink-50/50 to-pink-50/50 min-h-screen">
+    <div className="p-8 bg-gradient-to-br from-green-50/50 to-green-50/50 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-start mb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-pink-500/30">
+            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-500 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/30">
               <Quote className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-green-600 bg-clip-text text-transparent">
               Depoimentos dos Parceiros
             </h1>
           </div>
@@ -168,7 +168,7 @@ export default function AdminTestimonialsPage() {
             resetForm();
             setIsDialogOpen(true);
           }}
-          className="gap-2 bg-gradient-to-r from-pink-600 to-pink-600 hover:from-pink-700 hover:to-pink-700 shadow-lg shadow-pink-500/30"
+          className="gap-2 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 shadow-lg shadow-green-500/30"
         >
           <Plus className="w-4 h-4" />
           Novo Depoimento
@@ -177,10 +177,10 @@ export default function AdminTestimonialsPage() {
 
       {/* Cards de Estatísticas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-pink-100">
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-pink-100 to-pink-200 rounded-xl flex items-center justify-center">
-              <Users className="w-7 h-7 text-pink-600" />
+            <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">
+              <Users className="w-7 h-7 text-green-600" />
             </div>
             <div>
               <p className="text-sm text-gray-500 font-medium">Total de Depoimentos</p>
@@ -201,10 +201,10 @@ export default function AdminTestimonialsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-pink-100">
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-pink-100 to-pink-200 rounded-xl flex items-center justify-center">
-              <Video className="w-7 h-7 text-pink-600" />
+            <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">
+              <Video className="w-7 h-7 text-green-600" />
             </div>
             <div>
               <p className="text-sm text-gray-500 font-medium">Com Vídeo</p>
@@ -219,7 +219,7 @@ export default function AdminTestimonialsPage() {
         {testimonials && testimonials.length > 0 ? (
           <div className="divide-y divide-gray-100">
             {testimonials.map((testimonial: any) => (
-              <div key={testimonial.id} className="p-6 hover:bg-pink-50/50 transition-colors">
+              <div key={testimonial.id} className="p-6 hover:bg-green-50/50 transition-colors">
                 <div className="flex items-start gap-6">
                   {/* Avatar/Image */}
                   <div className="flex-shrink-0 relative">
@@ -227,17 +227,17 @@ export default function AdminTestimonialsPage() {
                       <img
                         src={testimonial.image}
                         alt={testimonial.name}
-                        className="w-20 h-20 rounded-full object-cover border-4 border-pink-100"
+                        className="w-20 h-20 rounded-full object-cover border-4 border-green-100"
                       />
                     ) : (
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-pink-500 flex items-center justify-center border-4 border-pink-100">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-green-500 flex items-center justify-center border-4 border-green-100">
                         <span className="text-2xl font-bold text-white">
                           {testimonial.name.charAt(0)}
                         </span>
                       </div>
                     )}
                     {testimonial.videoUrl && (
-                      <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                      <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
                         <Play className="w-4 h-4 text-white fill-white" />
                       </div>
                     )}
@@ -248,7 +248,7 @@ export default function AdminTestimonialsPage() {
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <h3 className="text-lg font-bold text-gray-900">{testimonial.name}</h3>
-                        <p className="text-sm text-pink-600 font-medium">
+                        <p className="text-sm text-green-600 font-medium">
                           {testimonial.role} • {testimonial.company}
                         </p>
                         {testimonial.location && (
@@ -257,7 +257,7 @@ export default function AdminTestimonialsPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         {testimonial.courseName && (
-                          <span className="px-3 py-1 bg-pink-100 text-pink-700 text-xs rounded-full font-medium">
+                          <span className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
                             {testimonial.courseName}
                           </span>
                         )}
@@ -284,7 +284,7 @@ export default function AdminTestimonialsPage() {
                     <p className="text-gray-700 mb-4 line-clamp-2 italic">"{testimonial.testimonial}"</p>
 
                     {testimonial.videoUrl && (
-                      <div className="flex items-center gap-2 mb-4 text-sm text-pink-600">
+                      <div className="flex items-center gap-2 mb-4 text-sm text-green-600">
                         <Video className="w-4 h-4" />
                         <span className="truncate max-w-md">{testimonial.videoUrl}</span>
                       </div>
@@ -295,7 +295,7 @@ export default function AdminTestimonialsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => handleEdit(testimonial)}
-                        className="gap-2 border-pink-200 text-pink-600 hover:bg-pink-50"
+                        className="gap-2 border-green-200 text-green-600 hover:bg-green-50"
                       >
                         <Edit className="w-4 h-4" />
                         Editar
@@ -318,8 +318,8 @@ export default function AdminTestimonialsPage() {
           </div>
         ) : (
           <div className="p-12 text-center">
-            <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Quote className="w-10 h-10 text-pink-400" />
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Quote className="w-10 h-10 text-green-400" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Nenhum depoimento cadastrado</h3>
             <p className="text-gray-600 mb-4">
@@ -330,7 +330,7 @@ export default function AdminTestimonialsPage() {
                 resetForm();
                 setIsDialogOpen(true);
               }}
-              className="gap-2 bg-gradient-to-r from-pink-600 to-pink-600"
+              className="gap-2 bg-gradient-to-r from-green-600 to-green-600"
             >
               <Plus className="w-4 h-4" />
               Adicionar Primeiro Depoimento
@@ -344,7 +344,7 @@ export default function AdminTestimonialsPage() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Quote className="w-5 h-5 text-pink-600" />
+              <Quote className="w-5 h-5 text-green-600" />
               {editingId ? "Editar Depoimento" : "Novo Depoimento"}
             </DialogTitle>
             <DialogDescription>
@@ -425,10 +425,10 @@ export default function AdminTestimonialsPage() {
               </p>
             </div>
 
-            <div className="p-4 bg-pink-50 rounded-xl border border-pink-200">
+            <div className="p-4 bg-green-50 rounded-xl border border-green-200">
               <div className="flex items-center gap-2 mb-3">
-                <Video className="w-5 h-5 text-pink-600" />
-                <Label className="text-pink-700 font-semibold">Vídeo do Depoimento</Label>
+                <Video className="w-5 h-5 text-green-600" />
+                <Label className="text-green-700 font-semibold">Vídeo do Depoimento</Label>
               </div>
               <Input
                 id="videoUrl"
@@ -437,7 +437,7 @@ export default function AdminTestimonialsPage() {
                 onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
                 placeholder="https://youtube.com/watch?v=... ou https://vimeo.com/..."
               />
-              <p className="text-xs text-pink-600 mt-2">
+              <p className="text-xs text-green-600 mt-2">
                 Cole a URL do YouTube, Vimeo ou link direto do vídeo. O vídeo será exibido em modal quando o usuário clicar.
               </p>
             </div>
@@ -504,7 +504,7 @@ export default function AdminTestimonialsPage() {
               <Button 
                 type="submit" 
                 disabled={createMutation.isPending || updateMutation.isPending}
-                className="bg-gradient-to-r from-pink-600 to-pink-600 hover:from-pink-700 hover:to-pink-700"
+                className="bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700"
               >
                 {editingId ? "Atualizar" : "Criar"} Depoimento
               </Button>

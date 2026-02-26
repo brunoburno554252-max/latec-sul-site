@@ -38,7 +38,7 @@ export default function Header() {
   return (
     <header className="w-full bg-white sticky top-0 z-50 shadow-sm border-b border-gray-100">
       {/* Top Bar - Ajustado espaçamento do WhatsApp */}
-      <div className="bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white py-2 text-sm font-medium hidden md:block">
+      <div className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] text-white py-2 text-sm font-medium hidden md:block">
         <div className="w-full px-8 lg:px-16 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <span className="font-bold">Central de Atendimento:</span>
@@ -110,7 +110,7 @@ export default function Header() {
                 </DropdownMenu>
               ) : (
                 <Link key={item.name} href={item.href}>
-                  <span className="text-gray-600 hover:text-primary font-medium transition-colors cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gradient-to-r from-[#da1069] to-[#3559AC] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">
+                  <span className="text-gray-600 hover:text-primary font-medium transition-colors cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">
                     {item.name}
                   </span>
                 </Link>
@@ -120,7 +120,7 @@ export default function Header() {
 
           {/* CTA Button */}
           <div className="hidden xl:block">
-            <Button className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold shadow-lg shadow-[#3559AC]/30 rounded-full px-8 py-2 h-10 transition-all hover:scale-105">
+            <Button className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:opacity-90 text-white font-bold shadow-lg shadow-[#D4A017]/30 rounded-full px-8 py-2 h-10 transition-all hover:scale-105">
               SEJA UM PARCEIRO
             </Button>
           </div>
@@ -149,7 +149,7 @@ export default function Header() {
             <div className="mt-4 flex flex-col gap-4">
               <Button 
                 variant="outline" 
-                className="w-full border-primary text-primary hover:from-[#c4105e] hover:to-[#2a468a]/5 h-12 rounded-xl font-bold"
+                className="w-full border-primary text-primary hover:from-[#146B2F] hover:to-[#B8860B]/5 h-12 rounded-xl font-bold"
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   setIsAvaModalOpen(true);
@@ -157,7 +157,7 @@ export default function Header() {
               >
                 AVA do Aluno
               </Button>
-              <Button className="w-full bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white h-12 rounded-xl font-bold shadow-lg shadow-[#3559AC]/30">
+              <Button className="w-full bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] text-white h-12 rounded-xl font-bold shadow-lg shadow-[#D4A017]/30">
                 SEJA UM PARCEIRO
               </Button>
             </div>

@@ -108,7 +108,7 @@ function BannerSection() {
                   <div className="flex items-center justify-between p-4 border rounded-lg bg-blue-50 border-blue-100">
                     <div>
                       <Label htmlFor="showContent">Mostrar Texto/Botão</Label>
-                      <p className="text-xs text-blue-600">Desative se a imagem já tiver texto</p>
+                      <p className="text-xs text-amber-600">Desative se a imagem já tiver texto</p>
                     </div>
                     <Switch id="showContent" checked={showContent} onCheckedChange={setShowContent} />
                   </div>
@@ -220,7 +220,7 @@ function SelosSection() {
             <CardContent className="p-4 text-center space-y-2">
               <img src={selo.image} className="h-16 mx-auto object-contain" />
               <p className="font-medium text-sm">{selo.title}</p>
-              {selo.link && <p className="text-xs text-blue-500 truncate">{selo.link}</p>}
+              {selo.link && <p className="text-xs text-amber-500 truncate">{selo.link}</p>}
               <div className="flex justify-center gap-2">
                 <Button variant="ghost" size="icon" onClick={() => handleEdit(selo)}><Pencil className="w-4 h-4" /></Button>
                 <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: selo.id })}><Trash2 className="w-4 h-4" /></Button>
@@ -279,7 +279,7 @@ function ImprensaSection() {
             <CardContent className="p-4 text-center space-y-2">
               <img src={item.logo} className="h-8 mx-auto object-contain grayscale" />
               <p className="text-xs text-gray-600 truncate">{item.name}</p>
-              {item.link && <p className="text-xs text-blue-500 truncate">{item.link}</p>}
+              {item.link && <p className="text-xs text-amber-500 truncate">{item.link}</p>}
               <div className="flex justify-center gap-2">
                 <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}><Pencil className="w-4 h-4" /></Button>
                 <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: item.id })}><Trash2 className="w-4 h-4" /></Button>
@@ -544,7 +544,7 @@ function PlataformaSection() {
         {features.map((item: any) => (
           <Card key={item.id} className={item.isActive ? '' : 'opacity-50'}>
             <CardContent className="p-4 flex justify-between items-start">
-              <div><h3 className="font-bold">{item.title}</h3><p className="text-sm text-gray-500">{item.description}</p><p className="text-xs text-blue-500 mt-1">Ícone: {item.icon}</p></div>
+              <div><h3 className="font-bold">{item.title}</h3><p className="text-sm text-gray-500">{item.description}</p><p className="text-xs text-amber-500 mt-1">Ícone: {item.icon}</p></div>
               <div className="flex gap-1">
                 <Button variant="ghost" size="icon" onClick={() => handleEditFeature(item)}><Pencil className="w-4 h-4" /></Button>
                 <Button variant="ghost" size="icon" className="text-red-600" onClick={() => deleteMutation.mutate({ id: item.id })}><Trash2 className="w-4 h-4" /></Button>
@@ -654,14 +654,14 @@ function EcossistemaSection() {
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Instituições do Ecossistema</h2>
-          <Button onClick={() => { resetForm(); setShowForm(true); }} className="gap-2 bg-pink-600 hover:bg-pink-700">
+          <Button onClick={() => { resetForm(); setShowForm(true); }} className="gap-2 bg-green-600 hover:bg-green-700">
             <Plus className="w-4 h-4" /> Nova Instituição
           </Button>
         </div>
 
         {/* Formulário de Criar/Editar */}
         {showForm && (
-          <Card className="border-2 border-pink-200">
+          <Card className="border-2 border-green-200">
             <CardHeader className="pb-2">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-lg">{editingInst ? `Editar: ${editingInst.name}` : 'Nova Instituição'}</CardTitle>
@@ -692,7 +692,7 @@ function EcossistemaSection() {
                       <Input value={formCategoria} onChange={(e) => setFormCategoria(e.target.value)} placeholder="Ex: Educação" />
                     </div>
                     <div>
-                      <Label className="flex items-center gap-2"><Globe className="w-4 h-4 text-pink-600" /> Link do Botão "Conhecer mais"</Label>
+                      <Label className="flex items-center gap-2"><Globe className="w-4 h-4 text-green-600" /> Link do Botão "Conhecer mais"</Label>
                       <Input value={formWebsite} onChange={(e) => setFormWebsite(e.target.value)} placeholder="https://exemplo.com.br" />
                       <p className="text-xs text-gray-500 mt-1">Se preenchido, o botão "Conhecer mais" aparecerá no site</p>
                     </div>
@@ -704,18 +704,18 @@ function EcossistemaSection() {
                   {/* Coluna Direita - Imagens */}
                   <div className="space-y-4">
                     <div>
-                      <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-pink-600" /> Logo da Instituição</Label>
+                      <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-green-600" /> Logo da Instituição</Label>
                       <ImageUpload value={formLogo} onChange={setFormLogo} onRemove={() => setFormLogo('')} />
                     </div>
                     <div>
-                      <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-blue-600" /> Banner de Fundo</Label>
+                      <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4 text-amber-600" /> Banner de Fundo</Label>
                       <ImageUpload value={formBanner} onChange={setFormBanner} onRemove={() => setFormBanner('')} />
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-end gap-2 pt-4 border-t">
                   <Button type="button" variant="outline" onClick={resetForm}>Cancelar</Button>
-                  <Button type="submit" className="bg-pink-600 hover:bg-pink-700 gap-2">
+                  <Button type="submit" className="bg-green-600 hover:bg-green-700 gap-2">
                     <Save className="w-4 h-4" /> {editingInst ? 'Salvar Alterações' : 'Criar Instituição'}
                   </Button>
                 </div>
@@ -734,9 +734,9 @@ function EcossistemaSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {(institutions as any[]).map((inst: any) => (
               <Card key={inst.id} className="overflow-hidden hover:shadow-md transition-shadow">
-                <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-3 text-white">
+                <div className="bg-gradient-to-r from-green-500 to-green-600 p-3 text-white">
                   <h3 className="font-bold truncate">{inst.name || inst.id}</h3>
-                  <p className="text-xs text-pink-100">{inst.tipo || 'Sem tipo definido'}</p>
+                  <p className="text-xs text-green-100">{inst.tipo || 'Sem tipo definido'}</p>
                 </div>
                 <CardContent className="p-4 space-y-3">
                   {/* Logo Preview */}
@@ -773,7 +773,7 @@ function EcossistemaSection() {
 
                   {/* Ações */}
                   <div className="flex gap-2 pt-3 border-t">
-                    <Button variant="outline" size="sm" className="flex-1 gap-1 hover:bg-pink-50 hover:text-pink-700" onClick={() => handleEdit(inst)}>
+                    <Button variant="outline" size="sm" className="flex-1 gap-1 hover:bg-green-50 hover:text-green-700" onClick={() => handleEdit(inst)}>
                       <Pencil className="w-3 h-3" /> Editar
                     </Button>
                     <Button variant="outline" size="sm" className="gap-1 text-red-600 hover:bg-red-50" onClick={() => handleDelete(inst.id, inst.name)} disabled={deleteMutation.isPending}>
@@ -831,10 +831,10 @@ function CursosSection() {
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-gray-900 mb-1">{course.title}</h3>
                         <div className="flex flex-wrap gap-2">
-                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-pink-100 text-pink-700 rounded text-xs font-medium">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
                             <GraduationCap className="w-3 h-3" /> {course.category}
                           </span>
-                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-amber-700 rounded text-xs font-medium">
                             <BookOpen className="w-3 h-3" /> {course.modality}
                           </span>
                           <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
@@ -847,10 +847,10 @@ function CursosSection() {
                       </div>
                     </div>
                     <div className="flex gap-2 mt-3">
-                      <Button variant="outline" size="sm" className="gap-1 hover:bg-pink-50 hover:text-pink-700" onClick={() => setLocation('/admin-la-educacao/cursos/' + course.id + '/grade')}>
+                      <Button variant="outline" size="sm" className="gap-1 hover:bg-green-50 hover:text-green-700" onClick={() => setLocation('/admin-la-educacao/cursos/' + course.id + '/grade')}>
                         <BookOpen className="w-3 h-3" /> Grade
                       </Button>
-                      <Button variant="outline" size="sm" className="gap-1 hover:bg-blue-50 hover:text-blue-700" onClick={() => setLocation('/admin-la-educacao/cursos/' + course.id)}>
+                      <Button variant="outline" size="sm" className="gap-1 hover:bg-blue-50 hover:text-amber-700" onClick={() => setLocation('/admin-la-educacao/cursos/' + course.id)}>
                         <Pencil className="w-3 h-3" /> Editar
                       </Button>
                       <Button variant="outline" size="sm" className="gap-1 text-red-600 hover:bg-red-50" onClick={() => handleDelete(course.id, course.title)} disabled={deleteMutation.isPending}>

@@ -160,7 +160,7 @@ export default function ImageCropper({
 
         <div className="flex flex-col gap-4">
           {/* Instruções */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-amber-700">
             <strong>Dica:</strong> Arraste a área de seleção para posicionar a imagem. Use os controles abaixo para zoom e rotação.
           </div>
 
@@ -272,7 +272,7 @@ export default function ImageCropper({
             <X className="w-4 h-4 mr-2" />
             Cancelar
           </Button>
-          <Button type="button" onClick={handleCropComplete} className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90">
+          <Button type="button" onClick={handleCropComplete} className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:from-[#146B2F] hover:to-[#B8860B]/90">
             <Check className="w-4 h-4 mr-2" />
             Aplicar Ajustes
           </Button>

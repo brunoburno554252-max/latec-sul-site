@@ -67,9 +67,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-pink-50/30 to-pink-50/20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-green-50/20">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 h-full w-72 bg-gradient-to-b from-[#da1069] via-pink-900 to-pink-950 text-white shadow-2xl flex flex-col">
+      <aside className="fixed left-0 top-0 h-full w-72 bg-gradient-to-b from-[#1B8C3D] via-green-900 to-green-950 text-white shadow-2xl flex flex-col">
         {/* Header da Sidebar */}
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center gap-3 mb-2">
@@ -78,7 +78,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">LA. Educação</h2>
-              <p className="text-xs text-pink-200">Painel Administrativo</p>
+              <p className="text-xs text-green-200">Painel Administrativo</p>
             </div>
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                     isActive
                       ? "bg-white/15 text-white shadow-lg shadow-black/10 backdrop-blur-sm border border-white/20"
-                      : "text-pink-200 hover:bg-white/10 hover:text-white hover:translate-x-1"
+                      : "text-green-200 hover:bg-white/10 hover:text-white hover:translate-x-1"
                   }`}
                 >
                   <div className={`p-2 rounded-lg transition-colors ${
@@ -115,18 +115,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="p-4 border-t border-white/10 bg-black/10 backdrop-blur-sm">
           <div className="mb-3 px-3 py-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-400 flex items-center justify-center font-bold text-white text-sm shadow-lg">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-400 flex items-center justify-center font-bold text-white text-sm shadow-lg">
                 {adminUser.name?.charAt(0) || "A"}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-white truncate">{adminUser.name || "Administrador"}</p>
-                <p className="text-xs text-pink-300 truncate">{adminUser.email || "admin@laeducacao.com.br"}</p>
+                <p className="text-xs text-green-300 truncate">{adminUser.email || "admin@laeducacao.com.br"}</p>
               </div>
             </div>
           </div>
           <Button
             variant="ghost"
-            className="w-full justify-start text-pink-200 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg"
+            className="w-full justify-start text-green-200 hover:bg-white/10 hover:text-white transition-all duration-200 rounded-lg"
             onClick={handleLogout}
           >
             <LogOut className="w-4 h-4 mr-3" />

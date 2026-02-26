@@ -96,7 +96,7 @@ export default function BlogPostPage() {
         <div className="container mx-auto px-6 mb-12">
           <div className="max-w-4xl mx-auto">
             <div className="mb-6">
-              <span className="inline-block bg-gradient-to-r from-[#da1069] to-[#3559AC] text-white text-xs font-bold px-4 py-2 rounded-full uppercase tracking-wider mb-4">
+              <span className="inline-block bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] text-white text-xs font-bold px-4 py-2 rounded-full uppercase tracking-wider mb-4">
                 {post.category}
               </span>
               <h1 className="text-4xl md:text-5xl font-heading font-bold text-gray-900 mb-6 leading-tight">
@@ -184,7 +184,7 @@ export default function BlogPostPage() {
                 <div className="mt-12 pt-8 border-t border-gray-200">
                   <div className="flex items-center justify-between gap-8">
                     <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#da1069] to-[#3559AC] flex items-center justify-center text-white text-2xl font-bold">
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] flex items-center justify-center text-white text-2xl font-bold">
                         {post.author?.charAt(0) || "A"}
                       </div>
                       <div>
@@ -195,7 +195,7 @@ export default function BlogPostPage() {
                     {post.externalLink && (
                       <Button
                         onClick={() => window.open(post.externalLink, '_blank')}
-                        className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-8 h-12 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 whitespace-nowrap text-base flex-shrink-0"
+                        className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:opacity-90 text-white font-bold px-8 h-12 rounded-full shadow-xl shadow-[#D4A017]/30 transition-all hover:-translate-y-1 whitespace-nowrap text-base flex-shrink-0"
                       >
                         VER MATÉRIA COMPLETA
                       </Button>

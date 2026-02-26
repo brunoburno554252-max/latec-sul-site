@@ -39,7 +39,7 @@ export default function ConsultPage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-[#da1069] to-[#3559AC] py-16 text-white">
+        <section className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] py-16 text-white">
           <div className="container mx-auto px-4 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-6">
               <Building2 className="w-10 h-10 text-white" />
@@ -60,8 +60,8 @@ export default function ConsultPage() {
               {/* Card de Busca */}
               <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100">
                 <div className="flex items-center gap-4 mb-2">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#da1069]/10 to-[#da1069]/20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Search className="w-6 h-6 text-[#da1069]" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#1B8C3D]/10 to-[#1B8C3D]/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Search className="w-6 h-6 text-[#1B8C3D]" />
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">Buscar Parceiro</h2>
@@ -72,7 +72,7 @@ export default function ConsultPage() {
                 {/* Campo de Busca */}
                 <div className="relative mt-6">
                   <div className="absolute inset-y-0 left-0 flex items-center">
-                    <div className="w-12 h-12 ml-1 bg-gradient-to-br from-[#da1069] to-[#9b1b8e] rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 ml-1 bg-gradient-to-br from-[#1B8C3D] to-[#9b1b8e] rounded-full flex items-center justify-center">
                       {isLoading || isTyping ? (
                         <Loader2 className="w-5 h-5 text-white animate-spin" />
                       ) : (
@@ -85,7 +85,7 @@ export default function ConsultPage() {
                     placeholder="Nome, CNPJ/CPF ou ID do Parceiro..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="block w-full pl-16 pr-12 py-4 border-2 border-gray-200 rounded-full text-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#da1069] focus:ring-0 transition-all"
+                    className="block w-full pl-16 pr-12 py-4 border-2 border-gray-200 rounded-full text-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#1B8C3D] focus:ring-0 transition-all"
                   />
                   {searchTerm && (
                     <button 
@@ -100,8 +100,8 @@ export default function ConsultPage() {
                 {/* Dicas de busca */}
                 <div className="flex flex-wrap gap-3 mt-5 justify-center">
                   <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100">
-                    <div className="w-8 h-8 bg-[#da1069]/10 rounded-full flex items-center justify-center">
-                      <User className="w-4 h-4 text-[#da1069]" />
+                    <div className="w-8 h-8 bg-[#1B8C3D]/10 rounded-full flex items-center justify-center">
+                      <User className="w-4 h-4 text-[#1B8C3D]" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-gray-700">Por Nome</p>
@@ -109,8 +109,8 @@ export default function ConsultPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100">
-                    <div className="w-8 h-8 bg-[#da1069]/10 rounded-full flex items-center justify-center">
-                      <FileText className="w-4 h-4 text-[#da1069]" />
+                    <div className="w-8 h-8 bg-[#1B8C3D]/10 rounded-full flex items-center justify-center">
+                      <FileText className="w-4 h-4 text-[#1B8C3D]" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-gray-700">Por CNPJ/CPF</p>
@@ -118,8 +118,8 @@ export default function ConsultPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 bg-gray-50 rounded-full px-4 py-2 border border-gray-100">
-                    <div className="w-8 h-8 bg-[#da1069]/10 rounded-full flex items-center justify-center">
-                      <Hash className="w-4 h-4 text-[#da1069]" />
+                    <div className="w-8 h-8 bg-[#1B8C3D]/10 rounded-full flex items-center justify-center">
+                      <Hash className="w-4 h-4 text-[#1B8C3D]" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-gray-700">Por ID</p>
@@ -142,7 +142,7 @@ export default function ConsultPage() {
                 <div className="mt-8 space-y-6">
                   {isLoading ? (
                     <div className="text-center py-10">
-                      <Loader2 className="w-10 h-10 text-[#da1069] animate-spin mx-auto mb-4" />
+                      <Loader2 className="w-10 h-10 text-[#1B8C3D] animate-spin mx-auto mb-4" />
                       <p className="text-gray-500">Consultando base de dados...</p>
                     </div>
                   ) : error ? (
@@ -153,8 +153,8 @@ export default function ConsultPage() {
                     <>
                       {/* Contador de resultados */}
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#da1069]/10 to-purple-100 rounded-full flex items-center justify-center">
-                          <Sparkles className="w-5 h-5 text-[#da1069]" />
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#1B8C3D]/10 to-purple-100 rounded-full flex items-center justify-center">
+                          <Sparkles className="w-5 h-5 text-[#1B8C3D]" />
                         </div>
                         <div>
                           <p className="text-lg font-bold text-gray-900">

@@ -270,7 +270,7 @@ export default function FullscreenEcosystemEditor() {
                     e.stopPropagation();
                     handleToggleInverted(cardId);
                   }}
-                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-pink-600 hover:bg-pink-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-green-600 hover:bg-green-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                   title="Inverter cores do botão"
                 >
                   ⚡
@@ -290,7 +290,7 @@ export default function FullscreenEcosystemEditor() {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="bg-pink-600 hover:bg-pink-700 disabled:bg-pink-400 text-white font-bold py-2 px-4 rounded-lg transition"
+          className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-bold py-2 px-4 rounded-lg transition"
         >
           {isSaving ? "⏳ Salvando..." : "💾 Salvar Coordenadas"}
         </button>

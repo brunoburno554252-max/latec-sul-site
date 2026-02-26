@@ -86,7 +86,7 @@ export default function CertificateTrackingPage() {
       
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-[#da1069] to-[#3559AC] py-16 text-white">
+        <section className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] py-16 text-white">
           <div className="container mx-auto px-4 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-6">
               <ShieldCheck className="w-10 h-10 text-white" />
@@ -112,7 +112,7 @@ export default function CertificateTrackingPage() {
                     onClick={() => setActiveTab("rastreio")}
                   >
                     <CardContent className="p-8 text-center">
-                      <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#da1069] to-[#3559AC] rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
                         <KeyRound className="w-10 h-10 text-white" />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-3">Rastreio</h3>
@@ -120,7 +120,7 @@ export default function CertificateTrackingPage() {
                         Acompanhe o status de emissão do seu certificado ou diploma utilizando sua chave de acesso.
                       </p>
                       <div className="mt-6">
-                        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#da1069] group-hover:gap-3 transition-all">
+                        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#1B8C3D] group-hover:gap-3 transition-all">
                           Acessar <span className="text-lg">→</span>
                         </span>
                       </div>
@@ -133,7 +133,7 @@ export default function CertificateTrackingPage() {
                     onClick={() => setActiveTab("validacao")}
                   >
                     <CardContent className="p-8 text-center">
-                      <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#3559AC] to-[#1a3a7a] rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#D4A017] to-[#1a3a7a] rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
                         <QrCode className="w-10 h-10 text-white" />
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-3">Validação</h3>
@@ -141,7 +141,7 @@ export default function CertificateTrackingPage() {
                         Verifique a autenticidade de um certificado ou diploma através do código QR ou código de validação.
                       </p>
                       <div className="mt-6">
-                        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#3559AC] group-hover:gap-3 transition-all">
+                        <span className="inline-flex items-center gap-2 text-sm font-bold text-[#D4A017] group-hover:gap-3 transition-all">
                           Acessar <span className="text-lg">→</span>
                         </span>
                       </div>
@@ -186,7 +186,7 @@ export default function CertificateTrackingPage() {
                         </div>
                         <Button 
                           type="submit" 
-                          className="h-12 px-8 bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90 text-white font-bold text-lg" 
+                          className="h-12 px-8 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:from-[#146B2F] hover:to-[#B8860B]/90 text-white font-bold text-lg" 
                           disabled={isLoading || searchKey.length < 10}
                         >
                           {isLoading ? <Loader2 className="animate-spin mr-2" /> : "RASTREAR"}
@@ -252,7 +252,7 @@ export default function CertificateTrackingPage() {
                                   <span className={`inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold ${
                                     result.data.status === "Concluído" || result.data.status === "Entregue Aluno/Parceiro"
                                       ? "bg-green-100 text-green-700"
-                                      : "bg-blue-100 text-blue-700"
+                                      : "bg-blue-100 text-amber-700"
                                   }`}>
                                     {result.data.status}
                                   </span>
@@ -315,7 +315,7 @@ export default function CertificateTrackingPage() {
                   <Card className="shadow-xl border-none">
                     <CardHeader className="text-center pb-2">
                       <CardTitle className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2">
-                        <QrCode className="w-6 h-6 text-[#3559AC]" />
+                        <QrCode className="w-6 h-6 text-[#D4A017]" />
                         Validação de Certificado
                       </CardTitle>
                       <CardDescription>
@@ -333,7 +333,7 @@ export default function CertificateTrackingPage() {
                           Você poderá verificar a autenticidade de qualquer certificado ou diploma emitido pela LA. Educação.
                         </p>
                         <div className="mt-8">
-                          <span className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                          <span className="inline-flex items-center gap-2 bg-blue-50 text-amber-700 px-4 py-2 rounded-full text-sm font-medium">
                             <ShieldCheck className="w-4 h-4" />
                             Funcionalidade em desenvolvimento
                           </span>

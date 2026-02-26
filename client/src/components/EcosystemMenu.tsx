@@ -116,7 +116,7 @@ export default function EcosystemMenu() {
       </div>
 
       {/* Menu Rosa Claro */}
-      <div className="bg-[#FFF0F5] py-8 border-y border-pink-100">
+      <div className="bg-[#F0FFF4] py-8 border-y border-green-100">
         <div className="container mx-auto px-4">
           <div className="flex flex-nowrap justify-between items-center gap-4 md:gap-8 overflow-x-auto pb-4 scrollbar-hide">
             {menuItems.map((item) => (
@@ -144,7 +144,7 @@ export default function EcosystemMenu() {
                   />
                 </div>
                 <div className={`mt-2 h-1 w-full rounded-full transition-all duration-300 ${
-                  activeTab.id === item.id ? "bg-gradient-to-r from-[#da1069] to-[#3559AC]" : "bg-transparent"
+                  activeTab.id === item.id ? "bg-gradient-to-r from-[#1B8C3D] to-[#D4A017]" : "bg-transparent"
                 }`} />
               </button>
             ))}
@@ -202,7 +202,7 @@ export default function EcosystemMenu() {
                   href={activeTab.website} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90 text-white font-semibold px-8 py-4 rounded-full shadow-lg shadow-primary/30 transition-all duration-300 hover:scale-105"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:from-[#146B2F] hover:to-[#B8860B]/90 text-white font-semibold px-8 py-4 rounded-full shadow-lg shadow-primary/30 transition-all duration-300 hover:scale-105"
                 >
                   Conhecer mais
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,7 +212,7 @@ export default function EcosystemMenu() {
               </div>
             )}
             <div className="mt-10 flex justify-center">
-              <div className="h-2.5 w-32 bg-gradient-to-r from-[#da1069] to-[#3559AC] rounded-full shadow-xl shadow-primary/30"></div>
+              <div className="h-2.5 w-32 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] rounded-full shadow-xl shadow-primary/30"></div>
             </div>
           </div>
         </div>

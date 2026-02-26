@@ -77,7 +77,7 @@ export default function AdminEcosystemPage() {
             </Button>
             <Button
               onClick={() => setLocation("/admin-la-educacao/ecossistema/editor")}
-              className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded-lg"
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg"
             >
               🖼️ Editor de Posições
             </Button>
@@ -86,7 +86,7 @@ export default function AdminEcosystemPage() {
 
         {/* Abas */}
         <div className="flex gap-4 border-b border-gray-200">
-          <button className="px-6 py-3 border-b-2 border-pink-600 text-pink-600 font-bold">
+          <button className="px-6 py-3 border-b-2 border-green-600 text-green-600 font-bold">
             📋 Instituições
           </button>
         </div>
@@ -95,7 +95,7 @@ export default function AdminEcosystemPage() {
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
               <p className="text-gray-500">Carregando instituições do banco de dados...</p>
             </div>
           </div>
@@ -112,9 +112,9 @@ export default function AdminEcosystemPage() {
                   className="bg-white rounded-lg shadow-md hover:shadow-lg transition border border-gray-200 overflow-hidden"
                 >
                   {/* Header do Card */}
-                  <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-4 text-white">
+                  <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
                     <h3 className="text-lg font-bold">{institutionInfo?.nome || cardInfo.nome}</h3>
-                    <p className="text-sm text-pink-100">{institutionInfo?.tipo || cardInfo.tipo}</p>
+                    <p className="text-sm text-green-100">{institutionInfo?.tipo || cardInfo.tipo}</p>
                   </div>
 
                   {/* Conteúdo */}
@@ -162,7 +162,7 @@ export default function AdminEcosystemPage() {
                     <div className="flex gap-2 pt-4 border-t border-gray-200">
                       <button
                         onClick={() => setLocation(`/admin-la-educacao/ecossistema/${cardId}`)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-pink-600 text-white py-2 px-3 rounded-lg hover:bg-pink-700 transition font-semibold text-sm"
+                        className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white py-2 px-3 rounded-lg hover:bg-green-700 transition font-semibold text-sm"
                       >
                         <Edit size={16} />
                         Editar

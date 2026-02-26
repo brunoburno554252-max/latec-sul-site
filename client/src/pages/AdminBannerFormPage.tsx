@@ -227,7 +227,7 @@ export default function AdminBannerFormPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Configurações Visuais</CardTitle>
-                <div className="flex items-center justify-between p-4 border rounded-lg bg-blue-50 border-blue-100"><div><Label htmlFor="showContent">Mostrar Texto/Botão</Label><p className="text-xs text-blue-600">Desative se a imagem já tiver texto</p></div><Switch id="showContent" checked={showContent} onCheckedChange={setShowContent} /></div>
+                <div className="flex items-center justify-between p-4 border rounded-lg bg-blue-50 border-blue-100"><div><Label htmlFor="showContent">Mostrar Texto/Botão</Label><p className="text-xs text-amber-600">Desative se a imagem já tiver texto</p></div><Switch id="showContent" checked={showContent} onCheckedChange={setShowContent} /></div>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">

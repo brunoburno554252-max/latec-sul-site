@@ -31,8 +31,8 @@ export default function ToggleSwitch({
   }, [backgroundColor]);
 
   // Se inverted, inverter as cores
-  let switchColor = useWhiteSwitch ? "#ffffff" : "#da1069";
-  let circleBgColor = useWhiteSwitch ? "#da1069" : "#ffffff";
+  let switchColor = useWhiteSwitch ? "#ffffff" : "#1B8C3D";
+  let circleBgColor = useWhiteSwitch ? "#1B8C3D" : "#ffffff";
   const dotColor = "#000000"; // Pontinhos pretos sempre
   
   if (inverted) {
@@ -43,10 +43,10 @@ export default function ToggleSwitch({
     <button
       onClick={onClick}
       title={title}
-      className="relative w-16 h-8 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 cursor-pointer shadow-lg hover:shadow-xl"
+      className="relative w-16 h-8 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 cursor-pointer shadow-lg hover:shadow-xl"
       style={{
         backgroundColor: switchColor,
-        border: useWhiteSwitch ? "2px solid #da1069" : "2px solid #ffffff",
+        border: useWhiteSwitch ? "2px solid #1B8C3D" : "2px solid #ffffff",
       }}
     >
       {/* Pontinhos pretos (indicadores) */}

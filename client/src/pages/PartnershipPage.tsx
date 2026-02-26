@@ -36,7 +36,7 @@ export default function PartnershipPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       <div className="container mx-auto px-4 py-12">
         <Link href="/">
           <Button variant="ghost" className="mb-6">
@@ -48,7 +48,7 @@ export default function PartnershipPage() {
         <div className="max-w-2xl mx-auto">
           <Card>
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-pink-900">
+              <CardTitle className="text-3xl font-bold text-green-900">
                 Seja um Parceiro
               </CardTitle>
               <CardDescription className="text-lg mt-2">
@@ -126,15 +126,15 @@ export default function PartnershipPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-pink-600 hover:bg-pink-700"
+                  className="w-full bg-green-600 hover:bg-green-700"
                   disabled={createMutation.isPending}
                 >
                   {createMutation.isPending ? "Enviando..." : "Enviar Solicitação"}
                 </Button>
               </form>
 
-              <div className="mt-8 p-4 bg-pink-50 rounded-lg">
-                <h3 className="font-semibold text-pink-900 mb-2">
+              <div className="mt-8 p-4 bg-green-50 rounded-lg">
+                <h3 className="font-semibold text-green-900 mb-2">
                   Por que ser parceiro?
                 </h3>
                 <ul className="space-y-2 text-sm text-gray-700">

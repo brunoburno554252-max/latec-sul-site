@@ -129,8 +129,8 @@ export default function AboutSection() {
       </div>
 
       {/* HERO SECTION */}
-      <Card className="border-pink-200 shadow-lg overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-pink-600 to-pink-500 text-white">
+      <Card className="border-green-200 shadow-lg overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-green-600 to-green-500 text-white">
           <CardTitle className="flex items-center gap-2">
             <Building2 className="w-6 h-6" /> 1. Seção Inicial (Banner Rosa)
           </CardTitle>
@@ -171,13 +171,13 @@ export default function AboutSection() {
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label className="text-base font-semibold">Imagem de Destaque (Sede)</Label>
-                <div className="border-2 border-dashed border-pink-100 rounded-2xl p-2 bg-pink-50/30">
+                <div className="border-2 border-dashed border-green-100 rounded-2xl p-2 bg-green-50/30">
                   <ImageUpload value={heroImage} onChange={setHeroImage} onRemove={() => setHeroImage('')} aspectRatio={16/9} />
                 </div>
                 <p className="text-xs text-gray-400 mt-1 italic">* Esta imagem aparece ao lado do texto no banner rosa.</p>
               </div>
               <Button 
-                className="w-full h-14 bg-pink-600 hover:bg-pink-700 text-lg font-bold shadow-md transition-all" 
+                className="w-full h-14 bg-green-600 hover:bg-green-700 text-lg font-bold shadow-md transition-all" 
                 onClick={() => updateHeroMutation.mutate({ id: hero?.id || 1, title: heroTitle, description: heroDesc, imageUrl: heroImage, badgeText: heroBadgeText, badgeValue: heroBadgeValue })}
               >
                 <Save className="w-5 h-5 mr-2" /> Salvar Alterações do Banner
@@ -192,11 +192,11 @@ export default function AboutSection() {
         <div className="flex justify-between items-end border-b pb-4">
           <div className="space-y-1">
             <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <History className="w-7 h-7 text-blue-600" /> 2. Linha do Tempo (Trajetória)
+              <History className="w-7 h-7 text-amber-600" /> 2. Linha do Tempo (Trajetória)
             </h3>
             <p className="text-gray-500">Gerencie os marcos históricos que aparecem nos cards alternados. Use o campo "Posição" para ordenar.</p>
           </div>
-          <Button onClick={() => { resetTimelineForm(); setShowTimelineForm(true); }} className="bg-blue-600 hover:bg-blue-700 h-11 px-6 font-bold">
+          <Button onClick={() => { resetTimelineForm(); setShowTimelineForm(true); }} className="bg-amber-600 hover:bg-amber-700 h-11 px-6 font-bold">
             <Plus className="w-5 h-5 mr-2" /> Adicionar Novo Marco
           </Button>
         </div>
@@ -252,7 +252,7 @@ export default function AboutSection() {
                     <Button variant="outline" className="flex-1 h-12 font-bold" onClick={resetTimelineForm}>
                       <X className="w-4 h-4 mr-2" /> Cancelar
                     </Button>
-                    <Button className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 font-bold" onClick={() => {
+                    <Button className="flex-1 h-12 bg-amber-600 hover:bg-amber-700 font-bold" onClick={() => {
                       if (!tlOrder) {
                         toast.error('Por favor, preencha o campo "Posição"');
                         return;
@@ -307,7 +307,7 @@ export default function AboutSection() {
                 <div className="w-2/3 p-5 flex flex-col justify-between">
                   <div>
                     <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-bold px-2 py-1 bg-blue-100 text-blue-700 rounded-md uppercase tracking-wider">{item.year}</span>
+                      <span className="text-xs font-bold px-2 py-1 bg-blue-100 text-amber-700 rounded-md uppercase tracking-wider">{item.year}</span>
                       <span className="text-[10px] font-medium text-gray-400 uppercase">Pos: {item.orderIndex || idx + 1}</span>
                     </div>
                     <h4 className="font-bold text-gray-900 line-clamp-1 mb-2">{item.title}</h4>

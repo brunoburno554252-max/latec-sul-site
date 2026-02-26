@@ -28,7 +28,7 @@ export default function AdminCoursesPage() {
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-gray-600 font-medium">Carregando cursos...</p>
           </div>
         </div>
@@ -43,15 +43,15 @@ export default function AdminCoursesPage() {
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-[#da1069] to-[#3559AC] bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] bg-clip-text text-transparent">
                 Gerenciar Cursos
               </h1>
-              <GraduationCap className="w-8 h-8 text-pink-500" />
+              <GraduationCap className="w-8 h-8 text-green-500" />
             </div>
             <p className="text-gray-600 text-lg">Adicione, edite ou remova cursos do catálogo</p>
           </div>
           <Button 
-            className="gap-2 bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a] text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-6 text-base font-semibold" 
+            className="gap-2 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:from-[#146B2F] hover:to-[#B8860B] text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-6 text-base font-semibold" 
             onClick={() => setLocation("/admin-la-educacao/cursos/novo")}
           >
             <Plus className="w-5 h-5" />
@@ -68,7 +68,7 @@ export default function AdminCoursesPage() {
                   <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-1">Total de Cursos</p>
                   <p className="text-3xl font-bold text-gray-900">{courses?.length || 0}</p>
                 </div>
-                <div className="w-14 h-14 bg-[#3559AC] rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-14 h-14 bg-[#D4A017] rounded-2xl flex items-center justify-center shadow-lg">
                   <BookOpen className="w-7 h-7 text-white" />
                 </div>
               </div>
@@ -91,7 +91,7 @@ export default function AdminCoursesPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-md bg-gradient-to-br from-pink-50 to-pink-100/50">
+          <Card className="border-0 shadow-md bg-gradient-to-br from-green-50 to-green-100/50">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -100,7 +100,7 @@ export default function AdminCoursesPage() {
                     {courses ? new Set(courses.map(c => c.category)).size : 0}
                   </p>
                 </div>
-                <div className="w-14 h-14 bg-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
                   <GraduationCap className="w-7 h-7 text-white" />
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default function AdminCoursesPage() {
         <div>
           <div className="flex items-center gap-3 mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Lista de Cursos</h2>
-            <div className="h-1 flex-1 bg-gradient-to-r from-[#da1069] via-pink-500 to-transparent rounded-full"></div>
+            <div className="h-1 flex-1 bg-gradient-to-r from-[#1B8C3D] via-green-500 to-transparent rounded-full"></div>
           </div>
 
           {!courses || courses.length === 0 ? (
@@ -125,7 +125,7 @@ export default function AdminCoursesPage() {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Nenhum curso cadastrado</h3>
                   <p className="text-gray-600 mb-6">Comece adicionando seu primeiro curso ao catálogo</p>
                   <Button 
-                    className="gap-2 bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a] text-white" 
+                    className="gap-2 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:from-[#146B2F] hover:to-[#B8860B] text-white" 
                     onClick={() => setLocation("/admin-la-educacao/cursos/novo")}
                   >
                     <Plus className="w-4 h-4" />
@@ -153,8 +153,8 @@ export default function AdminCoursesPage() {
                           />
                         </div>
                       ) : (
-                        <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-100 flex items-center justify-center shadow-lg flex-shrink-0">
-                          <BookOpen className="w-12 h-12 text-pink-500" />
+                        <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-green-100 to-green-100 flex items-center justify-center shadow-lg flex-shrink-0">
+                          <BookOpen className="w-12 h-12 text-green-500" />
                         </div>
                       )}
 
@@ -164,11 +164,11 @@ export default function AdminCoursesPage() {
                           <div className="flex-1">
                             <h3 className="text-xl font-bold text-gray-900 mb-2">{course.title}</h3>
                             <div className="flex flex-wrap gap-3">
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-pink-100 text-pink-700 rounded-lg text-sm font-medium">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
                                 <GraduationCap className="w-4 h-4" />
                                 {course.category}
                               </span>
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
+                              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-amber-700 rounded-lg text-sm font-medium">
                                 <BookOpen className="w-4 h-4" />
                                 {course.modality}
                               </span>
@@ -194,7 +194,7 @@ export default function AdminCoursesPage() {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="gap-2 hover:bg-pink-50 hover:text-pink-700 hover:border-pink-300 transition-colors"
+                            className="gap-2 hover:bg-green-50 hover:text-green-700 hover:border-green-300 transition-colors"
                             onClick={() => setLocation(`/admin-la-educacao/cursos/${course.id}/grade`)}
                           >
                             <BookOpen className="w-4 h-4" />
@@ -203,7 +203,7 @@ export default function AdminCoursesPage() {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="gap-2 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-colors"
+                            className="gap-2 hover:bg-blue-50 hover:text-amber-700 hover:border-blue-300 transition-colors"
                             onClick={() => setLocation(`/admin-la-educacao/cursos/${course.id}`)}
                           >
                             <Pencil className="w-4 h-4" />

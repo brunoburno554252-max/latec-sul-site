@@ -8,7 +8,7 @@ export default function PressNews() {
   return (
     <section className="bg-white border-b border-gray-50 overflow-hidden">
       {/* Faixa Azul Oficial do Site - Fina e Elegante */}
-      <div className="bg-[#3559AC] py-3 w-full"> {/* Azul oficial do site */}
+      <div className="bg-[#D4A017] py-3 w-full"> {/* Azul oficial do site */}
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-xl md:text-2xl font-bold text-white tracking-widest uppercase">
             SAIU NA IMPRENSA

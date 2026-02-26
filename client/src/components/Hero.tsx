@@ -77,7 +77,7 @@ export default function Hero() {
                     {slide.ctaText && (
                       <div className="flex gap-4">
                         <Link href={slide.ctaLink || "#"}>
-                          <Button className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold shadow-xl shadow-[#3559AC]/20 rounded-full px-10 py-4 h-auto text-lg transition-all hover:scale-105">
+                          <Button className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:opacity-90 text-white font-bold shadow-xl shadow-[#D4A017]/20 rounded-full px-10 py-4 h-auto text-lg transition-all hover:scale-105">
                             {slide.ctaText}
                           </Button>
                         </Link>
@@ -117,7 +117,7 @@ export default function Hero() {
                   onClick={() => setCurrentSlide(index)}
                   className={`h-2 rounded-full transition-all ${
                     isCurrent 
-                      ? "w-8 bg-gradient-to-r from-[#da1069] to-[#3559AC]" 
+                      ? "w-8 bg-gradient-to-r from-[#1B8C3D] to-[#D4A017]" 
                       : "w-2 bg-white/50 hover:bg-white/75"
                   }`}
                 />

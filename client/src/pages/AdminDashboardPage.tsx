@@ -9,9 +9,9 @@ export default function AdminDashboardPage() {
       icon: BookOpen, 
       label: "Cursos", 
       value: "12", 
-      gradient: "from-[#3559AC] to-[#2a468a]",
+      gradient: "from-[#D4A017] to-[#B8860B]",
       bgGradient: "from-blue-50 to-blue-100/50",
-      iconBg: "bg-[#3559AC]",
+      iconBg: "bg-[#D4A017]",
       change: "+2 este mês",
       changePositive: true
     },
@@ -29,9 +29,9 @@ export default function AdminDashboardPage() {
       icon: Image, 
       label: "Banners Ativos", 
       value: "3", 
-      gradient: "from-pink-500 to-pink-600",
-      bgGradient: "from-pink-50 to-pink-100/50",
-      iconBg: "bg-pink-500",
+      gradient: "from-green-500 to-green-600",
+      bgGradient: "from-green-50 to-green-100/50",
+      iconBg: "bg-green-500",
       change: "Atualizado hoje",
       changePositive: true
     },
@@ -53,8 +53,8 @@ export default function AdminDashboardPage() {
       title: "Gerenciar Cursos",
       description: "Adicionar, editar ou remover cursos do catálogo",
       href: "/admin-la-educacao/cursos",
-      gradient: "from-[#3559AC] to-[#2a468a]",
-      iconBg: "bg-[#3559AC]"
+      gradient: "from-[#D4A017] to-[#B8860B]",
+      iconBg: "bg-[#D4A017]"
     },
     {
       icon: FileText,
@@ -69,8 +69,8 @@ export default function AdminDashboardPage() {
       title: "Gerenciar Banners",
       description: "Atualizar banners e imagens da homepage",
       href: "/admin-la-educacao/banners",
-      gradient: "from-pink-500 to-pink-600",
-      iconBg: "bg-pink-500"
+      gradient: "from-green-500 to-green-600",
+      iconBg: "bg-green-500"
     },
     {
       icon: Award,
@@ -89,10 +89,10 @@ export default function AdminDashboardPage() {
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-[#da1069] to-[#3559AC] bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] bg-clip-text text-transparent">
                 Dashboard
               </h1>
-              <Sparkles className="w-6 h-6 text-pink-500" />
+              <Sparkles className="w-6 h-6 text-green-500" />
             </div>
             <p className="text-gray-600 text-lg">Bem-vindo ao painel administrativo da LA. Educação</p>
           </div>
@@ -148,7 +148,7 @@ export default function AdminDashboardPage() {
         <div>
           <div className="flex items-center gap-3 mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Ações Rápidas</h2>
-            <div className="h-1 flex-1 bg-gradient-to-r from-[#da1069] via-pink-500 to-transparent rounded-full"></div>
+            <div className="h-1 flex-1 bg-gradient-to-r from-[#1B8C3D] via-green-500 to-transparent rounded-full"></div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -167,7 +167,7 @@ export default function AdminDashboardPage() {
                           
                           {/* Conteúdo */}
                           <div className="flex-1">
-                            <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-[#da1069] transition-colors">
+                            <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-[#1B8C3D] transition-colors">
                               {action.title}
                             </h3>
                             <p className="text-sm text-gray-600 leading-relaxed">
@@ -176,7 +176,7 @@ export default function AdminDashboardPage() {
                           </div>
                           
                           {/* Arrow */}
-                          <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-[#da1069] group-hover:translate-x-1 transition-all duration-300" />
+                          <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-[#1B8C3D] group-hover:translate-x-1 transition-all duration-300" />
                         </div>
                       </CardContent>
                     </Card>
@@ -192,7 +192,7 @@ export default function AdminDashboardPage() {
           <Card className="border-0 shadow-md bg-gradient-to-br from-blue-50 to-blue-100/50">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-[#3559AC] rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-[#D4A017] rounded-lg flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="font-bold text-gray-900">Cursos Populares</h3>
@@ -217,10 +217,10 @@ export default function AdminDashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-md bg-gradient-to-br from-pink-50 to-pink-100/50">
+          <Card className="border-0 shadow-md bg-gradient-to-br from-green-50 to-green-100/50">
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
                   <Award className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="font-bold text-gray-900">Certificações</h3>

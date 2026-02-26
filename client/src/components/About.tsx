@@ -91,7 +91,7 @@ export default function About() {
             <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white">
               <img 
                 src={sectionImage} 
-                alt="Sede da LA Educação" 
+                alt="Sede da LATec Sul" 
                 className="w-full aspect-[4/3] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-60"></div>
@@ -104,7 +104,7 @@ export default function About() {
             {/* Floating Stat Card */}
             <div className="absolute -bottom-10 -right-10 bg-white p-8 rounded-3xl shadow-2xl border border-gray-100 z-20 hidden md:block animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300 max-w-xs">
               <div className="flex flex-col gap-2">
-                <span className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#da1069] to-[#3559AC]">
+                <span className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#1B8C3D] to-[#D4A017]">
                   {counterNumber}
                 </span>
                 <span className="text-gray-600 font-bold text-lg leading-tight">
@@ -149,7 +149,7 @@ export default function About() {
             <div className="grid grid-cols-2 gap-5 mb-12">
               {benefits.map((benefit, index) => (
                 <div key={index} className="flex items-start gap-3 group">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#da1069] to-[#3559AC] flex items-center justify-center shrink-0 shadow-md shadow-accent/30 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1B8C3D] to-[#D4A017] flex items-center justify-center shrink-0 shadow-md shadow-accent/30 group-hover:scale-110 transition-transform duration-300">
                     {benefit.icon}
                   </div>
                   <div>
@@ -162,7 +162,7 @@ export default function About() {
 
             {buttonText && buttonLink && (
               <Button 
-                className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
+                className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#D4A017]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
                 onClick={() => window.location.href = buttonLink}
               >
                 {buttonText}

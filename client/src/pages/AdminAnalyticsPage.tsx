@@ -34,9 +34,9 @@ export default function AdminAnalyticsPage() {
       icon: Eye,
       label: "Total de Visualizações",
       value: stats?.totalViews?.toString() || "0",
-      gradient: "from-[#3559AC] to-[#2a468a]",
+      gradient: "from-[#D4A017] to-[#B8860B]",
       iconBg: "bg-blue-100",
-      iconColor: "text-[#2a468a]"
+      iconColor: "text-[#B8860B]"
     },
     {
       icon: Users,
@@ -62,11 +62,11 @@ export default function AdminAnalyticsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-br from-pink-500 to-pink-500 rounded-2xl shadow-lg">
+            <div className="p-3 bg-gradient-to-br from-green-500 to-green-500 rounded-2xl shadow-lg">
               <BarChart3 className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-pink-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-green-600 bg-clip-text text-transparent">
                 Analytics
               </h1>
               <p className="text-gray-600 mt-1">Monitore o desempenho do seu site</p>
@@ -81,7 +81,7 @@ export default function AdminAnalyticsPage() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
             <div className="flex flex-col">
@@ -90,7 +90,7 @@ export default function AdminAnalyticsPage() {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
           </div>
@@ -99,7 +99,7 @@ export default function AdminAnalyticsPage() {
         {/* Cards de Estatísticas */}
         {statsLoading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-pink-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-green-600" />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -134,13 +134,13 @@ export default function AdminAnalyticsPage() {
             <div className="p-6">
               {pagesLoading ? (
                 <div className="flex items-center justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-pink-600" />
+                  <Loader2 className="w-6 h-6 animate-spin text-green-600" />
                 </div>
               ) : topPages && topPages.length > 0 ? (
                 <div className="space-y-4">
                   {topPages.map((item, index) => (
                     <div key={item.page} className="flex items-center gap-4">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-pink-500 text-white font-bold text-sm">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-green-500 text-white font-bold text-sm">
                         {index + 1}
                       </div>
                       <div className="flex-1">
@@ -150,12 +150,12 @@ export default function AdminAnalyticsPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div 
-                            className="bg-gradient-to-r from-pink-500 to-pink-500 h-2 rounded-full transition-all duration-500"
+                            className="bg-gradient-to-r from-green-500 to-green-500 h-2 rounded-full transition-all duration-500"
                             style={{ width: `${item.percentage}%` }}
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium text-pink-600">{item.percentage}%</span>
+                      <span className="text-sm font-medium text-green-600">{item.percentage}%</span>
                     </div>
                   ))}
                 </div>
@@ -175,7 +175,7 @@ export default function AdminAnalyticsPage() {
           <div className="p-6">
             <div className="flex items-start gap-4">
               <div className="p-3 bg-blue-100 rounded-xl">
-                <BarChart3 className="w-6 h-6 text-[#2a468a]" />
+                <BarChart3 className="w-6 h-6 text-[#B8860B]" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Rastreamento Automático</h3>

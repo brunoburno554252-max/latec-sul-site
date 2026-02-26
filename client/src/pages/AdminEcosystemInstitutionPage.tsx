@@ -180,8 +180,8 @@ export default function AdminEcosystemInstitutionPage() {
     return (
       <div className="min-h-screen bg-gray-50 p-8 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <div className="text-pink-600 font-bold">Carregando dados do banco de dados...</div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <div className="text-green-600 font-bold">Carregando dados do banco de dados...</div>
         </div>
       </div>
     );
@@ -203,7 +203,7 @@ export default function AdminEcosystemInstitutionPage() {
           <div className="flex items-center gap-4">
             <a
               href="/admin-la-educacao/ecossistema"
-              className="p-2 bg-white rounded-full shadow-sm text-pink-600 hover:bg-pink-50 transition-colors"
+              className="p-2 bg-white rounded-full shadow-sm text-green-600 hover:bg-green-50 transition-colors"
             >
               <ArrowLeft size={24} />
             </a>
@@ -216,7 +216,7 @@ export default function AdminEcosystemInstitutionPage() {
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="flex items-center justify-center gap-2 bg-pink-600 text-white py-3 px-8 rounded-xl hover:bg-pink-700 transition shadow-lg shadow-pink-200 font-bold disabled:opacity-50"
+            className="flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-8 rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-200 font-bold disabled:opacity-50"
           >
             {isSaving ? "Salvando..." : <><Save size={20} /> Salvar Alterações</>}
           </button>
@@ -228,7 +228,7 @@ export default function AdminEcosystemInstitutionPage() {
             {/* Logo da Empresa */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <ImageIcon size={20} className="text-pink-600" /> Logo da Empresa
+                <ImageIcon size={20} className="text-green-600" /> Logo da Empresa
               </h3>
               <div 
                 onClick={() => fileInputRef.current?.click()}
@@ -243,7 +243,7 @@ export default function AdminEcosystemInstitutionPage() {
                 />
                 {isUploading ? (
                   <div className="text-center p-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-2"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-2"></div>
                     <p className="text-xs text-gray-500">Enviando...</p>
                   </div>
                 ) : formData.fotos && formData.fotos[0] ? (
@@ -265,14 +265,14 @@ export default function AdminEcosystemInstitutionPage() {
                 placeholder="URL da Imagem do Logo"
                 value={formData.fotos?.[0] || ""}
                 onChange={(e) => handleInputChange("fotos", [e.target.value])}
-                className="mt-4 w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none"
+                className="mt-4 w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
               />
             </div>
 
             {/* Banner de Fundo */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <ImageIcon size={20} className="text-pink-600" /> Banner de Fundo
+                <ImageIcon size={20} className="text-green-600" /> Banner de Fundo
               </h3>
               <div 
                 onClick={() => bannerInputRef.current?.click()}
@@ -287,7 +287,7 @@ export default function AdminEcosystemInstitutionPage() {
                 />
                 {isUploading ? (
                   <div className="text-center p-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600 mx-auto mb-2"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-2"></div>
                     <p className="text-xs text-gray-500">Enviando...</p>
                   </div>
                 ) : formData.banner ? (
@@ -309,7 +309,7 @@ export default function AdminEcosystemInstitutionPage() {
                 placeholder="URL da Imagem do Banner"
                 value={formData.banner || ""}
                 onChange={(e) => handleInputChange("banner", e.target.value)}
-                className="mt-4 w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none"
+                className="mt-4 w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
               />
             </div>
           </div>
@@ -326,7 +326,7 @@ export default function AdminEcosystemInstitutionPage() {
                     type="text"
                     value={formData.nome}
                     onChange={(e) => handleInputChange("nome", e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all"
                   />
                 </div>
 
@@ -337,7 +337,7 @@ export default function AdminEcosystemInstitutionPage() {
                       type="text"
                       value={formData.tipo}
                       onChange={(e) => handleInputChange("tipo", e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all"
                     />
                   </div>
                   <div>
@@ -346,7 +346,7 @@ export default function AdminEcosystemInstitutionPage() {
                       type="text"
                       value={formData.categoria}
                       onChange={(e) => handleInputChange("categoria", e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -357,7 +357,7 @@ export default function AdminEcosystemInstitutionPage() {
                     value={formData.descricao}
                     onChange={(e) => handleInputChange("descricao", e.target.value)}
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none transition-all resize-none"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all resize-none"
                     placeholder="Escreva aqui o texto que aparecerá quando o aluno clicar na logo desta empresa..."
                   />
                   <p className="mt-2 text-xs text-gray-400">Este texto será exibido na seção de conteúdo dinâmico do site.</p>
@@ -369,7 +369,7 @@ export default function AdminEcosystemInstitutionPage() {
                     type="url"
                     value={formData.website || ""}
                     onChange={(e) => handleInputChange("website", e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none transition-all"
                     placeholder="https://..."
                   />
                 </div>

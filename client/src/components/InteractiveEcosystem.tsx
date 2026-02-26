@@ -136,7 +136,7 @@ export default function InteractiveEcosystem() {
                     href={instituicoesInfo[cardId].website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-gradient-to-r from-[#da1069] to-[#9b1b8e] text-white text-xs font-bold py-1.5 px-4 rounded-full hover:opacity-90 transition-opacity shadow-lg whitespace-nowrap"
+                    className="bg-gradient-to-r from-[#1B8C3D] to-[#9b1b8e] text-white text-xs font-bold py-1.5 px-4 rounded-full hover:opacity-90 transition-opacity shadow-lg whitespace-nowrap"
                     onClick={(e) => e.stopPropagation()}
                   >
                     Conhecer mais →
@@ -271,12 +271,12 @@ export default function InteractiveEcosystem() {
                     href={selectedInstituicaoInfo.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full bg-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-pink-700 transition text-center"
+                    className="block w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition text-center"
                   >
                     Conhecer Mais
                   </a>
                 ) : (
-                  <button className="w-full bg-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-pink-700 transition">
+                  <button className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition">
                     Conhecer Mais
                   </button>
                 )}

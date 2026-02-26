@@ -32,7 +32,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: "text-pink-600 underline",
+          class: "text-green-600 underline",
         },
       }),
     ],

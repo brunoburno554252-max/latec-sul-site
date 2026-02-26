@@ -26,7 +26,7 @@ export default function DedicatedSupport() {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-gray-50 to-pink-50/30 overflow-hidden relative">
+    <section className="py-24 bg-gradient-to-br from-gray-50 to-green-50/30 overflow-hidden relative">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
@@ -48,7 +48,7 @@ export default function DedicatedSupport() {
             <div className="space-y-6 mb-12">
               {supportFeatures.map((feature, index) => (
                 <div key={index} className="flex items-start gap-5 group">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#da1069] to-[#3559AC] flex items-center justify-center shrink-0 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#1B8C3D] to-[#D4A017] flex items-center justify-center shrink-0 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
                   <div>
@@ -60,7 +60,7 @@ export default function DedicatedSupport() {
             </div>
 
             <Button 
-              className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
+              className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#D4A017]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
               onClick={() => window.location.href = '/parceiro'}
             >
               QUERO ESSE SUPORTE

@@ -15,11 +15,11 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
 // Color mapping for categories
 const categoryColors: Record<string, string> = {
-  "graduacao-ead": "bg-pink-600",
-  "pos-graduacao": "bg-pink-600",
-  "cursos-tecnicos": "bg-[#2a468a]",
+  "graduacao-ead": "bg-green-600",
+  "pos-graduacao": "bg-green-600",
+  "cursos-tecnicos": "bg-[#B8860B]",
   "profissionalizantes": "bg-orange-500",
-  "eja": "bg-blue-600",
+  "eja": "bg-amber-600",
 };
 
 export default function CourseList() {
@@ -138,7 +138,7 @@ export default function CourseList() {
 
         <div className="mt-16 text-center">
           <Link href="/cursos">
-            <Button size="lg" className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:from-[#c4105e] hover:to-[#2a468a]/90 text-white font-bold px-10 h-14 rounded-full shadow-lg shadow-[#3559AC]/30 transition-all hover:scale-105">
+            <Button size="lg" className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:from-[#146B2F] hover:to-[#B8860B]/90 text-white font-bold px-10 h-14 rounded-full shadow-lg shadow-[#D4A017]/30 transition-all hover:scale-105">
               VER CATÁLOGO COMPLETO
             </Button>
           </Link>

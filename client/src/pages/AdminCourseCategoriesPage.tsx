@@ -132,7 +132,7 @@ export default function AdminCourseCategoriesPage() {
                     )}
                     <div className="flex gap-4 mt-2">
                       <p className="text-xs text-gray-400">ID: {category.id}</p>
-                      <p className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                      <p className="text-xs bg-blue-100 text-amber-700 px-2 py-1 rounded">
                         {category.courseCount || 0} curso{category.courseCount !== 1 ? 's' : ''}
                       </p>
                     </div>

@@ -136,9 +136,9 @@ export default function ImageUpload({
           </div>
         </div>
       ) : (
-        <div {...getRootProps()} className={`border-2 border-dashed rounded-xl p-8 transition-all cursor-pointer flex flex-col items-center justify-center gap-3 ${isDragActive ? "border-pink-500 bg-pink-50" : "border-gray-200 hover:border-pink-400 hover:bg-gray-50"}`}>
+        <div {...getRootProps()} className={`border-2 border-dashed rounded-xl p-8 transition-all cursor-pointer flex flex-col items-center justify-center gap-3 ${isDragActive ? "border-green-500 bg-green-50" : "border-gray-200 hover:border-green-400 hover:bg-gray-50"}`}>
           <input {...getInputProps()} />
-          <div className="w-12 h-12 rounded-full bg-pink-50 flex items-center justify-center text-pink-500">
+          <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-500">
             {isUploading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Upload className="w-6 h-6" />}
           </div>
           <div className="text-center">
@@ -163,7 +163,7 @@ export default function ImageUpload({
           <DialogFooter className="flex gap-2">
             <Button type="button" variant="outline" onClick={() => setShowCropper(false)}>Cancelar</Button>
             <Button type="button" variant="secondary" onClick={handleUploadDirect} disabled={isUploading}>Enviar sem cortar</Button>
-            <Button type="button" onClick={handleCropComplete} className="bg-pink-600 hover:bg-pink-700" disabled={isUploading}>
+            <Button type="button" onClick={handleCropComplete} className="bg-green-600 hover:bg-green-700" disabled={isUploading}>
               {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 mr-2" />} Aplicar Corte
             </Button>
           </DialogFooter>

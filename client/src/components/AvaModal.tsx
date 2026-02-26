@@ -21,7 +21,7 @@ export default function AvaModal({ isOpen, onClose }: AvaModalProps) {
     >
       <div className="bg-white rounded-3xl shadow-2xl w-[90%] max-w-2xl mx-4 animate-in zoom-in-95 duration-300">
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-[#da1069] to-[#3559AC] rounded-t-3xl px-8 py-6 text-white">
+        <div className="relative bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] rounded-t-3xl px-8 py-6 text-white">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors"
@@ -53,7 +53,7 @@ export default function AvaModal({ isOpen, onClose }: AvaModalProps) {
               href="https://laava.simpleacademy.tech/login"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative overflow-hidden bg-gradient-to-br from-[#da1069] to-[#b80e56] hover:from-[#b80e56] hover:to-[#da1069] rounded-2xl p-6 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="group relative overflow-hidden bg-gradient-to-br from-[#1B8C3D] to-[#b80e56] hover:from-[#b80e56] hover:to-[#1B8C3D] rounded-2xl p-6 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative z-10">
@@ -73,7 +73,7 @@ export default function AvaModal({ isOpen, onClose }: AvaModalProps) {
               href="https://lafaculdadesava.simpleacademy.tech/login"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative overflow-hidden bg-gradient-to-br from-[#3559AC] to-[#2a468a] hover:from-[#2a468a] hover:to-[#3559AC] rounded-2xl p-6 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="group relative overflow-hidden bg-gradient-to-br from-[#D4A017] to-[#B8860B] hover:from-[#B8860B] hover:to-[#D4A017] rounded-2xl p-6 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative z-10">

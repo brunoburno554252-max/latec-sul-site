@@ -81,7 +81,7 @@ export default function ExclusiveSupport() {
             <div className="space-y-6 mb-12">
               {supportFeatures.map((feature, index) => (
                 <div key={index} className="flex items-start gap-5 group">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#da1069] to-[#3559AC] flex items-center justify-center shrink-0 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#1B8C3D] to-[#D4A017] flex items-center justify-center shrink-0 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
                   <div>
@@ -93,7 +93,7 @@ export default function ExclusiveSupport() {
             </div>
 
             <Button 
-              className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
+              className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#D4A017]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
               onClick={() => window.location.href = '/parceiro'}
             >
               QUERO ESSE SUPORTE
@@ -152,13 +152,13 @@ export default function ExclusiveSupport() {
               <div className="flex flex-col items-center text-center">
                 {/* Student Avatars */}
                 <div className="flex -space-x-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#da1069] to-[#3559AC] border-2 border-white flex items-center justify-center overflow-hidden">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1B8C3D] to-[#D4A017] border-2 border-white flex items-center justify-center overflow-hidden">
                     <Users className="text-white" size={18} />
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-[#2a468a] border-2 border-white flex items-center justify-center overflow-hidden">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-[#B8860B] border-2 border-white flex items-center justify-center overflow-hidden">
                     <Users className="text-white" size={18} />
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 border-2 border-white flex items-center justify-center overflow-hidden">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-white flex items-center justify-center overflow-hidden">
                     <Users className="text-white" size={18} />
                   </div>
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-white flex items-center justify-center overflow-hidden">
@@ -166,7 +166,7 @@ export default function ExclusiveSupport() {
                   </div>
                 </div>
                 {/* Count */}
-                <p className="text-2xl font-extrabold bg-gradient-to-r from-[#da1069] to-[#3559AC] bg-clip-text text-transparent mb-1">+15000</p>
+                <p className="text-2xl font-extrabold bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] bg-clip-text text-transparent mb-1">+15000</p>
                 <p className="text-xs font-bold text-gray-900 uppercase tracking-wider">ALUNOS</p>
                 <p className="text-xs text-gray-500 mt-1">Transformando vidas</p>
               </div>
@@ -187,7 +187,7 @@ export default function ExclusiveSupport() {
             <div className="grid grid-cols-2 gap-5 mb-12">
               {platformFeatures.map((feature, index) => (
                 <div key={index} className="flex items-start gap-3 group">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#da1069] to-[#3559AC] flex items-center justify-center shrink-0 shadow-md shadow-accent/30 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1B8C3D] to-[#D4A017] flex items-center justify-center shrink-0 shadow-md shadow-accent/30 group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
                   <div>
@@ -199,7 +199,7 @@ export default function ExclusiveSupport() {
             </div>
 
             <Button 
-              className="bg-gradient-to-r from-[#da1069] to-[#3559AC] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#3559AC]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
+              className="bg-gradient-to-r from-[#1B8C3D] to-[#D4A017] hover:opacity-90 text-white font-bold px-10 h-16 rounded-full shadow-xl shadow-[#D4A017]/30 transition-all hover:-translate-y-1 w-full sm:w-auto text-lg"
               onClick={() => window.location.href = '/cursos'}
             >
               CONHECER CURSOS
